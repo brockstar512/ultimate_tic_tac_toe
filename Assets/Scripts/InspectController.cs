@@ -19,7 +19,7 @@ public class InspectController : MonoBehaviour
     RectTransform target;
     Button _resetButton;
     CanvasGroup _canvasGroup;
-    Transform _placements;
+    Transform _placements;//wrong
 
     private void Awake()
     {
