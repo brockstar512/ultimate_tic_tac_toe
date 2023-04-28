@@ -9,7 +9,6 @@ public class MicroBoardManager : MonoBehaviour
 
 
     public MarkType[,] Grid { get; private set; }
-    private const int GRID_SIZE = 3;
     private Button _button;
     private byte _index;
     private byte _row;
@@ -22,7 +21,7 @@ public class MicroBoardManager : MonoBehaviour
     public void Init(byte index)
     {
         _placements = this.transform.GetChild(1).GetComponent<Transform>();
-        Grid = new MarkType[GRID_SIZE, GRID_SIZE];
+        Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
         _index = index;
         _button = GetComponent<Button>();
         _row = (byte)(index / 3);
@@ -41,8 +40,16 @@ public class MicroBoardManager : MonoBehaviour
             Cell cell = _placements.GetChild(i).GetComponent<Cell>();
             cell.Init((byte)i);
             _cells.Add(i, cell);
+            cell.onCellSelected += ReadBoard;
         }
     }
 
+    void ReadBoard()
+    {
+
+    }
+
+
+   
 
 }

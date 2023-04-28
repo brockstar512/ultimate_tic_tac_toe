@@ -11,4 +11,16 @@ public class Enums : MonoBehaviour
         O = 2
     }
 
+    public enum WinLineType
+    {
+        None,
+        Diagonal,
+        AntiDiagonal,
+        ColLeft,
+        ColMid,
+        ColRight,
+        RowTop,
+        RowMiddle,
+        RowBottom,
+    }
 }
