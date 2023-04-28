@@ -20,7 +20,6 @@ public class InspectController : MonoBehaviour
     Button _resetButton;
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
-    bool _isInteractable = false;
 
 
     private void Awake()
@@ -49,9 +48,8 @@ public class InspectController : MonoBehaviour
 
     void Show()
     {
-        if (!_isInteractable)
-            return;
-        Debug.Log("Show");
+
+        //Debug.Log("Show");
         this.transform.SetAsLastSibling();
         _button.onClick.RemoveAllListeners();
         _button.enabled = false;
@@ -64,7 +62,7 @@ public class InspectController : MonoBehaviour
 
     void Return()
     {
-        Debug.Log("Return");
+        //Debug.Log("Return");
         _resetCanvasGroup.DOFade(0, speed);
         _resetButton.onClick.RemoveAllListeners();
         _button.enabled = true;
@@ -81,7 +79,6 @@ public class InspectController : MonoBehaviour
 
     void HandleSubscription(bool subscribe)
     {
-        _isInteractable = true;
         for (int i = 0; i < _placements.transform.childCount; i++)
         {
             switch (subscribe) {
@@ -93,11 +90,5 @@ public class InspectController : MonoBehaviour
                     break;
             }
         }
-        this.GetComponent<MicroBoardManager>().retireBoard += IsInteractable;
-    }
-
-    void IsInteractable(bool isInteractable)
-    {
-        _isInteractable = isInteractable;
     }
 }

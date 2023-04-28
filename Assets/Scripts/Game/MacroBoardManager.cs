@@ -28,7 +28,5 @@ public class MacroBoardManager : MonoBehaviour
             board.Init((byte)i);
             _boards.Add(i, board);
         }
-        
     }
-
 }

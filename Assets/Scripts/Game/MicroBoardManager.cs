@@ -16,7 +16,9 @@ public class MicroBoardManager : MonoBehaviour
     private byte _col;
     private Transform _placements;
     private Dictionary<int, Cell> _cells;
-    public event Action<bool> retireBoard;
+    //public event Action<bool> retireBoard;//this might just go with markBoard
+    public event Action<int, int> markBoard;
+
 
     //when a cell is selected this read its own board to see if the user won this micro board
     //then destroy that boards inspect controller
@@ -28,7 +30,6 @@ public class MicroBoardManager : MonoBehaviour
         _button = GetComponent<Button>();
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
-        //_button.onClick.AddListener(CellClicked);
         InitializeMicroBoard();
     }
 
@@ -50,12 +51,15 @@ public class MicroBoardManager : MonoBehaviour
 
     void ReadBoard()
     {
-        var (isWin, lineType) = Utilities.CheckWin(_row, _col, Grid);
+
+        Debug.Log($"Here is the board we are reading {this.gameObject.name}");
+        var (isWin, lineType) = Utilities.CheckWin(_row, _col, Grid);//this should be the 
         if (isWin)
         {
+            _button.interactable = false;
             Debug.Log("This board is done");
             //invoke line controller
-            retireBoard?.Invoke(false);
+            //retireBoard?.Invoke(false);
         }
         else
         {
@@ -66,17 +70,30 @@ public class MicroBoardManager : MonoBehaviour
 
     void MarkCell(int row, int col)
     {
+        //Debug.Log($"Marking cell for grid {gameObject.name}");
         Grid[row, col] = MarkType.X;
+
+        //for (int x = 0; x < 3; x++)
+        //{
+
+        //    for (int y = 0; y < 3; y++)
+        //    {
+
+        //        //Acces the array like this
+
+        //        Debug.Log($" here is what is at the matrix  {Grid[x, y]}");
+
+
+
+        //    }
+        //}
     }
 
-    void RetireBoard()
-    {
-        //Destroy(this.GetComponent<InspectController>());
-        retireBoard?.Invoke(false);
-    }
+
 
     //void UpdateBoard(Net_OnMarkCell msg)
     //{
     //    _cells[msg.Index].UpdateUI(msg.Actor);
     //}
+
 }

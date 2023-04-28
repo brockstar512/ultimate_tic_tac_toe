@@ -6,20 +6,25 @@ using static Enums;
 public static class Utilities
 {
     public const int GRID_SIZE = 3;
-
+    //grid we are looking at.. row and col is the val of the big board
     public static (bool isWin, WinLineType lineType) CheckWin(byte row, byte col, MarkType[,] Grid)
     {
         var type = Grid[row, col];
+        Debug.Log($"array   {row},{col}");
 
         //check col
         for (int i = 0; i < GRID_SIZE; i++)
         {
+            Debug.Log($"col for this one is {Grid[row, i]}");
+            if (Grid[row, i] == MarkType.None) continue;
             if (Grid[row, i] != type) break;
             if (i == GRID_SIZE - 1) return (true, ResolveLineTypeRow(row));
         }
         //check row
         for (int i = 0; i < GRID_SIZE; i++)
         {
+            Debug.Log($"row for this one is {Grid[i, col]}");
+            if (Grid[i, col] == MarkType.None) continue;
             if (Grid[i, col] != type) break;
             if (i == GRID_SIZE - 1) return (true, ResolveLineTypeCol(col));
         }
@@ -29,6 +34,8 @@ public static class Utilities
         {
             for (int i = 0; i < GRID_SIZE; i++)
             {
+                Debug.Log($"diagnonal for this one is {Grid[i, i]}");
+                if (Grid[i, i] == MarkType.None) continue;
                 if (Grid[i, i] != type) break;
                 if (i == GRID_SIZE - 1) return (true, WinLineType.Diagonal);
             }
@@ -43,6 +50,8 @@ public static class Utilities
             //if we get to i == 2 we have a match
             for (int i = 0; i < GRID_SIZE; i++)
             {
+                Debug.Log($"ANTI diagnonal for this one is {Grid[i, (GRID_SIZE - 1) - i]}");
+                if (Grid[i, (GRID_SIZE - 1) - i] == MarkType.None) continue;
                 if (Grid[i, (GRID_SIZE - 1) - i] != type) break;
                 if (i == GRID_SIZE - 1) return (true, WinLineType.AntiDiagonal);
             }
