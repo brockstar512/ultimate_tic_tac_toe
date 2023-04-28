@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
+using System;
 
 public class MicroBoardManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class MicroBoardManager : MonoBehaviour
     private byte _col;
     private Transform _placements;
     private Dictionary<int, Cell> _cells;
+    public event Action<bool> retireBoard;
 
     //when a cell is selected this read its own board to see if the user won this micro board
     //then destroy that boards inspect controller
@@ -32,7 +34,7 @@ public class MicroBoardManager : MonoBehaviour
 
     void InitializeMicroBoard()
     {
-        this.gameObject.name = $"Cell: [{_row},{_col}]";
+        this.gameObject.name = $"Board: [{_row},{_col}]";
         _cells = new Dictionary<int, Cell>();
 
         for (int i = 0; i < _placements.childCount; i++)
@@ -41,15 +43,40 @@ public class MicroBoardManager : MonoBehaviour
             cell.Init((byte)i);
             _cells.Add(i, cell);
             cell.onCellSelected += ReadBoard;
+            cell.markCell += MarkCell;
+
         }
     }
 
     void ReadBoard()
     {
+        var (isWin, lineType) = Utilities.CheckWin(_row, _col, Grid);
+        if (isWin)
+        {
+            Debug.Log("This board is done");
+            //invoke line controller
+            retireBoard?.Invoke(false);
+        }
+        else
+        {
+            Debug.Log("you can keep going");
 
+        }
     }
 
+    void MarkCell(int row, int col)
+    {
+        Grid[row, col] = MarkType.X;
+    }
 
-   
+    void RetireBoard()
+    {
+        //Destroy(this.GetComponent<InspectController>());
+        retireBoard?.Invoke(false);
+    }
 
+    //void UpdateBoard(Net_OnMarkCell msg)
+    //{
+    //    _cells[msg.Index].UpdateUI(msg.Actor);
+    //}
 }

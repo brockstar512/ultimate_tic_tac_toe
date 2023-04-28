@@ -13,6 +13,8 @@ public class Cell : MonoBehaviour
     private byte _row;
     private byte _col;
     public event Action onCellSelected;
+    public event Action<int,int> markCell;
+
 
     public void Init(byte index)
     {
@@ -32,6 +34,7 @@ public class Cell : MonoBehaviour
         _button.interactable = false;
         _mark.enabled = true;
         Vector3 size = new Vector3(.90f, .90f, .90f);
+        markCell?.Invoke(_row,_col);
         _mark.transform.DOScale(size, .05f).SetEase(Ease.OutBounce).OnComplete(()=> onCellSelected?.Invoke());
         //invoke event that this cell is clicked
     }
@@ -39,6 +42,7 @@ public class Cell : MonoBehaviour
     private void OnDestroy()
     {
         _button.onClick.RemoveAllListeners();
+        onCellSelected = null;
     }
 
 }

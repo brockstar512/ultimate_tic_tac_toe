@@ -20,6 +20,7 @@ public class InspectController : MonoBehaviour
     Button _resetButton;
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
+    bool _isInteractable = false;
 
 
     private void Awake()
@@ -48,6 +49,8 @@ public class InspectController : MonoBehaviour
 
     void Show()
     {
+        if (!_isInteractable)
+            return;
         Debug.Log("Show");
         this.transform.SetAsLastSibling();
         _button.onClick.RemoveAllListeners();
@@ -71,7 +74,6 @@ public class InspectController : MonoBehaviour
         _button.onClick.AddListener(Show);
     }
 
-
     void HandleMarks(bool isEnabled)
     {
         _placements.blocksRaycasts = isEnabled;
@@ -79,6 +81,7 @@ public class InspectController : MonoBehaviour
 
     void HandleSubscription(bool subscribe)
     {
+        _isInteractable = true;
         for (int i = 0; i < _placements.transform.childCount; i++)
         {
             switch (subscribe) {
@@ -86,9 +89,15 @@ public class InspectController : MonoBehaviour
                     _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected += Return;
                     break;
                 case false:
-                    _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected += Return;
+                    _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected -= Return;
                     break;
             }
         }
+        this.GetComponent<MicroBoardManager>().retireBoard += IsInteractable;
+    }
+
+    void IsInteractable(bool isInteractable)
+    {
+        _isInteractable = isInteractable;
     }
 }
