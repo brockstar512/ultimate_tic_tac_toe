@@ -21,6 +21,8 @@ public class InspectController : MonoBehaviour
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
 
+    //when a cell is selected this should close and return to its normal state
+
     private void Awake()
     {
         origin = this.GetComponent<RectTransform>();
@@ -35,6 +37,14 @@ public class InspectController : MonoBehaviour
         targetMarkMin = target.anchorMin;
         _button.onClick.AddListener(Show);
         HandleMarks(false);
+    }
+    private void Start()
+    {
+        HandleSubscription(true);
+    }
+    private void OnDestroy()
+    {
+        HandleSubscription(false);
     }
 
     void Show()
@@ -66,9 +76,20 @@ public class InspectController : MonoBehaviour
     void HandleMarks(bool isEnabled)
     {
         _placements.blocksRaycasts = isEnabled;
-        //for(int i = 0; i < _placements.childCount - 1; i++)
-        //{
-        //    _placements.GetChild(i).GetComponent<Image>().enabled = isEnabled;
-        //}
+    }
+
+    void HandleSubscription(bool subscribe)
+    {
+        for (int i = 0; i < _placements.transform.childCount; i++)
+        {
+            switch (subscribe) {
+                case true:
+                    _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected += Return;
+                    break;
+                case false:
+                    _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected += Return;
+                    break;
+            }
+        }
     }
 }

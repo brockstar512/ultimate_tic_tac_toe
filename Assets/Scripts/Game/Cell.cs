@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -11,6 +12,7 @@ public class Cell : MonoBehaviour
     private byte _index;
     private byte _row;
     private byte _col;
+    public event Action onCellSelected;
 
     private void Awake()
     {
@@ -28,18 +30,18 @@ public class Cell : MonoBehaviour
 
     private void CellClicked()
     {
-        Debug.Log("Cell clicked");
         _button.interactable = false;
         _mark.enabled = true;
-        _mark.transform.DOScale(Vector3.one,.1f).SetEase(Ease.OutBounce);
-        //Debug.Log("Sending MarkCellRequest to Server!");
-
-        //var msg = new Net_MarkCellRequest()
-        //{
-        //    Index = _index
-        //};
-
-        //NetworkClient.Instance.SendServer(msg);
+        _mark.transform.DOScale(Vector3.one,.1f).SetEase(Ease.OutBounce).OnComplete(()=> onCellSelected?.Invoke());
+        //invoke event that this cell is clicked
+        
     }
 
 }
+
+//actions dont need to be declared before making a pointer
+//events delegates have to be called within the class... normal delegate can be called any where
+//so event delegates have to managed their own invoktion but subscribers can still subscribe to them they just can fire them
+//public event OnCellSelected onCellSelected;
+//public delegate void OnCellSelected();
+//public static event Action<Net_OnAuthFail> OnAuthFail;

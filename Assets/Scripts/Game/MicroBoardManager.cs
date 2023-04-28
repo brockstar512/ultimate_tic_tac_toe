@@ -6,7 +6,8 @@ using static Enums;
 
 public class MicroBoardManager : MonoBehaviour
 {
- 
+
+
     public MarkType[,] Grid { get; private set; }
     private const int GRID_SIZE = 3;
     private Button _button;
@@ -14,6 +15,8 @@ public class MicroBoardManager : MonoBehaviour
     private byte _row;
     private byte _col;
 
+    //when a cell is selected this read its own board to see if the user won this micro board
+    //then destroy that boards inspect controller
     public void Init(byte index)
     {
         Grid = new MarkType[GRID_SIZE, GRID_SIZE];
