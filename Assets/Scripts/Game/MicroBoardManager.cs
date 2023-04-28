@@ -16,7 +16,6 @@ public class MicroBoardManager : MonoBehaviour
     private byte _col;
     private Transform _placements;
     private Dictionary<int, Cell> _cells;
-    //public event Action<bool> retireBoard;//this might just go with markBoard
     public event Action<int, int> markBoard;
 
 
@@ -43,36 +42,32 @@ public class MicroBoardManager : MonoBehaviour
             Cell cell = _placements.GetChild(i).GetComponent<Cell>();
             cell.Init((byte)i);
             _cells.Add(i, cell);
-            cell.onCellSelected += ReadBoard;
+            //cell.onCellSelected += ReadBoard;
             cell.markCell += MarkCell;
 
         }
     }
 
-    void ReadBoard()
-    {
-
-        Debug.Log($"Here is the board we are reading {this.gameObject.name}");
-        var (isWin, lineType) = Utilities.CheckWin(_row, _col, Grid);//this should be the 
-        if (isWin)
-        {
-            _button.interactable = false;
-            Debug.Log("This board is done");
-            //invoke line controller
-            //retireBoard?.Invoke(false);
-        }
-        else
-        {
-            Debug.Log("you can keep going");
-
-        }
-    }
 
     void MarkCell(int row, int col)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
         Grid[row, col] = MarkType.X;
 
+        //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
+        var (isWin, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
+
+        if (isWin)
+        {
+            _button.interactable = false;
+            Debug.Log("This board is done");
+            //do whatever animations you need
+        }
+        else
+        {
+            Debug.Log("you can keep going");
+
+        }
         //for (int x = 0; x < 3; x++)
         //{
 
