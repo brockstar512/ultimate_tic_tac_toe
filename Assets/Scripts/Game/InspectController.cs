@@ -21,7 +21,6 @@ public class InspectController : MonoBehaviour
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
 
-    //when a cell is selected this should close and return to its normal state
 
     private void Awake()
     {

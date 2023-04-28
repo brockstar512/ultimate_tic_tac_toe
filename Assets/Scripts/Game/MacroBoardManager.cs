@@ -9,15 +9,27 @@ public class MacroBoardManager : MonoBehaviour
 
     public MarkType[,] Grid { get; private set; }
     private const int GRID_SIZE = 3;
+    private Dictionary<int, MicroBoardManager> _boards;
 
-    void Awake()
+    private void Awake()
     {
+        Grid = new MarkType[GRID_SIZE, GRID_SIZE];
+        InitializeMacroBoard();
     }
 
     void InitializeMacroBoard()
     {
         Grid = new MarkType[GRID_SIZE, GRID_SIZE];
 
+        _boards = new Dictionary<int, MicroBoardManager>();
+
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            MicroBoardManager board = this.transform.GetChild(i).GetComponent<MicroBoardManager>();
+            board.Init((byte)i);
+            _boards.Add(i, board);
+        }
+        
     }
 
 }

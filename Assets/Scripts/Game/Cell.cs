@@ -14,10 +14,6 @@ public class Cell : MonoBehaviour
     private byte _col;
     public event Action onCellSelected;
 
-    private void Awake()
-    {
-        Init(0);
-    }
     public void Init(byte index)
     {
         _mark = this.transform.GetChild(0).GetComponent<Image>();
@@ -26,15 +22,23 @@ public class Cell : MonoBehaviour
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
         _button.onClick.AddListener(CellClicked);
+        this.gameObject.name = $"Cell: [{_row},{_col}]";
+
     }
 
     private void CellClicked()
     {
+
         _button.interactable = false;
         _mark.enabled = true;
-        _mark.transform.DOScale(Vector3.one,.1f).SetEase(Ease.OutBounce).OnComplete(()=> onCellSelected?.Invoke());
+        Vector3 size = new Vector3(.90f, .90f, .90f);
+        _mark.transform.DOScale(size, .05f).SetEase(Ease.OutBounce).OnComplete(()=> onCellSelected?.Invoke());
         //invoke event that this cell is clicked
-        
+    }
+
+    private void OnDestroy()
+    {
+        _button.onClick.RemoveAllListeners();
     }
 
 }
@@ -45,3 +49,5 @@ public class Cell : MonoBehaviour
 //public event OnCellSelected onCellSelected;
 //public delegate void OnCellSelected();
 //public static event Action<Net_OnAuthFail> OnAuthFail;
+//_img.transform.DOScale(.90f,.05f).SetEase(Ease.OutBounce);
+
