@@ -18,17 +18,16 @@ public class InspectController : MonoBehaviour
     RectTransform origin;
     RectTransform target;
     Button _resetButton;
-    CanvasGroup _canvasGroup;
-    Transform _placements;//wrong
+    CanvasGroup _resetCanvasGroup;
+    [SerializeField]CanvasGroup _placements;
 
     private void Awake()
     {
         origin = this.GetComponent<RectTransform>();
         target = GameObject.FindWithTag("MainBoard").GetComponent<RectTransform>();
         _resetButton = GameObject.FindWithTag("ResetButton").GetComponent<Button>();
-        _placements = GameObject.FindWithTag("Placements").transform;
-        _canvasGroup = _resetButton.GetComponent<CanvasGroup>();
-        _canvasGroup.alpha = 0;
+        _resetCanvasGroup = _resetButton.GetComponent<CanvasGroup>();
+        _resetCanvasGroup.alpha = 0;
         _button = GetComponent<Button>();
         originMarkMax = origin.anchorMax;
         originMarkMin = origin.anchorMin;
@@ -48,13 +47,13 @@ public class InspectController : MonoBehaviour
         this.GetComponent<RectTransform>().DOAnchorMin(targetMarkMin, speed).SetEase(Ease.InOutSine);
         HandleMarks(true);
         _resetButton.onClick.AddListener(Return);
-        _canvasGroup.DOFade(1, speed);
+        _resetCanvasGroup.DOFade(1, speed);
     }
 
     void Return()
     {
         Debug.Log("Return");
-        _canvasGroup.DOFade(0, speed);
+        _resetCanvasGroup.DOFade(0, speed);
         _resetButton.onClick.RemoveAllListeners();
         _button.enabled = true;
         this.GetComponent<RectTransform>().DOAnchorMax(originMarkMax, speed).SetEase(Ease.InOutSine);
@@ -66,9 +65,10 @@ public class InspectController : MonoBehaviour
 
     void HandleMarks(bool isEnabled)
     {
-        for(int i = 0; i < _placements.childCount - 1; i++)
-        {
-            _placements.GetChild(i).GetComponent<Image>().enabled = isEnabled;
-        }
+        _placements.blocksRaycasts = isEnabled;
+        //for(int i = 0; i < _placements.childCount - 1; i++)
+        //{
+        //    _placements.GetChild(i).GetComponent<Image>().enabled = isEnabled;
+        //}
     }
 }
