@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WinLineHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Image line;
+    private RectTransform rt;
 
-    // Update is called once per frame
-    void Update()
+    System.Collections.IEnumerator AnimateLine()
     {
-        
+        yield return new WaitForSeconds(0.5f);
+
+        while (line.fillAmount < 1f)
+        {
+            line.fillAmount += 2f * Time.deltaTime;
+            yield return null;
+        }
     }
 }
