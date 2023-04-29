@@ -27,6 +27,28 @@ public class MacroBoardManager : MonoBehaviour
             MicroBoardManager board = this.transform.GetChild(i).GetComponent<MicroBoardManager>();
             board.Init((byte)i);
             _boards.Add(i, board);
+            board.markBoard += MarkBoard;
+        }
+    }
+
+    void MarkBoard(int row, int col)
+    {
+        //Debug.Log($"Marking cell for grid {gameObject.name}");
+        Grid[row, col] = MarkType.X;
+
+        //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
+        var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid);//this should be the 
+
+        if (isOver)
+        {
+            //_boards.interactable = false;
+            Debug.Log("Game is over");
+            //do whatever animations you need
+        }
+        else
+        {
+            Debug.Log("you can keep going");
+
         }
     }
 }

@@ -61,6 +61,7 @@ public class MicroBoardManager : MonoBehaviour
         {
             _button.interactable = false;
             Debug.Log("This board is done");
+            markBoard?.Invoke(_row, _col);
             //do whatever animations you need
         }
         else
@@ -68,20 +69,7 @@ public class MicroBoardManager : MonoBehaviour
             Debug.Log("you can keep going");
 
         }
-        //for (int x = 0; x < 3; x++)
-        //{
 
-        //    for (int y = 0; y < 3; y++)
-        //    {
-
-        //        //Acces the array like this
-
-        //        Debug.Log($" here is what is at the matrix  {Grid[x, y]}");
-
-
-
-        //    }
-        //}
     }
 
 
