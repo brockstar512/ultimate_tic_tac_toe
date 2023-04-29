@@ -6,35 +6,37 @@ using UnityEngine.UI;
 
 public class WinLineHandler : MonoBehaviour
 {
-    [SerializeField] Image line;
-    [SerializeField] RectTransform rt;
-    LineConfig lineConfig;
+    Image line;
+    [SerializeField] Transform LeftVerticalLine;
+    [SerializeField] Transform MiddleVerticalLine;
+    [SerializeField] Transform RightVerticalLine;
+    [SerializeField] Transform TopHorizontalLine;
+    [SerializeField] Transform HorizontalLine;
+    [SerializeField] Transform BottomHorizontalLine;
+    [SerializeField] Transform DiagonalLine;
+    [SerializeField] Transform AntiDiagonalLine;
+    const float _speed = 2f;
 
-    void Awake()
+
+    private void Awake()
     {
-        lineConfig = GetComponent<LineConfig>();
-        PositionLine();
+        ConfigLine();
     }
 
-    void PositionLine()
+    void ConfigLine()
     {
-        var (one, two) = lineConfig.GetBothRect();
-        //position it needs to go
-        //Vector3 relativePos = 
-        lineConfig.GetLength(one, two, rt);
-        //size to reach distance
-        //rt.sizeDelta = relativePos;
-        //rotation to point to it
-        //rt.rotation = lineConfig.GetRotation(relativePos);
+        line = Instantiate(BottomHorizontalLine, this.transform).GetComponent<Image>();
+        StopCoroutine(AnimateLine());
+        StartCoroutine(AnimateLine());
     }
 
-    System.Collections.IEnumerator AnimateLine()
+    IEnumerator AnimateLine()
     {
         yield return new WaitForSeconds(0.5f);
 
         while (line.fillAmount < 1f)
         {
-            line.fillAmount += 2f * Time.deltaTime;
+            line.fillAmount += _speed * Time.deltaTime;
             yield return null;
         }
     }
