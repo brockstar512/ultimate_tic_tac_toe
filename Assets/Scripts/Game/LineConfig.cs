@@ -7,7 +7,7 @@ using static Enums;
 public class LineConfig : MonoBehaviour
 {
     public AngleType angleType;
-    RectTransform holder;
+    public RectTransform holder;
     RectTransform me;
 
     private void Awake()
