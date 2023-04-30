@@ -3,24 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Enums;
-using static UnityEngine.GraphicsBuffer;
 
 public class LineConfig : MonoBehaviour
 {
-    [SerializeField] RectTransform holder;
-    [SerializeField] RectTransform me;
+    public AngleType angleType;
+    RectTransform holder;
+    RectTransform me;
+
     private void Awake()
     {
-        Debug.Log(holder.rect.yMax);
-        Debug.Log(holder.rect.xMax);
-        float val = (holder.rect.xMax- holder.rect.yMax);
-        Debug.Log(me.rect.width);//base
-        Debug.Log(me.rect.height);//height
-        float hyp = (float)Math.Sqrt(holder.rect.width * holder.rect.width + holder.rect.height * holder.rect.height);
-        Debug.Log(hyp);//length//yes
-        //float arc = Mathf.Asin((hyp / holder.rect.height)); //Atan2(float y, float x)
-        float arc = Mathf.Atan2(holder.rect.width, holder.rect.height);
-        Debug.Log(arc * Mathf.Rad2Deg);//yes
+        holder = this.transform.parent.GetComponent<RectTransform>();
+        me = this.transform.GetComponent<RectTransform>();
+        float hypotenuse = (float)Math.Sqrt(holder.rect.width * holder.rect.width + holder.rect.height * holder.rect.height);
+        Debug.Log(hypotenuse);//length//yes
+        float angle = Mathf.Atan2(holder.rect.width, holder.rect.height) * Mathf.Rad2Deg;
+        Debug.Log(angle);//yes
+        me.rotation = Quaternion.Euler(0f, 0f, (int)angleType* angle); ;
+        me.sizeDelta = new Vector2(me.sizeDelta.x, hypotenuse);
     }
 }
 

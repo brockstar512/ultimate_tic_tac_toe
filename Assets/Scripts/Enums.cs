@@ -23,4 +23,10 @@ public class Enums : MonoBehaviour
         RowMiddle,
         RowBottom,
     }
+
+    public enum AngleType
+    {
+        Diagonal = -1,
+        AntiDiagonal = 1,
+    }
 }

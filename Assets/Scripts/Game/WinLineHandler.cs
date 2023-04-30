@@ -20,12 +20,12 @@ public class WinLineHandler : MonoBehaviour
 
     private void Awake()
     {
-        //ConfigLine();
+        ConfigLine();
     }
 
     void ConfigLine()
     {
-        line = Instantiate(BottomHorizontalLine, this.transform).GetComponent<Image>();
+        line = Instantiate(DiagonalLine, this.transform).GetComponent<Image>();
         StopCoroutine(AnimateLine());
         StartCoroutine(AnimateLine());
     }
