@@ -21,7 +21,6 @@ public class WinLineHandler : MonoBehaviour
 
     private void Awake()
     {
-        //ConfigLine();
         MacroBoardManager.winLine += ConfigLine;
         RoundOverManager.reset += Reset;
     }
@@ -29,7 +28,6 @@ public class WinLineHandler : MonoBehaviour
     void ConfigLine(WinLineType WinLineType)
     {
         Transform prefab = GetLine(WinLineType);
-
         line = Instantiate(prefab, this.transform).GetComponent<Image>();
         StopCoroutine(AnimateLine());
         StartCoroutine(AnimateLine());

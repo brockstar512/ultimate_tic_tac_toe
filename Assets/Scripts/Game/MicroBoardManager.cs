@@ -20,6 +20,7 @@ public class MicroBoardManager : MonoBehaviour
     CanvasGroup cg;
     private Dictionary<int, Cell> _cells;
     public event Action<int, int> markBoard;
+    public event Action onCellSelected;
     private Image _mark;
 
 
@@ -62,28 +63,42 @@ public class MicroBoardManager : MonoBehaviour
         Grid[row, col] = MarkType.X;
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
-        var (isWin, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
+        var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
 
-        if (isWin)
+        if (isDone)
         {
-            //_button.interactable = false;
+            StopCoroutine(ResetView(.25f));
+            StartCoroutine(ResetView(.25f));
+
+            for(int i = 0; i < _cells.Count; i++)
+            {
+                _cells[i].Reset();
+            }
+
             cg.blocksRaycasts = false;
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col);
             Vector3 size = new Vector3(.90f, .90f, .90f);
             _mark.enabled = true;
-            _mark.transform.DOScale(size, .75f).SetEase(Ease.OutElastic);
+            _mark.transform.DOScale(size, .15f);
             //do whatever animations you need
             
         }
         else
         {
             Debug.Log("you can keep going");//switch turns
+            StopCoroutine(ResetView(.1f));
+            StartCoroutine(ResetView(.1f));
 
         }
 
     }
-
+    IEnumerator ResetView(float pause)
+    {
+        yield return new WaitForSeconds(pause);
+        onCellSelected?.Invoke();
+        yield return null;
+    }
 
     private void Reset()
     {
@@ -93,7 +108,6 @@ public class MicroBoardManager : MonoBehaviour
         {
             for (int row = 0; row < Grid.GetLength(1); row++)
             {
-                _cells = new Dictionary<int, Cell>();
                 Grid[row, col] = MarkType.None;
             }
         }
@@ -105,6 +119,7 @@ public class MicroBoardManager : MonoBehaviour
     private void OnDestroy()
     {
         markBoard = null;
+        onCellSelected = null;
         RoundOverManager.reset -= Reset;
     }
 

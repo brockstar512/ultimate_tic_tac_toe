@@ -83,10 +83,10 @@ public class InspectController : MonoBehaviour
         {
             switch (subscribe) {
                 case true:
-                    _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected += Return;
+                    this.GetComponent<MicroBoardManager>().onCellSelected += Return;
                     break;
                 case false:
-                    _placements.transform.GetChild(i).GetComponent<Cell>().onCellSelected -= Return;
+                    this.GetComponent<MicroBoardManager>().onCellSelected -= Return;
                     break;
             }
         }
