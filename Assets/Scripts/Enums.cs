@@ -26,7 +26,8 @@ public class Enums : MonoBehaviour
 
     public enum AngleType
     {
-        Diagonal = -1,
-        AntiDiagonal = 1,
+        
+        AntiDiagonal = -1,
+        Diagonal = 1,
     }
 }

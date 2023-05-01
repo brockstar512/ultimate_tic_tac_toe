@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class MacroBoardManager : MonoBehaviour
 
     public MarkType[,] Grid { get; private set; }
     private Dictionary<int, MicroBoardManager> _boards;
+    public static event Action<WinLineType> winLine;
 
     private void Awake()
     {
@@ -37,13 +39,14 @@ public class MacroBoardManager : MonoBehaviour
         Grid[row, col] = MarkType.X;
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
-        var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid);//this should be the 
+        var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid); 
 
         if (isOver)
         {
             //_boards.interactable = false;
-            Debug.Log("Game is over");
+            Debug.Log($"Game is over");
             //do whatever animations you need
+            winLine?.Invoke(lineType);
         }
         else
         {

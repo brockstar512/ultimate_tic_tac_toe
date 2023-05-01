@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using static Enums;
 
 public class WinLineHandler : MonoBehaviour
 {
@@ -20,14 +21,53 @@ public class WinLineHandler : MonoBehaviour
 
     private void Awake()
     {
-        ConfigLine();
+        //ConfigLine();
+        MacroBoardManager.winLine += ConfigLine;
     }
 
-    void ConfigLine()
+    void ConfigLine(WinLineType WinLineType)
     {
-        line = Instantiate(DiagonalLine, this.transform).GetComponent<Image>();
+        Transform prefab = GetLine(WinLineType);
+
+        line = Instantiate(prefab, this.transform).GetComponent<Image>();
         StopCoroutine(AnimateLine());
         StartCoroutine(AnimateLine());
+    }
+
+    private Transform GetLine(WinLineType WinLineType)
+    {
+        Transform line = null;
+        switch (WinLineType)
+        {
+            case WinLineType.Diagonal:
+                line = DiagonalLine;
+                break;
+            case WinLineType.AntiDiagonal:
+                line = AntiDiagonalLine;
+                break;
+            case WinLineType.RowBottom:
+                line = BottomHorizontalLine;
+                break;
+            case WinLineType.RowMiddle:
+                line = HorizontalLine;
+                break;
+            case WinLineType.RowTop:
+                line = TopHorizontalLine;
+                break;
+            case WinLineType.ColLeft:
+                line = LeftVerticalLine;
+                break;
+            case WinLineType.ColMid:
+                line = MiddleVerticalLine;
+                break;
+            case WinLineType.ColRight:
+                line = RightVerticalLine;
+                break;
+            default:
+                line = RightVerticalLine;
+                break;
+        }
+        return line;
     }
 
     IEnumerator AnimateLine()
@@ -39,5 +79,10 @@ public class WinLineHandler : MonoBehaviour
             line.fillAmount += _speed * Time.deltaTime;
             yield return null;
         }
+    }
+
+    private void Reset()
+    {
+        
     }
 }

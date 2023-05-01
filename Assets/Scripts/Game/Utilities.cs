@@ -11,6 +11,7 @@ public static class Utilities
     //row and col are currently the mico board
     public static (bool isWin, WinLineType lineType) CheckWin(byte row, byte col, MarkType[,] Grid)
     {
+        
         //get the type we are checking for
         var type = Grid[row, col];
 
