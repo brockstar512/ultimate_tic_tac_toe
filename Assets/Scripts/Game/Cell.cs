@@ -39,7 +39,7 @@ public class Cell : MonoBehaviour
         _mark.enabled = true;
         Vector3 size = new Vector3(.90f, .90f, .90f);
         markCell?.Invoke(_row,_col);
-        _mark.transform.DOScale(size, .05f).SetEase(Ease.OutBounce).OnComplete(()=> onCellSelected?.Invoke());
+        _mark.transform.DOScale(size, .15f).SetEase(Ease.OutElastic).OnComplete(()=> onCellSelected?.Invoke());
         //invoke event that this cell is clicked
     }
 
@@ -47,8 +47,8 @@ public class Cell : MonoBehaviour
     {
         _button.interactable = true;
         //_mark.enabled = false;
-        Vector3 size = new Vector3(.75f, .75f, .75f);
-        _mark.transform.DOScale(size, .05f).SetEase(Ease.InBounce).OnComplete(() => { _mark.enabled = false; });
+        Vector3 size = new Vector3(.25f, .25f, .25f);
+        _mark.transform.DOScale(size, .15f).SetEase(Ease.InElastic).OnComplete(() => { _mark.enabled = false; });
     }
 
     private void OnDestroy()

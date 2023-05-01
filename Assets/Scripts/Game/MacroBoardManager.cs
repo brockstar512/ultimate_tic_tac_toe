@@ -9,11 +9,13 @@ public class MacroBoardManager : MonoBehaviour
     //when a micro board is finished this should read the whole boards
 
     public MarkType[,] Grid { get; private set; }
+    CanvasGroup cg;
     private Dictionary<int, MicroBoardManager> _boards;
     public static event Action<WinLineType> winLine;
 
     private void Awake()
     {
+        cg = GetComponent<CanvasGroup>();
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
         InitializeMacroBoard();
         RoundOverManager.reset += Reset;
@@ -48,6 +50,7 @@ public class MacroBoardManager : MonoBehaviour
             Debug.Log($"Game is over");
             //do whatever animations you need
             winLine?.Invoke(lineType);
+            cg.blocksRaycasts = false;
         }
         else
         {
@@ -67,6 +70,8 @@ public class MacroBoardManager : MonoBehaviour
                 Grid[row, col] = MarkType.None;
             }
         }
+        cg.blocksRaycasts = true;
+
     }
 
 

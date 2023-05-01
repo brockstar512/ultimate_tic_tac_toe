@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
 using System;
+using DG.Tweening;
+using System.Drawing;
 
 public class MicroBoardManager : MonoBehaviour
 {
@@ -15,15 +17,19 @@ public class MicroBoardManager : MonoBehaviour
     private byte _row;
     private byte _col;
     private Transform _placements;
+    CanvasGroup cg;
     private Dictionary<int, Cell> _cells;
     public event Action<int, int> markBoard;
+    private Image _mark;
 
 
     //when a cell is selected this read its own board to see if the user won this micro board
     //then destroy that boards inspect controller
     public void Init(byte index)
     {
+        cg = GetComponent<CanvasGroup>();
         _placements = this.transform.GetChild(1).GetComponent<Transform>();
+        _mark = this.transform.GetChild(2).GetComponent<Image>();
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
         _index = index;
         _button = GetComponent<Button>();
@@ -60,9 +66,13 @@ public class MicroBoardManager : MonoBehaviour
 
         if (isWin)
         {
-            _button.interactable = false;
+            //_button.interactable = false;
+            cg.blocksRaycasts = false;
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col);
+            Vector3 size = new Vector3(.90f, .90f, .90f);
+            _mark.enabled = true;
+            _mark.transform.DOScale(size, .75f).SetEase(Ease.OutElastic);
             //do whatever animations you need
         }
         else
@@ -76,7 +86,8 @@ public class MicroBoardManager : MonoBehaviour
 
     private void Reset()
     {
-        _button.interactable = true;
+        //_button.interactable = true;
+        cg.blocksRaycasts = true;
         for (int col = 0; col < Grid.GetLength(0); col++)
         {
             for (int row = 0; row < Grid.GetLength(1); row++)
@@ -85,6 +96,9 @@ public class MicroBoardManager : MonoBehaviour
                 Grid[row, col] = MarkType.None;
             }
         }
+        Vector3 size = new Vector3(.25f, .25f, .25f);
+        
+        _mark.transform.DOScale(size, .75f).SetEase(Ease.InElastic).OnComplete(()=> _mark.enabled = false);
     }
 
     private void OnDestroy()
