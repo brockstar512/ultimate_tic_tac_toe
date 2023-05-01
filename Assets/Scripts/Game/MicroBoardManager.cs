@@ -66,7 +66,7 @@ public class MicroBoardManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("you can keep going");
+            Debug.Log("you can keep going");//switch turns
 
         }
 
