@@ -74,6 +74,7 @@ public class MicroBoardManager : MonoBehaviour
             _mark.enabled = true;
             _mark.transform.DOScale(size, .75f).SetEase(Ease.OutElastic);
             //do whatever animations you need
+            
         }
         else
         {
