@@ -26425,13 +26425,14 @@ GameObject:
   - component: {fileID: 8893339851494355659}
   - component: {fileID: 8893339851494355652}
   - component: {fileID: 8893339851494355658}
+  - component: {fileID: 8893339851494355660}
   m_Layer: 5
   m_Name: EndRound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!225 &8893339851494355658
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -26440,7 +26441,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8893339851494355654}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -26452,6 +26453,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8893339851494355654}
   m_CullTransparentMesh: 1
+--- !u!114 &8893339851494355660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339851494355654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5823b0af32d504c869d52ca07620a3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playAgainButton: {fileID: 8893339851254705756}
+  _quitButton: {fileID: 8893339850204344551}
+  _acceptButton: {fileID: 8893339851609687310}
 --- !u!1 &8893339851609687304
 GameObject:
   m_ObjectHideFlags: 0

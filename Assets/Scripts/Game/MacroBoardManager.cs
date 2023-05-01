@@ -16,6 +16,7 @@ public class MacroBoardManager : MonoBehaviour
     {
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
         InitializeMacroBoard();
+        RoundOverManager.reset += Reset;
     }
 
     void InitializeMacroBoard()
@@ -53,5 +54,24 @@ public class MacroBoardManager : MonoBehaviour
             Debug.Log("you can keep going");
 
         }
+    }
+
+
+    private void Reset()
+    {
+        for (int col = 0; col < Grid.GetLength(0); col++)
+        {
+            for (int row = 0; row < Grid.GetLength(1); row++)
+            {
+                _boards = new Dictionary<int, MicroBoardManager>();
+                Grid[row, col] = MarkType.None;
+            }
+        }
+    }
+
+
+    private void OnDestroy()
+    {
+        RoundOverManager.reset -= Reset;
     }
 }

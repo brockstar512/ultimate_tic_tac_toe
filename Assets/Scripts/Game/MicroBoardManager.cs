@@ -30,6 +30,7 @@ public class MicroBoardManager : MonoBehaviour
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
         InitializeMicroBoard();
+        RoundOverManager.reset += Reset;
     }
 
     void InitializeMicroBoard()
@@ -73,10 +74,28 @@ public class MicroBoardManager : MonoBehaviour
     }
 
 
+    private void Reset()
+    {
+        _button.interactable = true;
+        for (int col = 0; col < Grid.GetLength(0); col++)
+        {
+            for (int row = 0; row < Grid.GetLength(1); row++)
+            {
+                _cells = new Dictionary<int, Cell>();
+                Grid[row, col] = MarkType.None;
+            }
+        }
+    }
 
-    //void UpdateBoard(Net_OnMarkCell msg)
-    //{
-    //    _cells[msg.Index].UpdateUI(msg.Actor);
-    //}
+    private void OnDestroy()
+    {
+        markBoard = null;
+        RoundOverManager.reset -= Reset;
+    }
+
 
 }
+//void UpdateBoard(Net_OnMarkCell msg)
+//{
+//    _cells[msg.Index].UpdateUI(msg.Actor);
+//}

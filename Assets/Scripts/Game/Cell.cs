@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using static Enums;
 
 public class Cell : MonoBehaviour
 {
@@ -25,6 +27,8 @@ public class Cell : MonoBehaviour
         _col = (byte)(index % 3);
         _button.onClick.AddListener(CellClicked);
         this.gameObject.name = $"Cell: [{_row},{_col}]";
+        RoundOverManager.reset += Reset;
+
 
     }
 
@@ -39,10 +43,19 @@ public class Cell : MonoBehaviour
         //invoke event that this cell is clicked
     }
 
+    private void Reset()
+    {
+        _button.interactable = true;
+        //_mark.enabled = false;
+        Vector3 size = new Vector3(.75f, .75f, .75f);
+        _mark.transform.DOScale(size, .05f).SetEase(Ease.InBounce).OnComplete(() => { _mark.enabled = false; });
+    }
+
     private void OnDestroy()
     {
         _button.onClick.RemoveAllListeners();
         onCellSelected = null;
+        markCell = null;
     }
 
 }

@@ -23,6 +23,7 @@ public class WinLineHandler : MonoBehaviour
     {
         //ConfigLine();
         MacroBoardManager.winLine += ConfigLine;
+        RoundOverManager.reset += Reset;
     }
 
     void ConfigLine(WinLineType WinLineType)
@@ -81,8 +82,13 @@ public class WinLineHandler : MonoBehaviour
         }
     }
 
-    private void Reset()
+    void Reset()
     {
-        
+        Destroy(line.gameObject);
+    }
+    private void OnDestroy()
+    {
+        MacroBoardManager.winLine -= ConfigLine;
+        RoundOverManager.reset -= Reset;
     }
 }
