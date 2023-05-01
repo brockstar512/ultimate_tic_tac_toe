@@ -20,7 +20,7 @@ public class WinLineHandler : MonoBehaviour
 
     private void Awake()
     {
-        //ConfigLine();
+        ConfigLine();
     }
 
     void ConfigLine()

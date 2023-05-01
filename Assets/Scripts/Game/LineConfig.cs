@@ -12,7 +12,7 @@ public class LineConfig : MonoBehaviour
     RectTransform me;
 
 
-    private void Awake()
+    private void Start()
     {
         holder = this.transform.parent.GetComponent<RectTransform>();
         me = this.transform.GetComponent<RectTransform>();
