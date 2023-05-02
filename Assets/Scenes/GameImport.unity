@@ -2142,7 +2142,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8893339850090025466}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.018325906, y: 0.22972564}
   m_AnchorMax: {x: 0.9814168, y: 0.773677}
@@ -23855,8 +23855,8 @@ RectTransform:
   - {fileID: 878565396}
   - {fileID: 8893339851275244666}
   - {fileID: 8893339851922475600}
-  - {fileID: 8893339851494355653}
   - {fileID: 175857939}
+  - {fileID: 8893339851494355653}
   m_Father: {fileID: 8893339850633084539}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26920,7 +26920,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: YOU WIN!
+  m_text: ROUND WON!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
   m_sharedMaterial: {fileID: -5778827652079343894, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
@@ -26947,8 +26947,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 75
+  m_fontSizeBase: 75
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -27229,7 +27229,7 @@ RectTransform:
   - {fileID: 8893339851302676180}
   - {fileID: 8893339851832793514}
   m_Father: {fileID: 8893339850090025466}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

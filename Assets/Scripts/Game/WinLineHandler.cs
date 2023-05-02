@@ -4,7 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
-
+using System;
 public class WinLineHandler : MonoBehaviour
 {
     Image line;
@@ -17,7 +17,7 @@ public class WinLineHandler : MonoBehaviour
     [SerializeField] Transform DiagonalLine;
     [SerializeField] Transform AntiDiagonalLine;
     const float _speed = 2f;
-
+    public static event Action roundOver;
 
     private void Awake()
     {
@@ -78,12 +78,21 @@ public class WinLineHandler : MonoBehaviour
             line.fillAmount += _speed * Time.deltaTime;
             yield return null;
         }
+        yield return new WaitForSeconds(.5f);
+        roundOver?.Invoke();
+
     }
 
     void Reset()
     {
         Destroy(line.gameObject);
     }
+
+    //IEnumerator InitializePrompt()
+    //{
+    //    roundOver?.Invoke();
+    //    yield return null;
+    //}
     private void OnDestroy()
     {
         MacroBoardManager.winLine -= ConfigLine;

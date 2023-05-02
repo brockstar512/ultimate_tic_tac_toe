@@ -42,14 +42,15 @@ public class MacroBoardManager : MonoBehaviour
         Grid[row, col] = MarkType.X;
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
-        var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid); 
+        var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid);
+        Debug.Log($"Line Type: {lineType}");
 
         if (isOver)
         {
             //_boards.interactable = false;
             Debug.Log($"Game is over");
             //do whatever animations you need
-            winLine?.Invoke(lineType);
+            winLine?.Invoke(lineType);//this can be outisde to indicate draw or not
             cg.blocksRaycasts = false;
         }
         else
