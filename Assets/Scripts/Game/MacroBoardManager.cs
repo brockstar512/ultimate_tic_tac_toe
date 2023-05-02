@@ -40,6 +40,7 @@ public class MacroBoardManager : MonoBehaviour
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
         Grid[row, col] = MarkType.X;
+        //GameManager.Instance.ActiveGame.GetPlayerType(actor);
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid);

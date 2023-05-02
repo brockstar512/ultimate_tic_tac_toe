@@ -88,14 +88,11 @@ public class WinLineHandler : MonoBehaviour
         Destroy(line.gameObject);
     }
 
-    //IEnumerator InitializePrompt()
-    //{
-    //    roundOver?.Invoke();
-    //    yield return null;
-    //}
+
     private void OnDestroy()
     {
         MacroBoardManager.winLine -= ConfigLine;
         RoundOverManager.reset -= Reset;
+        roundOver = null;
     }
 }

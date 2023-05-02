@@ -10,7 +10,6 @@ using System.Drawing;
 public class MicroBoardManager : MonoBehaviour
 {
 
-
     public MarkType[,] Grid { get; private set; }
     private Button _button;
     private byte _index;
@@ -56,7 +55,6 @@ public class MicroBoardManager : MonoBehaviour
         }
     }
 
-
     void MarkCell(int row, int col)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
@@ -79,6 +77,7 @@ public class MicroBoardManager : MonoBehaviour
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col);
             Vector3 size = new Vector3(.90f, .90f, .90f);
+            _mark.color = GameManager.Instance.GetColor;
             _mark.enabled = true;
             _mark.transform.DOScale(size, .15f);
             //do whatever animations you need
@@ -93,6 +92,7 @@ public class MicroBoardManager : MonoBehaviour
         }
 
     }
+
     IEnumerator ResetView(float pause)
     {
         yield return new WaitForSeconds(pause);

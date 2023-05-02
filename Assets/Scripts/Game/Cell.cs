@@ -34,7 +34,7 @@ public class Cell : MonoBehaviour
 
     private void CellClicked()
     {
-
+        _mark.color = GameManager.Instance.GetColor;
         _button.interactable = false;
         _mark.enabled = true;
         Vector3 size = new Vector3(.90f, .90f, .90f);
