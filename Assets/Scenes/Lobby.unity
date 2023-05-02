@@ -1654,7 +1654,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Menu
+  m_text: <size=100>Tick Tock Toe<size=75><br><i>Ultimate</i>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
   m_sharedMaterial: {fileID: -5778827652079343894, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
@@ -1681,8 +1681,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 75
+  m_fontSizeBase: 75
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1738,10 +1738,10 @@ RectTransform:
   m_Father: {fileID: 6230386772513930348}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &6230386771313837180
 GameObject:
@@ -4697,10 +4697,10 @@ RectTransform:
   m_Father: {fileID: 6230386772230102314}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0.8610881}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &6230386772513930349
 GameObject:
