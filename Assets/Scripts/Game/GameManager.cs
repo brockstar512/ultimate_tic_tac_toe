@@ -1,12 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static Enums;
+
 
 public class GameManager : MonoBehaviour
 {
+
+    private const int MaxPlayers = 2;
+    [SerializeField] Button joinButton;
+    [SerializeField] Button hostButton;
+
     public static GameManager Instance { get; private set; }
     public MarkType MyType { get; set; }
     public MarkType OpponentType { get; set; }
@@ -57,10 +65,14 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
         MyType = MarkType.X;
+        joinButton.onClick.AddListener(StartJoin);
+        hostButton.onClick.AddListener(StartHost);
+
     }
 
     public void RegisterGame(Guid gameId, string xUser, string oUser)
     {
+        Debug.Log("Starting new game");
         ActiveGame = new Game
         {
             Id = gameId,
@@ -87,7 +99,39 @@ public class GameManager : MonoBehaviour
         InputsEnabled = true;
 
     }
+    public void Start()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
+        {
+            Debug.Log($"ClientID {clienId} has joined");
+            if(NetworkManager.Singleton.IsHost && NetworkManager.Singleton.ConnectedClients.Count == 2)
+            {
+                Debug.Log("Start Game");
+                Guid Id = Guid.NewGuid();
+                RegisterGame(Id, NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
+            }
+        };
+    }
 
+    public void StartHost()
+    {
+        hostButton.interactable = false;
+
+        NetworkManager.Singleton.StartHost();
+    }
+    public void StartJoin()
+    {
+        joinButton.interactable = false;
+
+        NetworkManager.Singleton.StartClient();
+
+    }
+
+    private void OnDestroy()
+    {
+        joinButton.onClick.RemoveAllListeners();
+        hostButton.onClick.RemoveAllListeners();
+    }
     public class Game
     {
         public Guid? Id { get; set; }
