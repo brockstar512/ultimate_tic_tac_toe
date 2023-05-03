@@ -70,6 +70,20 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void Start()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
+        {
+            Debug.Log($"ClientID {clienId} has joined");
+            if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 2)
+            {
+                Debug.Log("Start Game");
+                Guid Id = Guid.NewGuid();
+                RegisterGame(Id, NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
+            }
+        };
+    }
+
     public void RegisterGame(Guid gameId, string xUser, string oUser)
     {
         Debug.Log("Starting new game");
@@ -99,19 +113,7 @@ public class GameManager : MonoBehaviour
         InputsEnabled = true;
 
     }
-    public void Start()
-    {
-        NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
-        {
-            Debug.Log($"ClientID {clienId} has joined");
-            if(NetworkManager.Singleton.IsHost && NetworkManager.Singleton.ConnectedClients.Count == 2)
-            {
-                Debug.Log("Start Game");
-                Guid Id = Guid.NewGuid();
-                RegisterGame(Id, NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
-            }
-        };
-    }
+
 
     public void StartHost()
     {
