@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using DG.Tweening;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
@@ -14,26 +16,35 @@ public class Cell : MonoBehaviour
     private byte _index;
     private byte _row;
     private byte _col;
+    private byte _board;
     //public event Action onCellSelected;
     public event Action<int,int> markCell;
 
-
-    public void Init(byte index)
+    public void Init(byte index, byte boardNumber)
     {
+        _board = boardNumber;
         _mark = this.transform.GetChild(0).GetComponent<Image>();
         _index = index;
         _button = GetComponent<Button>();
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
-        _button.onClick.AddListener(CellClicked);
-        this.gameObject.name = $"Cell: [{_row},{_col}]";
+        _button.onClick.AddListener(CellClickedClientRpc);
+        this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;
 
 
     }
 
-    private void CellClicked()
+    [ClientRpc]
+    private void CellClickedClientRpc()
     {
+        //Debug.Log($"cell clicked by {GameManager.Instance.ActiveGame.CurrentUser}");
+        Debug.Log($"cell local client id {NetworkManager.Singleton.LocalClientId.ToString()}");
+        Debug.Log(GameManager.Instance.InputsEnabled);
+        //active game is probably the one that is null
+        if (GameManager.Instance.ActiveGame.CurrentUser != NetworkManager.Singleton.LocalClientId.ToString())
+            return;
+
         _mark.color = GameManager.Instance.GetColor;
         _button.interactable = false;
         _mark.enabled = true;
@@ -53,12 +64,12 @@ public class Cell : MonoBehaviour
         _mark.transform.DOScale(size, .15f).SetEase(Ease.InElastic).OnComplete(() => { _mark.enabled = false; });
     }
 
-    private void OnDestroy()
-    {
-        _button.onClick.RemoveAllListeners();
+    //private void OnDestroy()
+    //{
+    //    _button.onClick.RemoveAllListeners();
         
-        markCell = null;
-    }
+    //    markCell = null;
+    //}
 
 }
 

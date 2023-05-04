@@ -47,7 +47,7 @@ public class MicroBoardManager : MonoBehaviour
         for (int i = 0; i < _placements.childCount; i++)
         {
             Cell cell = _placements.GetChild(i).GetComponent<Cell>();
-            cell.Init((byte)i);
+            cell.Init((byte)i, _index);
             _cells.Add(i, cell);
             //cell.onCellSelected += ReadBoard;
             cell.markCell += MarkCell;

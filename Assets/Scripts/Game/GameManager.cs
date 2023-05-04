@@ -8,13 +8,8 @@ using UnityEngine.UI;
 using static Enums;
 
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
-
-    private const int MaxPlayers = 2;
-    [SerializeField] Button joinButton;
-    [SerializeField] Button hostButton;
-
     public static GameManager Instance { get; private set; }
     public MarkType MyType { get; set; }
     public MarkType OpponentType { get; set; }
@@ -64,36 +59,26 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-        MyType = MarkType.X;
-        joinButton.onClick.AddListener(StartJoin);
-        hostButton.onClick.AddListener(StartHost);
+        MyType = MarkType.X;//could be an issue
 
     }
 
-    public void Start()
+
+    public void UpdateBoard()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
-        {
-            Debug.Log($"ClientID {clienId} has joined");
-            if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 2)
-            {
-                Debug.Log("Start Game");
-                Guid Id = Guid.NewGuid();
-                RegisterGame(Id, NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
-            }
-        };
+
     }
 
-    public void RegisterGame(Guid gameId, string xUser, string oUser)
+    
+    public void RegisterGame(string xUser, string oUser)
     {
         Debug.Log("Starting new game");
         ActiveGame = new Game
         {
-            Id = gameId,
             XUser = xUser,
             OUser = oUser,
             StartTime = DateTime.Now,
-            CurrentUser = xUser,
+            CurrentUser = oUser,
             LastStarter = xUser
         };
 
@@ -111,29 +96,11 @@ public class GameManager : MonoBehaviour
 
         }
         InputsEnabled = true;
-
     }
 
 
-    public void StartHost()
-    {
-        hostButton.interactable = false;
 
-        NetworkManager.Singleton.StartHost();
-    }
-    public void StartJoin()
-    {
-        joinButton.interactable = false;
 
-        NetworkManager.Singleton.StartClient();
-
-    }
-
-    private void OnDestroy()
-    {
-        joinButton.onClick.RemoveAllListeners();
-        hostButton.onClick.RemoveAllListeners();
-    }
     public class Game
     {
         public Guid? Id { get; set; }
