@@ -4,9 +4,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConnectionHandler : NetworkBehaviour
+public class ConnectionHandler : MonoBehaviour
 {
-    [SerializeField] Transform board;
+    public Transform _board;
+    [SerializeField] Transform boardPrefab;
     [SerializeField] Transform boardHolder;
 
     private const int MaxPlayers = 2;
@@ -20,26 +21,24 @@ public class ConnectionHandler : NetworkBehaviour
 
         NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
         {
-            Debug.Log($"ClientID {clienId} has joined");//
+            Debug.Log($"ClientID {clienId} has joined");//IsServer
             if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 2)
             {
-                Debug.Log("Start Game");
-                //Guid Id = Guid.NewGuid();
                 SpawnBoard();
             }
-            //else if (NetworkManager.Singleton.ConnectedClients.Count == 2)
-            {
-                //GameManager.Instance.RegisterGame(NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
 
-            }
+            //SpawnBoard();
         };
     }
 
     void SpawnBoard()
     {
         Debug.Log("board spawn");
-        Transform _board = Instantiate(board, boardHolder);
+        //_board = Instantiate(boardPrefab, boardHolder);
+        _board = Instantiate(boardPrefab);
         _board.GetComponent<NetworkObject>().Spawn();
+        //_board.SetParent(boardHolder);
+        //_board.GetComponent<NetworkObject>().Spawn();
     }
 
     public void StartHost()

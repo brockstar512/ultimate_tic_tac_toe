@@ -554,6 +554,7 @@ GameObject:
   - component: {fileID: 1371501548}
   - component: {fileID: 1371501549}
   - component: {fileID: 1371501550}
+  - component: {fileID: 1371501551}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -604,6 +605,23 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1371501551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371501547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db755085ae1941d3a281940a40ad764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _board: {fileID: 0}
+  boardPrefab: {fileID: 5932767338475021579, guid: 915e610b81a2d4dd08e33716e3ac465a, type: 3}
+  boardHolder: {fileID: 1222102645}
+  joinButton: {fileID: 2061821861}
+  hostButton: {fileID: 1987367433}
 --- !u!1 &1600920718
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,7 +631,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1600920719}
-  - component: {fileID: 1600920721}
+  - component: {fileID: 1600920723}
   - component: {fileID: 1600920720}
   - component: {fileID: 1600920722}
   m_Layer: 0
@@ -665,7 +683,24 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
---- !u!114 &1600920721
+--- !u!114 &1600920722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600920718}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db755085ae1941d3a281940a40ad764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _board: {fileID: 0}
+  boardPrefab: {fileID: 5932767338475021579, guid: 915e610b81a2d4dd08e33716e3ac465a, type: 3}
+  boardHolder: {fileID: 1222102645}
+  joinButton: {fileID: 2061821861}
+  hostButton: {fileID: 1987367433}
+--- !u!114 &1600920723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -704,22 +739,6 @@ MonoBehaviour:
     LoadSceneTimeOut: 120
     SpawnTimeout: 1
     EnableNetworkLogs: 1
---- !u!114 &1600920722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600920718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4db755085ae1941d3a281940a40ad764, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  board: {fileID: 5932767338475021579, guid: 915e610b81a2d4dd08e33716e3ac465a, type: 3}
-  boardHolder: {fileID: 1222102645}
-  joinButton: {fileID: 2061821861}
-  hostButton: {fileID: 1987367433}
 --- !u!1 &1675426500
 GameObject:
   m_ObjectHideFlags: 0
