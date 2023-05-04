@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class ConnectionHandler : MonoBehaviour
 {
-    public Transform _board;
-    [SerializeField] Transform boardPrefab;
-    [SerializeField] Transform boardHolder;
 
     private const int MaxPlayers = 2;
     [SerializeField] Button joinButton;
@@ -24,22 +21,16 @@ public class ConnectionHandler : MonoBehaviour
             Debug.Log($"ClientID {clienId} has joined");//IsServer
             if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 2)
             {
-                SpawnBoard();
+                //SpawnBoard();
+                //register game
+                Debug.Log($"Register game");
             }
 
-            //SpawnBoard();
+            
         };
     }
 
-    void SpawnBoard()
-    {
-        Debug.Log("board spawn");
-        //_board = Instantiate(boardPrefab, boardHolder);
-        _board = Instantiate(boardPrefab);
-        _board.GetComponent<NetworkObject>().Spawn();
-        //_board.SetParent(boardHolder);
-        //_board.GetComponent<NetworkObject>().Spawn();
-    }
+
 
     public void StartHost()
     {

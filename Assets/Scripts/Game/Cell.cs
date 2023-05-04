@@ -28,15 +28,15 @@ public class Cell : MonoBehaviour
         _button = GetComponent<Button>();
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
-        _button.onClick.AddListener(CellClickedClientRpc);
+        _button.onClick.AddListener(CellClicked);
         this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;
 
 
     }
 
-    [ClientRpc]
-    private void CellClickedClientRpc()
+    
+    private void CellClicked()
     {
         //Debug.Log($"cell clicked by {GameManager.Instance.ActiveGame.CurrentUser}");
         Debug.Log($"cell local client id {NetworkManager.Singleton.LocalClientId.ToString()}");
