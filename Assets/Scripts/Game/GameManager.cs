@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 using static Enums;
+using System.Text.RegularExpressions;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
 public class GameManager : NetworkBehaviour
@@ -14,27 +18,20 @@ public class GameManager : NetworkBehaviour
     public MarkType MyType { get; set; }
     public MarkType OpponentType { get; set; }
     public Game ActiveGame { get; private set; }
-    public bool InputsEnabled { get; private set; }
-    public string MyUsername { get; set; }
-    public string OpponentUsername { get; set; }
+    //public byte xUser { get; set; }
+    //public byte oUser { get; set; }
+    public MarkType GetMarkType
+    {
+        get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).MyType; }
+    }
     public Color GetColor
     {
-        get
-        {
-            if (MyType == MarkType.X)
-            {
-                return new Color32(0, 194, 255, 255);
-            }
-            else
-            {
-
-                return new Color32(0, 194, 255, 255); ;
-            }
-        }
+        get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).GetColor; }
     }
-    //public Dictionary<int, MarkType> _boards { get; set; }
-    public NetworkVariable<bool> isMyTurn = new NetworkVariable<bool>(false,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
-
+    public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
+    public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);//this is global
+    public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
+    public List<OnlinePlayer> players = new List<OnlinePlayer>();
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -45,58 +42,61 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
-        MyType = MarkType.X;//could be an issue... if i forget to change
-
     }
 
-    //this only runs on the server... it will not return anything
+    ////this only runs on the server... it will not return anything
+    //[ServerRpc(RequireOwnership = false)]//called by client ran by server
+    private void Update()
+    {
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    Debug.Log("P Pressed");
+        //    IsMyTurn.Value = !IsMyTurn.Value;
+        //}
+        //Debug.Log(IsMyTurn.Value);
+        //Debug.Log(CurrentPlayer.Value);
+    }
+
     [ServerRpc(RequireOwnership = false)]//called by client ran by server
-    public void UpdateTurnServerRpc(ServerRpcParams serverRpcParams = default)
+    public void UpdateTurnServerRpc()
     {
         ActiveGame.SwitchCurrentPlayer();
-        isMyTurn.Value = ActiveGame.CurrentUser == serverRpcParams.Receive.SenderClientId.ToString();
-        //if the move is not valid revert the move
     }
 
-
-    public void UpdateBoard()
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateBoardServerRpc()
     {
-        if (!IsServer)
-            return;
+        //if the move is not valide return that cell to its state
     }
 
-    
-    public void RegisterGame(string xUser, string oUser)
+    [ClientRpc]
+    void RegisterPlayerClientRpc()
+    {
+        byte index = 0;
+        foreach(OnlinePlayer player in players)
+        {
+            player.Init(index);
+            index++;
+        }
+    }
+
+    public void RegisterGame(byte xUserId, byte oUserId)
     {
         Debug.Log("Starting new game");
+        Debug.Log($"Player Count {players.Count}");
         ActiveGame = new Game
         {
-            XUser = xUser,
-            OUser = oUser,
+            XUser = xUserId,
+            OUser = oUserId,
             StartTime = DateTime.Now,
-            CurrentUser = xUser,
-            LastStarter = xUser
+            CurrentUser = xUserId,
+            LastStarter = xUserId
         };
+        //this could be in people
 
-        if (MyUsername == xUser)
-        {
-            MyType = MarkType.X;
-            OpponentUsername = oUser;
-            OpponentType = MarkType.O;
-        }
-        else
-        {
-            MyType = MarkType.O;
-            OpponentUsername = xUser;
-            OpponentType = MarkType.X;
+        RegisterPlayerClientRpc();
 
-        }
-        InputsEnabled = true;
-        isMyTurn.Value = MyUsername == ActiveGame.CurrentUser;
-        Debug.Log($"current user::  {ActiveGame.CurrentUser}");
-
-        Debug.Log($"current user::  {MyUsername}");
-
+        CurrentPlayer.Value = ActiveGame.CurrentUser;
     }
 
 
@@ -105,10 +105,10 @@ public class GameManager : NetworkBehaviour
     public class Game
     {
         public Guid? Id { get; set; }
-        public string XUser { get; set; }
-        public string OUser { get; set; }
-        public string CurrentUser { get; set; }
-        public string LastStarter { get; set; }
+        public byte XUser { get; set; }
+        public byte OUser { get; set; }
+        public byte CurrentUser { get; set; }
+        public byte LastStarter { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
@@ -125,7 +125,7 @@ public class GameManager : NetworkBehaviour
             LastStarter = CurrentUser;
         }
 
-        public MarkType GetPlayerType(string userID)
+        public MarkType GetPlayerType(byte userID)
         {
             if (userID == XUser)
             {
@@ -137,7 +137,7 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        private string GetOpponent(string currentUser)
+        private byte GetOpponent(byte currentUser)
         {
             if (currentUser == XUser)
             {

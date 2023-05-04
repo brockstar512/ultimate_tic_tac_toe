@@ -53,7 +53,7 @@ public class InspectController : MonoBehaviour
         //if (!GameManager.Instance.InputsEnabled)
         //    return;
         //Debug.Log("Show");
-        Debug.Log(GameManager.Instance.isMyTurn.Value);
+        
         //Debug.Log("Show");
         this.transform.SetAsLastSibling();
         _button.onClick.RemoveAllListeners();

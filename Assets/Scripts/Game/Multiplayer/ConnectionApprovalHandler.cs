@@ -21,7 +21,7 @@ public class ConnectionApprovalHandler : MonoBehaviour
             }
             else if (NetworkManager.Singleton.ConnectedClients.Count == 2)
             {
-                GameManager.Instance.RegisterGame(NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
+                //GameManager.Instance.RegisterGame(NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
 
             }
             Instantiate(board, this.transform);
