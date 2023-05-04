@@ -14,31 +14,16 @@ public class GameManager : NetworkBehaviour
     public MarkType MyType { get; set; }
     public MarkType OpponentType { get; set; }
     public Game ActiveGame { get; private set; }
-    public bool InputsEnabled { get; set; }
+    public bool InputsEnabled { get; private set; }
     public string MyUsername { get; set; }
     public string OpponentUsername { get; set; }
-    public bool IsMyTurn
-    {
-        get
-        {
-            if (ActiveGame == null)
-            {
-                return false;
-            }
-            if (ActiveGame.CurrentUser != MyUsername)
-            {
-                return false;
-            }
-            return true;
-        }
-    }
     public Color GetColor
     {
         get
         {
             if (MyType == MarkType.X)
             {
-                return new Color32(0,194,255,255);
+                return new Color32(0, 194, 255, 255);
             }
             else
             {
@@ -47,7 +32,8 @@ public class GameManager : NetworkBehaviour
             }
         }
     }
-
+    //public Dictionary<int, MarkType> _boards { get; set; }
+    public NetworkVariable<bool> isMyTurn = new NetworkVariable<bool>(false,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);
 
     private void Awake()
     {
@@ -59,14 +45,24 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
-        MyType = MarkType.X;//could be an issue
+        MyType = MarkType.X;//could be an issue... if i forget to change
 
+    }
+
+    //this only runs on the server... it will not return anything
+    [ServerRpc(RequireOwnership = false)]//called by client ran by server
+    public void UpdateTurnServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        ActiveGame.SwitchCurrentPlayer();
+        isMyTurn.Value = ActiveGame.CurrentUser == serverRpcParams.Receive.SenderClientId.ToString();
+        //if the move is not valid revert the move
     }
 
 
     public void UpdateBoard()
     {
-
+        if (!IsServer)
+            return;
     }
 
     
@@ -78,7 +74,7 @@ public class GameManager : NetworkBehaviour
             XUser = xUser,
             OUser = oUser,
             StartTime = DateTime.Now,
-            CurrentUser = oUser,
+            CurrentUser = xUser,
             LastStarter = xUser
         };
 
@@ -96,6 +92,11 @@ public class GameManager : NetworkBehaviour
 
         }
         InputsEnabled = true;
+        isMyTurn.Value = MyUsername == ActiveGame.CurrentUser;
+        Debug.Log($"current user::  {ActiveGame.CurrentUser}");
+
+        Debug.Log($"current user::  {MyUsername}");
+
     }
 
 

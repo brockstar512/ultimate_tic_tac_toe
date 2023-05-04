@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using static UnityEngine.UI.Image;
 using static UnityEngine.GraphicsBuffer;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Button))]
 public class InspectController : MonoBehaviour
@@ -49,6 +50,10 @@ public class InspectController : MonoBehaviour
     void Show()
     {
 
+        //if (!GameManager.Instance.InputsEnabled)
+        //    return;
+        //Debug.Log("Show");
+        Debug.Log(GameManager.Instance.isMyTurn.Value);
         //Debug.Log("Show");
         this.transform.SetAsLastSibling();
         _button.onClick.RemoveAllListeners();

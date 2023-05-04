@@ -31,20 +31,13 @@ public class Cell : MonoBehaviour
         _button.onClick.AddListener(CellClicked);
         this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;
-
+        //GameManager.Instance._boards[_board + c]
 
     }
 
     
     private void CellClicked()
     {
-        //Debug.Log($"cell clicked by {GameManager.Instance.ActiveGame.CurrentUser}");
-        Debug.Log($"cell local client id {NetworkManager.Singleton.LocalClientId.ToString()}");
-        Debug.Log(GameManager.Instance.InputsEnabled);
-        //active game is probably the one that is null
-        if (GameManager.Instance.ActiveGame.CurrentUser != NetworkManager.Singleton.LocalClientId.ToString())
-            return;
-
         _mark.color = GameManager.Instance.GetColor;
         _button.interactable = false;
         _mark.enabled = true;

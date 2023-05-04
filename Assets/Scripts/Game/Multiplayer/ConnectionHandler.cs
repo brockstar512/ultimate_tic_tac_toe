@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,9 +25,11 @@ public class ConnectionHandler : MonoBehaviour
                 //SpawnBoard();
                 //register game
                 Debug.Log($"Register game");
+                GameManager.Instance.RegisterGame(NetworkManager.Singleton.ConnectedClients[0].ClientId.ToString(), NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString());
             }
+            GameManager.Instance.MyUsername = clienId.ToString();
 
-            
+
         };
     }
 
