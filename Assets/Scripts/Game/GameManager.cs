@@ -25,7 +25,7 @@ public class GameManager : NetworkBehaviour
         get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).GetColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
-    public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);//this is global
+    //public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public List<OnlinePlayer> players = new List<OnlinePlayer>();
     public bool isMyTurn = false;//this is global
@@ -42,31 +42,24 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    ////this only runs on the server... it will not return anything
-    //[ServerRpc(RequireOwnership = false)]//called by client ran by server
-    private void Update()
+    public bool IsMyTurn()
     {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    Debug.Log("P Pressed");
-        //    IsMyTurn.Value = !IsMyTurn.Value;
-        //}
-        //Debug.Log(IsMyTurn.Value);
-        //Debug.Log(CurrentPlayer.Value);
+        //Debug.Log(players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).IsOwner);
+        return players.FirstOrDefault(x =>
+        x.MyUsername == CurrentPlayer.Value)
+            .IsOwner;
     }
-    [ContextMenu("Test")]
-    public bool IAmOwner()
-    {
-        //int intVal = Convert.ToInt32(CurrentPlayer);
-        //Debug.Log(intVal);
-        Debug.Log(players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).IsOwner);
 
-        return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).IsOwner;
+    [ContextMenu("Test")]
+    void UpdateTurn()
+    {
+        UpdateTurnServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]//called by client ran by server
     public void UpdateTurnServerRpc()
     {
+        CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
         ActiveGame.SwitchCurrentPlayer();
     }
 
