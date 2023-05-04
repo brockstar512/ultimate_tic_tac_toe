@@ -15,11 +15,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public MarkType MyType { get; set; }
-    public MarkType OpponentType { get; set; }
     public Game ActiveGame { get; private set; }
-    //public byte xUser { get; set; }
-    //public byte oUser { get; set; }
     public MarkType GetMarkType
     {
         get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).MyType; }
@@ -32,6 +28,8 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public List<OnlinePlayer> players = new List<OnlinePlayer>();
+    public bool isMyTurn = false;//this is global
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -56,6 +54,15 @@ public class GameManager : NetworkBehaviour
         //Debug.Log(IsMyTurn.Value);
         //Debug.Log(CurrentPlayer.Value);
     }
+    [ContextMenu("Test")]
+    public bool IAmOwner()
+    {
+        //int intVal = Convert.ToInt32(CurrentPlayer);
+        //Debug.Log(intVal);
+        Debug.Log(players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).IsOwner);
+
+        return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).IsOwner;
+    }
 
     [ServerRpc(RequireOwnership = false)]//called by client ran by server
     public void UpdateTurnServerRpc()
@@ -78,6 +85,7 @@ public class GameManager : NetworkBehaviour
             player.Init(index);
             index++;
         }
+        //players
     }
 
     public void RegisterGame(byte xUserId, byte oUserId)

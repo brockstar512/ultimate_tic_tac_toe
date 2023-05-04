@@ -25,6 +25,7 @@ public class OnlinePlayer : NetworkBehaviour
             }
         }
     }
+    public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
 
     private void Start()
     {
@@ -33,20 +34,28 @@ public class OnlinePlayer : NetworkBehaviour
         GameManager.Instance.players.Add(this);
     }
 
+    private void Update()
+    {
+        //Debug.Log(IsMyTurn.Value);
+    }
+
     public void Init(byte xUser)
     {
         if (!IsOwner)
             return;
 
-        if ((int)MarkType.X == (int)xUser)
+        if (0 == (int)xUser)
         {
             MyType = MarkType.X;
             MyUsername = 0;
+            IsMyTurn.Value = true;
         }
         else
         {
             MyType = MarkType.O;
             MyUsername = 1;
+            IsMyTurn.Value = false;
+
 
         }
         namer = MyUsername;
