@@ -31,12 +31,13 @@ public class OnlinePlayer : NetworkBehaviour
     {
         if (!IsOwner)
             this.enabled = false;
-        GameManager.Instance.players.Add(this);
+
+        GameManager.Instance.InitializePlayer(this);
     }
 
     private void Update()
     {
-        //Debug.Log(IsMyTurn.Value);
+        Debug.Log(IsMyTurn.Value);
     }
 
     public void Init(byte xUser)

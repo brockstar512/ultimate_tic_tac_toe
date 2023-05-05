@@ -15,21 +15,22 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
+    //only the server will hae access to this acttive game
     public Game ActiveGame { get; private set; }
-    public MarkType GetMarkType
+    //this is just for validation purposes which is why they should be private
+    private MarkType GetMarkType
     {
         get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).MyType; }
     }
-    public Color GetColor
+    private Color GetColor
     {
         get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).GetColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
-    //public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
-    public List<OnlinePlayer> players = new List<OnlinePlayer>();
+    private List<OnlinePlayer> players = new List<OnlinePlayer>();
     public bool isMyTurn = false;//this is global
-
+    [SerializeField] InspectController inspector;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -40,6 +41,12 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
+    }
+
+    public void InitializePlayer(OnlinePlayer player)
+    {
+        players.Add(player);
+        inspector.Init(player);
     }
 
     public bool IsMyTurn()
@@ -58,8 +65,10 @@ public class GameManager : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]//called by client ran by server
     public void UpdateTurnServerRpc()
-    {
+    { 
+        players[CurrentPlayer.Value].IsMyTurn.Value = false;
         CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
+        players[CurrentPlayer.Value].IsMyTurn.Value = true;
         ActiveGame.SwitchCurrentPlayer();
     }
 

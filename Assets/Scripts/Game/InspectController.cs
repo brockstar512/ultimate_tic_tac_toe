@@ -21,9 +21,9 @@ public class InspectController : MonoBehaviour
     Button _resetButton;
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
+    OnlinePlayer _player;
 
-
-    private void Awake()
+    void Awake()
     {
         origin = this.GetComponent<RectTransform>();
         target = GameObject.FindWithTag("MainBoard").GetComponent<RectTransform>();
@@ -38,19 +38,26 @@ public class InspectController : MonoBehaviour
         _button.onClick.AddListener(Show);
         HandleMarks(false);
     }
-    private void Start()
+
+    void Start()
     {
         HandleSubscription(true);
     }
-    private void OnDestroy()
+
+    void OnDestroy()
     {
         HandleSubscription(false);
+    }
+
+    public void Init(OnlinePlayer player)
+    {
+        _player = player;
     }
 
     void Show()
     {
         //if (!GameManager.Instance.InputsEnabled)// wait for UI to update
-        if (!GameManager.Instance.IsMyTurn())
+        if (!_player.IsMyTurn.Value)
             return;
 
         this.transform.SetAsLastSibling();
