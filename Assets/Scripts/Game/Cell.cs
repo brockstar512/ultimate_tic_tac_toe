@@ -31,8 +31,8 @@ public class Cell : MonoBehaviour
         _button.onClick.AddListener(CellClicked);
         this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;
-        //GameManager.Instance._boards[_board + c]
 
+        //GameManager.Instance.InitializeBoardValidation(_board,_index);
     }
 
     

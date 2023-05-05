@@ -29,6 +29,7 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     private List<OnlinePlayer> players = new List<OnlinePlayer>();
     public OnlinePlayer myPlayer;
+    private Dictionary<int, MarkType> BoardCells;
 
     private void Awake()
     {
@@ -40,32 +41,27 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
+        BoardCells = new Dictionary< int,MarkType>();
+        Debug.Log("Game manager is initiazlied");
     }
 
-    private void Update()
-    {
-        //Debug.Log(IsMyTurn.Value);
-    }
+
     public void InitializePlayer(OnlinePlayer player)
     {
         players.Add(player);
     }
 
-    public bool IsMyTurn()
-    {
-        //Debug.Log(players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).IsOwner);
-        return players.FirstOrDefault(x =>
-        x.MyUsername == CurrentPlayer.Value)
-            .IsOwner;
-    }
+
 
     [ContextMenu("Test")]
-    void UpdateTurnB()
+    void Test()
     {
-        UpdateBoardServerRpc();
+        //UpdateBoardServerRpc();
+
+        
     }
 
-    private void UpdateTurn()
+    void UpdateTurn()
     {
         if (!IsServer)
             return;
@@ -77,12 +73,26 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateBoardServerRpc()
+    public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
-        //if the move is not valide return that cell to its state
+        //
+        //9 * 1 + 0
+        
+        int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
+        if (BoardCells[cellDictIndex] != MarkType.None)
+        {
+            //if the move is not valide return that cell to its state
+        }
+        else
+        {
+            //else update other users board and change turn
+            BoardCells[cellDictIndex] = GetMarkType;
 
-        //else update other users board and change turn
-        UpdateTurn();
+            //
+            UpdateTurn();
+        }
+
+
     }
 
     [ClientRpc]
@@ -98,6 +108,8 @@ public class GameManager : NetworkBehaviour
 
     public void RegisterGame(byte xUserId, byte oUserId)
     {
+        if (!IsServer)
+            return;
         Debug.Log("Starting new game");
         Debug.Log($"Player Count {players.Count}");
         ActiveGame = new Game
@@ -106,9 +118,19 @@ public class GameManager : NetworkBehaviour
             OUser = oUserId,
             StartTime = DateTime.Now,
             CurrentUser = xUserId,
-            LastStarter = xUserId
-        };
-        //this could be in people
+            LastStarter = xUserId,
+    };
+
+        //grid size square * board number + cell index
+        int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE* Utilities.GRID_SIZE);
+
+        while(cellCount > 0)
+        {
+            Debug.Log("Cell initialize "+ cellCount);
+            
+            BoardCells[cellCount - 1] = MarkType.None;
+            cellCount--;
+        }
 
         RegisterPlayerClientRpc();
 
@@ -163,6 +185,11 @@ public class GameManager : NetworkBehaviour
             {
                 return XUser;
             }
+        }
+
+        public bool ValidateBoard()
+        {
+            return true;
         }
     }
 

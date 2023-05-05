@@ -13,7 +13,7 @@ public class MacroBoardManager : MonoBehaviour
     private Dictionary<int, MicroBoardManager> _boards;
     public static event Action<WinLineType> winLine;
 
-    private void Awake()
+    private void Start()
     {
         cg = GetComponent<CanvasGroup>();
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];

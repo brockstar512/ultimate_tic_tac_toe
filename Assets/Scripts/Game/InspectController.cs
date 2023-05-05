@@ -49,10 +49,7 @@ public class InspectController : MonoBehaviour
         HandleSubscription(false);
     }
 
-    //public void Init(OnlinePlayer player)
-    //{
-    //    _player = player;
-    //}
+
 
     void Show()
     {
