@@ -60,14 +60,16 @@ public class GameManager : NetworkBehaviour
     }
 
     [ContextMenu("Test")]
-    void UpdateTurn()
+    void UpdateTurnB()
     {
         UpdateBoardServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]//called by client ran by server
-    private void UpdateTurnServerRpc()
-    { 
+    private void UpdateTurn()
+    {
+        if (!IsServer)
+            return;
+
         players[CurrentPlayer.Value].IsMyTurn.Value = false;
         CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
         players[CurrentPlayer.Value].IsMyTurn.Value = true;
@@ -80,7 +82,7 @@ public class GameManager : NetworkBehaviour
         //if the move is not valide return that cell to its state
 
         //else update other users board and change turn
-        UpdateTurnServerRpc();
+        UpdateTurn();
     }
 
     [ClientRpc]
