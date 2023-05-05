@@ -36,7 +36,7 @@ public class Cell : MonoBehaviour
     }
 
     
-    private void CellClicked()
+    public void CellClicked()
     {
         _mark.color = GameManager.Instance.GetColor;
         _button.interactable = false;
@@ -44,7 +44,7 @@ public class Cell : MonoBehaviour
         Vector3 size = new Vector3(.90f, .90f, .90f);
         markCell?.Invoke(_row,_col);
         _mark.transform.DOScale(size, .1f).SetEase(Ease.OutElastic);
-        //invoke event that this cell is clicked
+        GameManager.Instance.UpdateBoardServerRpc(_board, _index);
     }
 
     

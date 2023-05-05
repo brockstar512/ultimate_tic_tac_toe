@@ -18,7 +18,7 @@ public class MicroBoardManager : MonoBehaviour
     private byte _col;
     private Transform _placements;
     CanvasGroup cg;
-    private Dictionary<int, Cell> _cells;
+    public Dictionary<int, Cell> _cells { get; private set; }
     public event Action<int, int> markBoard;
     public event Action onCellSelected;
     private Image _mark;

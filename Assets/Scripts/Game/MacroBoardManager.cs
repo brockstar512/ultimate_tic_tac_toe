@@ -7,11 +7,23 @@ using static Enums;
 public class MacroBoardManager : MonoBehaviour
 {
     //when a micro board is finished this should read the whole boards
+    public static MacroBoardManager Instance { get; private set; }
 
     public MarkType[,] Grid { get; private set; }
     CanvasGroup cg;
-    private Dictionary<int, MicroBoardManager> _boards;
+    public Dictionary<int, MicroBoardManager> _boards { get; private set; }
     public static event Action<WinLineType> winLine;
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {

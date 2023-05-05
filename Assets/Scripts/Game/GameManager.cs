@@ -10,6 +10,7 @@ using System.Linq;
 using static Enums;
 using System.Text.RegularExpressions;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
+using System.Reflection;
 
 
 public class GameManager : NetworkBehaviour
@@ -57,8 +58,21 @@ public class GameManager : NetworkBehaviour
     void Test()
     {
         //UpdateBoardServerRpc();
+    }
 
-        
+    [ClientRpc]//called by server ran on client
+    void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
+    {
+        Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
+        if (myPlayer.IsMyTurn.Value)
+            return;
+        //_boards
+        //byte _row = (byte)(cellIndex / 3);
+        //byte _col = (byte)(cellIndex % 3);
+        Debug.Log("It would have ran");
+
+        //return;
+        MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();
     }
 
     void UpdateTurn()
@@ -75,19 +89,19 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
-        //
-        //9 * 1 + 0
         
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
         if (BoardCells[cellDictIndex] != MarkType.None)
         {
             //if the move is not valide return that cell to its state
+            Debug.Log("You are not allowed to do that move");//todo need to get the validation actually working... tis does not work
+
         }
         else
         {
             //else update other users board and change turn
             BoardCells[cellDictIndex] = GetMarkType;
-
+            UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             //
             UpdateTurn();
         }

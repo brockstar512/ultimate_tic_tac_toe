@@ -557,8 +557,7 @@ MonoBehaviour:
     m_InternalValue: 0
   CurrentPlayer:
     m_InternalValue: 0
-  isMyTurn: 0
-  inspector: {fileID: 0}
+  myPlayer: {fileID: 0}
 --- !u!114 &1371501550
 MonoBehaviour:
   m_ObjectHideFlags: 0
