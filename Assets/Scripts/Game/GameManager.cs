@@ -20,11 +20,11 @@ public class GameManager : NetworkBehaviour
     //this is just for validation purposes which is why they should be private
     public MarkType GetMarkType
     {
-        get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).MyType; }
+        get { return myPlayer.IsMyTurn.Value ? myPlayer.MyType : myPlayer.OpponentType; }
     }
     public Color GetColor
     {
-        get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).GetColor; }
+        get { return myPlayer.IsMyTurn.Value ? myPlayer.GetMyColor : myPlayer.GetOpponentColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global

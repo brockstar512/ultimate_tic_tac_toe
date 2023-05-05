@@ -10,7 +10,8 @@ public class OnlinePlayer : NetworkBehaviour
     //public byte namer;
     public byte MyUsername { get; private set; }
     public MarkType MyType { get; private set; }
-    public Color GetColor
+    public MarkType OpponentType { get; private set; }
+    public Color GetMyColor
     {
         get
         {
@@ -21,7 +22,22 @@ public class OnlinePlayer : NetworkBehaviour
             else
             {
 
-                return new Color32(0, 194, 255, 255); ;
+                return new Color32(141, 202, 0, 255); 
+            }
+        }
+    }
+    public Color GetOpponentColor
+    {
+        get
+        {
+            if (OpponentType == MarkType.X)
+            {
+                return new Color32(0, 194, 255, 255);
+            }
+            else
+            {
+
+                return new Color32(141, 202, 0, 255);
             }
         }
     }
@@ -61,12 +77,14 @@ public class OnlinePlayer : NetworkBehaviour
         if (0 == (int)xUser)
         {
             MyType = MarkType.X;
+            OpponentType = MarkType.O;
             MyUsername = 0;
             IsMyTurn.Value = true;
         }
         else
         {
             MyType = MarkType.O;
+            OpponentType = MarkType.X;
             MyUsername = 1;
             IsMyTurn.Value = false;
         }
