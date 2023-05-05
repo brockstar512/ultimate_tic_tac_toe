@@ -7,7 +7,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class OnlinePlayer : NetworkBehaviour
 {
-    public byte namer;
+    //public byte namer;
     public byte MyUsername { get; private set; }
     public MarkType MyType { get; private set; }
     public Color GetColor
@@ -30,14 +30,27 @@ public class OnlinePlayer : NetworkBehaviour
     private void Start()
     {
         if (!IsOwner)
+        {
             this.enabled = false;
+        }
+        else
+        {
+            GameManager.Instance.myPlayer = this;
+        }
+        //if (!IsOwner)
+        //{
+        //    this.enabled = false;
+        //    return;
+        //    this was vausing an issue for initializing the init ismyturn variable. I think it was forcing the client to run the var
+        //}
+
 
         GameManager.Instance.InitializePlayer(this);
     }
 
     private void Update()
     {
-        Debug.Log(IsMyTurn.Value);
+        //Debug.Log(IsMyTurn.Value);
     }
 
     public void Init(byte xUser)
@@ -56,10 +69,8 @@ public class OnlinePlayer : NetworkBehaviour
             MyType = MarkType.O;
             MyUsername = 1;
             IsMyTurn.Value = false;
-
-
         }
-        namer = MyUsername;
+        //namer = MyUsername;
         Debug.Log(MyType);
 
 

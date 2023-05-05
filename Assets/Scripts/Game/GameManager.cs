@@ -15,22 +15,21 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
-    //only the server will hae access to this acttive game
-    public Game ActiveGame { get; private set; }
+    private Game ActiveGame { get; set; }
     //this is just for validation purposes which is why they should be private
-    private MarkType GetMarkType
+    public MarkType GetMarkType
     {
         get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).MyType; }
     }
-    private Color GetColor
+    public Color GetColor
     {
         get { return players.FirstOrDefault(x => x.MyUsername == CurrentPlayer.Value).GetColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     private List<OnlinePlayer> players = new List<OnlinePlayer>();
-    public bool isMyTurn = false;//this is global
-    [SerializeField] InspectController inspector;
+    public OnlinePlayer myPlayer;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -43,10 +42,13 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    private void Update()
+    {
+        //Debug.Log(IsMyTurn.Value);
+    }
     public void InitializePlayer(OnlinePlayer player)
     {
         players.Add(player);
-        inspector.Init(player);
     }
 
     public bool IsMyTurn()
@@ -60,11 +62,11 @@ public class GameManager : NetworkBehaviour
     [ContextMenu("Test")]
     void UpdateTurn()
     {
-        UpdateTurnServerRpc();
+        UpdateBoardServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]//called by client ran by server
-    public void UpdateTurnServerRpc()
+    private void UpdateTurnServerRpc()
     { 
         players[CurrentPlayer.Value].IsMyTurn.Value = false;
         CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
@@ -76,6 +78,9 @@ public class GameManager : NetworkBehaviour
     public void UpdateBoardServerRpc()
     {
         //if the move is not valide return that cell to its state
+
+        //else update other users board and change turn
+        UpdateTurnServerRpc();
     }
 
     [ClientRpc]
@@ -87,7 +92,6 @@ public class GameManager : NetworkBehaviour
             player.Init(index);
             index++;
         }
-        //players
     }
 
     public void RegisterGame(byte xUserId, byte oUserId)

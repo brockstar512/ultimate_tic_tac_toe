@@ -21,7 +21,7 @@ public class InspectController : MonoBehaviour
     Button _resetButton;
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
-    OnlinePlayer _player;
+    //OnlinePlayer _player;
 
     void Awake()
     {
@@ -49,15 +49,15 @@ public class InspectController : MonoBehaviour
         HandleSubscription(false);
     }
 
-    public void Init(OnlinePlayer player)
-    {
-        _player = player;
-    }
+    //public void Init(OnlinePlayer player)
+    //{
+    //    _player = player;
+    //}
 
     void Show()
     {
         //if (!GameManager.Instance.InputsEnabled)// wait for UI to update
-        if (!_player.IsMyTurn.Value)
+        if (!GameManager.Instance.myPlayer.IsMyTurn.Value)
             return;
 
         this.transform.SetAsLastSibling();
