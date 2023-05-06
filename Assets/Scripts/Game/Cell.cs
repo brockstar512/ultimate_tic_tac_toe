@@ -44,7 +44,7 @@ public class Cell : MonoBehaviour
         Vector3 size = new Vector3(.90f, .90f, .90f);
         markCell?.Invoke(_row,_col);
         _mark.transform.DOScale(size, .1f).SetEase(Ease.OutElastic);
-        GameManager.Instance.UpdateBoardServerRpc(_board, _index);
+        GameManager.Instance.UpdateBoardServerRpc(_board, _index);//take it out of here and just add it to the cell click button?
     }
 
     
