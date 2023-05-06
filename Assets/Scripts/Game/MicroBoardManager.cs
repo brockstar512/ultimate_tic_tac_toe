@@ -59,7 +59,7 @@ public class MicroBoardManager : MonoBehaviour
     void MarkCell(int row, int col)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
-        Grid[row, col] = MarkType.X;
+        Grid[row, col] = GameManager.Instance.GetMarkType;
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 

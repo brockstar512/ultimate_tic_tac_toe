@@ -51,7 +51,7 @@ public class MacroBoardManager : MonoBehaviour
     void MarkBoard(int row, int col)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
-        Grid[row, col] = MarkType.X;
+        Grid[row, col] = GameManager.Instance.GetMarkType;
         //GameManager.Instance.ActiveGame.GetPlayerType(actor);
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
