@@ -7,6 +7,7 @@ using static Enums;
 using System;
 public class WinLineHandler : MonoBehaviour
 {
+    [SerializeField] Color LineColor;
     Image line;
     [SerializeField] Transform LeftVerticalLine;
     [SerializeField] Transform MiddleVerticalLine;
@@ -29,6 +30,8 @@ public class WinLineHandler : MonoBehaviour
     {
         Transform prefab = GetLine(WinLineType);
         line = Instantiate(prefab, this.transform).GetComponent<Image>();
+        line.color = LineColor;
+            //GameManager.Instance.GetColor;
         StopCoroutine(AnimateLine());
         StartCoroutine(AnimateLine());
     }

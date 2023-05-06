@@ -53,13 +53,6 @@ public class OnlinePlayer : NetworkBehaviour
         {
             GameManager.Instance.myPlayer = this;
         }
-        //if (!IsOwner)
-        //{
-        //    this.enabled = false;
-        //    return;
-        //    this was vausing an issue for initializing the init ismyturn variable. I think it was forcing the client to run the var
-        //}
-
 
         GameManager.Instance.InitializePlayer(this);
     }

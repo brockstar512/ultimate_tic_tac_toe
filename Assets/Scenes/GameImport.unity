@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418a8c08add21422390dce8531e30c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LineColor: {r: 1, g: 0.57122386, b: 0.0047169924, a: 1}
   LeftVerticalLine: {fileID: 2913331263547358228, guid: fc2def54d65314bd8bd9958dbcc5c0da, type: 3}
   MiddleVerticalLine: {fileID: 1374960171288398533, guid: a644dc9928d244900ad09fb86c65e32d, type: 3}
   RightVerticalLine: {fileID: 9075124862028628681, guid: 4693b4424ff924c19a4b56dd4cf370a6, type: 3}
@@ -24523,7 +24524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

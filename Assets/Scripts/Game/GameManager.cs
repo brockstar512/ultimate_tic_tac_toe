@@ -92,12 +92,20 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
+        //int board = 0;
+        //int cell= 0;
+        //int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)board + (int)cell;
+        //Debug.Log($"Checking board {cellDictIndex}");
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
         if (BoardCells[cellDictIndex] != MarkType.None)
         {
-            //if the move is not valide return that cell to its state
-            Debug.Log("You are not allowed to do that move");//todo need to get the validation actually working... tis does not work
+            Debug.Log("Reset the circle to what is saved on this grid");
+            //todo
+            //make sure the UI matches the grid
+            //make sure the local grid matches the server grid... or just tell that cell to equal this with a server rpc
+            //continue the timer
 
+            //if the move is not valide return that cell to its state
         }
         else
         {

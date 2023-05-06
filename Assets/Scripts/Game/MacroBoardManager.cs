@@ -56,7 +56,7 @@ public class MacroBoardManager : MonoBehaviour
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid);
-        Debug.Log($"Line Type: {lineType}");
+        //Debug.Log($"Line Type: {lineType}");
 
         if (isOver)
         {
