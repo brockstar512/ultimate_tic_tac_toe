@@ -89,7 +89,9 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
-        
+        //if (myPlayer.IsMyTurn.Value)
+        //    return;
+
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
         if (BoardCells[cellDictIndex] != MarkType.None)
         {
