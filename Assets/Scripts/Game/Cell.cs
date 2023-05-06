@@ -29,13 +29,15 @@ public class Cell : MonoBehaviour
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
         _button.onClick.AddListener(CellClicked);
+        _button.onClick.AddListener(delegate { GameManager.Instance.UpdateBoardServerRpc(_board, _index); });
         this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;
+        //GameManager.Instance.UpdateBoardServerRpc(_board, _index);//take it out of here and just add it to the cell click button?
 
         //GameManager.Instance.InitializeBoardValidation(_board,_index);
     }
 
-    
+
     public void CellClicked()
     {
         _mark.color = GameManager.Instance.GetColor;
@@ -44,7 +46,6 @@ public class Cell : MonoBehaviour
         Vector3 size = new Vector3(.90f, .90f, .90f);
         markCell?.Invoke(_row,_col);
         _mark.transform.DOScale(size, .1f).SetEase(Ease.OutElastic);
-        GameManager.Instance.UpdateBoardServerRpc(_board, _index);//take it out of here and just add it to the cell click button?
     }
 
     

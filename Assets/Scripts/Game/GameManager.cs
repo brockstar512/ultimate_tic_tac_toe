@@ -70,16 +70,15 @@ public class GameManager : NetworkBehaviour
         //byte _row = (byte)(cellIndex / 3);
         //byte _col = (byte)(cellIndex % 3);
         Debug.Log("It would have ran");
-        Debug.Log("Updating the board this should not run twice THIS SHOUL DNOT BE REACHED");
 
         //return;
         MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();//this is going to run it again for the same player
 
-        UpdateTurnServerRpc();
+        //UpdateTurnServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void UpdateTurnServerRpc()
+    //[ServerRpc(RequireOwnership = false)]
+    void UpdateTurn()
     {
         if (!IsServer)
             return;
@@ -93,7 +92,6 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
-        Debug.Log("Updating the board this should not run twice");
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
         if (BoardCells[cellDictIndex] != MarkType.None)
         {
@@ -107,7 +105,7 @@ public class GameManager : NetworkBehaviour
             BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             //
-            //UpdateTurn();
+            UpdateTurn();
         }
 
 
@@ -144,7 +142,7 @@ public class GameManager : NetworkBehaviour
 
         while(cellCount > 0)
         {
-            Debug.Log("Cell initialize "+ cellCount);
+            //Debug.Log("Cell initialize "+ cellCount);
             
             BoardCells[cellCount - 1] = MarkType.None;
             cellCount--;
