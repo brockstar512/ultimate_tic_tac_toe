@@ -50,6 +50,7 @@ public class OnlinePlayer : NetworkBehaviour
             return;
         }
 
+        base.OnNetworkSpawn();
         IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
         {
             TimeManager.Instance.StartTimer(newVal);

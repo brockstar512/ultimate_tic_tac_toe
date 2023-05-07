@@ -158,11 +158,18 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlayerTimedOutRpc()
+    public void PlayerTimedOutServerRpc()
     {
         //either use default params
         //Or
         //just use the active game class
+
+    }
+    [ServerRpc(RequireOwnership = false)]
+    public void RoundOverServerRpc()
+    {
+
+
     }
 
 
