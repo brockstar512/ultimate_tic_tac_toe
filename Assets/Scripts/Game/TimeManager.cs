@@ -11,13 +11,10 @@ public class TimeManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeTitle;
     public TextMeshProUGUI time;
     private float timeRemaining;
-    const float timeCountDown = 3;
+    const float timeCountDown = 5;
     [SerializeField] bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
-    //public static event Action timerReset;
-    //public static event Action<bool> timerContinue;
 
-    //
 
     private void Awake()
     {
@@ -48,8 +45,13 @@ public class TimeManager : MonoBehaviour
 
     //reset.
     //when i read that it is my turn
-    public void StartTimer()
+    public void StartTimer(bool isBeginningTurn)
     {
+        //TurnIndicatorHandler.Instance.Show();
+        Debug.Log("starting timer " + isBeginningTurn);
+        if (!isBeginningTurn)
+            return;
+        //maybe have a delay? so consider making this a voroutine
         DisplayTime(timeCountDown);
 
         timeRemaining = timeCountDown;

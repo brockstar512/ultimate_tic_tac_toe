@@ -86,6 +86,7 @@ public class GameManager : NetworkBehaviour
         players[CurrentPlayer.Value].IsMyTurn.Value = false;
         CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
         players[CurrentPlayer.Value].IsMyTurn.Value = true;
+        //players[CurrentPlayer.Value].StartTurn();
         ActiveGame.SwitchCurrentPlayer();
     }
 

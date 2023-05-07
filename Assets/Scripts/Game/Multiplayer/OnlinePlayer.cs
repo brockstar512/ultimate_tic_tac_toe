@@ -43,8 +43,22 @@ public class OnlinePlayer : NetworkBehaviour
     }
     public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
 
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            return;
+        }
 
-    
+        IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
+        {
+            TimeManager.Instance.StartTimer(newVal);
+            TurnIndicatorHandler.Instance.Show(newVal);
+        };
+
+    }
+
+
     private void Start()
     {
         if (!IsOwner)
@@ -82,6 +96,7 @@ public class OnlinePlayer : NetworkBehaviour
             OpponentType = MarkType.X;
             MyUsername = 1;
             IsMyTurn.Value = false;
+            TurnIndicatorHandler.Instance.Show(false);
         }
         //namer = MyUsername;
         Debug.Log(MyType);
@@ -89,4 +104,9 @@ public class OnlinePlayer : NetworkBehaviour
 
     }
 
+
+    public override void OnNetworkDespawn()
+    {
+        IsMyTurn.OnValueChanged = null;
+    }
 }

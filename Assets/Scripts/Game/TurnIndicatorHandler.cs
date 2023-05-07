@@ -8,15 +8,26 @@ using System;
 
 public class TurnIndicatorHandler : MonoBehaviour
 {
-
+    public static TurnIndicatorHandler Instance { get; private set; }
     [SerializeField] TextMeshProUGUI playerText;
-    //public static event Action roundOver;
-    // Start is called before the first frame update
-    private void Show()
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
+    public void Show(bool isMyTurn)
     {
         Color _color = GameManager.Instance.GetColor;
 
-        if (GameManager.Instance.myPlayer.IsMyTurn.Value)
+        if (isMyTurn)
         {
             playerText.text = "Your";
         }
@@ -29,22 +40,10 @@ public class TurnIndicatorHandler : MonoBehaviour
         playerText.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => playerText.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
 
     }
-    //do i need a hide?
-    private void Hide()
-    {
-        Color _color = GameManager.Instance.GetColor;
 
-        if (GameManager.Instance.myPlayer.IsMyTurn.Value)
-        {
-            playerText.text = "Your";
-        }
-        else
-        {
-            playerText.text = "Enemies";
-        }
 
-        playerText.color = _color;
+     public void Pulse()
+     {
         playerText.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => playerText.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
-
-    }
+     }
 }
