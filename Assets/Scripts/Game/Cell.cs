@@ -44,6 +44,7 @@ public class Cell : MonoBehaviour
         _button.interactable = false;
         _mark.enabled = true;
         Vector3 size = new Vector3(.90f, .90f, .90f);
+        TimeManager.Instance.StopTimer();
         markCell?.Invoke(_row,_col);
         _mark.transform.DOScale(size, .1f).SetEase(Ease.OutElastic);
     }

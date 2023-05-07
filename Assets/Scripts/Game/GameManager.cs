@@ -43,7 +43,7 @@ public class GameManager : NetworkBehaviour
             Instance = this;
         }
         BoardCells = new Dictionary< int,MarkType>();
-        Debug.Log("Game manager is initiazlied");
+        Debug.Log("Game manager is initiazlized");
     }
 
 

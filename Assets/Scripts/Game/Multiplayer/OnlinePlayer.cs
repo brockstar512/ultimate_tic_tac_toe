@@ -43,6 +43,8 @@ public class OnlinePlayer : NetworkBehaviour
     }
     public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
 
+
+    
     private void Start()
     {
         if (!IsOwner)

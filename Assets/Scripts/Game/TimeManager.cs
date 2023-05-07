@@ -7,39 +7,33 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public static TimeManager Instance { get; private set; }
     [SerializeField] TextMeshProUGUI timeTitle;
     public TextMeshProUGUI time;
     private float timeRemaining;
-    const float timeCountDown = 2;
-    public bool timerIsRunning = false;
+    const float timeCountDown = 3;
+    [SerializeField] bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
-    [SerializeField] AudioClip timerFailedSoundFX;
+    //public static event Action timerReset;
+    //public static event Action<bool> timerContinue;
+
+    //
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+
         timeRemaining = timeCountDown;
         timerIsRunning = false;
     }
-    private void Start()
-    {
 
-    }
-
-    private void OnDestroy()
-    {
-
-
-    }
-
-    public void StartTimer()
-    {
-        DisplayTime(timeCountDown);
-
-        timeRemaining = timeCountDown;
-
-        // Starts the timer automatically   
-        timerIsRunning = true;
-    }
     void Update()
     {
         if (timerIsRunning)
@@ -52,14 +46,37 @@ public class TimeManager : MonoBehaviour
         }
     }
 
+    //reset.
+    //when i read that it is my turn
+    public void StartTimer()
+    {
+        DisplayTime(timeCountDown);
+
+        timeRemaining = timeCountDown;
+
+        // Starts the timer automatically   
+        timerIsRunning = true;
+    }
+
+    //when i press the cell
+    public void StopTimer()
+    {
+        timerIsRunning = false;
+    }
+
+    //this only will run in the event that the player tried to cheat
+    public void ContinueTime()
+    {
+        timerIsRunning = true;
+    }
+
+
     void MarkCellTimeSuccess()
     {
         timerIsRunning = false;
     }
-    void StopTimer()
-    {
-        timerIsRunning = false;
-    }
+
+
 
     void MarkCellTimeFail()
     {
