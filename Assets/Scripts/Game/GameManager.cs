@@ -31,6 +31,8 @@ public class GameManager : NetworkBehaviour
     private List<OnlinePlayer> players = new List<OnlinePlayer>();
     public OnlinePlayer myPlayer;
     private Dictionary<int, MarkType> BoardCells;
+    public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private void Awake()
     {
@@ -53,13 +55,6 @@ public class GameManager : NetworkBehaviour
     }
 
 
-
-    [ContextMenu("Test")]
-    void Test()
-    {
-        //UpdateBoardServerRpc();
-    }
-
     [ClientRpc]//called by server ran on client
     void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
     {
@@ -77,7 +72,7 @@ public class GameManager : NetworkBehaviour
         //UpdateTurnServerRpc();
     }
 
-    //[ServerRpc(RequireOwnership = false)]
+    
     void UpdateTurn()
     {
         if (!IsServer)
@@ -162,12 +157,17 @@ public class GameManager : NetworkBehaviour
         CurrentPlayer.Value = ActiveGame.CurrentUser;
     }
 
-
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerTimedOutRpc()
+    {
+        //either use default params
+        //Or
+        //just use the active game class
+    }
 
 
     public class Game
     {
-        public Guid? Id { get; set; }
         public byte XUser { get; set; }
         public byte OUser { get; set; }
         public byte CurrentUser { get; set; }
