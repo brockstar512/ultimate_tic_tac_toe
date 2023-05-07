@@ -29,6 +29,7 @@ public class Cell : MonoBehaviour
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
         _button.onClick.AddListener(CellClicked);
+        _button.onClick.AddListener(TimeManager.Instance.StopTimer);
         _button.onClick.AddListener(delegate { GameManager.Instance.UpdateBoardServerRpc(_board, _index); });
         this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;

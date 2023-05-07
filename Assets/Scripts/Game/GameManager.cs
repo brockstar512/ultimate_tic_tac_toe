@@ -33,6 +33,8 @@ public class GameManager : NetworkBehaviour
     private Dictionary<int, MarkType> BoardCells;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public event Action TimeOut;
+    //    public event Action<MarkType> TimeOut;
 
     private void Awake()
     {
@@ -55,16 +57,16 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    [ClientRpc]//called by server ran on client
+    [ClientRpc]
     void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
     {
-        Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
+        //Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
         if (myPlayer.IsMyTurn.Value)
             return;
         //_boards
         //byte _row = (byte)(cellIndex / 3);
         //byte _col = (byte)(cellIndex % 3);
-        Debug.Log("It would have ran");
+        //Debug.Log("It would have ran");
 
         //return;
         MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();//this is going to run it again for the same player
@@ -105,10 +107,8 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            //else update other users board and change turn
             BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
-            //
             UpdateTurn();
         }
 
@@ -160,15 +160,23 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc()
     {
+        //this should indicate weather it was a time out to round over.
+
+        RoundOverClientRpc();
+        //Debug.Log($"This player timed out: {myPlayer.MyType}");
+        //        TimeOut?.Invoke(players[CurrentPlayer.Value].MyType);
+        //TimeOut?.Invoke();
         //either use default params
         //Or
         //just use the active game class
 
     }
-    [ServerRpc(RequireOwnership = false)]
-    public void RoundOverServerRpc()
-    {
 
+    [ClientRpc]
+    public void RoundOverClientRpc()
+    {
+        //validate board and if that win is legit
+        TimeOut?.Invoke();//this should not be a delagte... it should should be a generic round over 
 
     }
 

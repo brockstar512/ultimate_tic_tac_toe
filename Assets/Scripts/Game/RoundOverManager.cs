@@ -6,6 +6,7 @@ using System;
 using DG.Tweening;
 public class RoundOverManager : MonoBehaviour
 {
+
     [SerializeField] Button _playAgainButton;
     [SerializeField] Button _quitButton;
     [SerializeField] Button _acceptButton;
@@ -16,6 +17,8 @@ public class RoundOverManager : MonoBehaviour
     {
         cg = this.GetComponent<CanvasGroup>();
         WinLineHandler.roundOver += Init;
+        GameManager.Instance.TimeOut += Init;
+
         _playAgainButton.onClick.AddListener(Reset);
     }
 
