@@ -5,6 +5,7 @@ using static Enums;
 
 public static class Utilities
 {
+
     public const int GRID_SIZE = 3;
     //grid we are looking at.. row and col is the val of the big board
     //row and col should be cel val... grid should also be micro board

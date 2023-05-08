@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using DG.Tweening;
-public class RoundOverManager : MonoBehaviour
-{
+using TMPro;
+using Unity.Netcode;
 
+public class RoundOverManager : NetworkBehaviour
+{
+    public const string Waiting = "Waiting On Opponent";
+    public const string Requested = "Opponent Wants To Play Again!";
+
+    //public const string Initial = "Waiting On Opponent";
+    [SerializeField] TextMeshProUGUI _promptText;
     [SerializeField] Button _playAgainButton;
     [SerializeField] Button _quitButton;
     [SerializeField] Button _acceptButton;
@@ -19,7 +26,7 @@ public class RoundOverManager : MonoBehaviour
         WinLineHandler.roundOver += Init;
         GameManager.Instance.TimeOut += Init;
 
-        _playAgainButton.onClick.AddListener(Reset);
+        _playAgainButton.onClick.AddListener(PlayAgainRequest);
     }
 
     private void Init()
@@ -32,6 +39,14 @@ public class RoundOverManager : MonoBehaviour
     private void Reset()
     {
         reset?.Invoke();
+    }
+
+    void PlayAgainRequest()
+    {
+        _playAgainButton.interactable = false;
+        _playAgainButton.gameObject.SetActive(false);
+        _promptText.text = Waiting;
+        //change the UI
     }
 
 

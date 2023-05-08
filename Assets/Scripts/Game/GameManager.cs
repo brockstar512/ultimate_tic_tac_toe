@@ -180,6 +180,22 @@ public class GameManager : NetworkBehaviour
 
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestPlayAgainServerRpc()
+    {
+        //ClientRpcParams rpcParams = default
+        //if(rpcParams.)
+    }
+
+    public void OnPlayAgain()
+    {
+
+    }
+
+    public void ExitGame()
+    {
+
+    }
 
     public class Game
     {
