@@ -67,11 +67,11 @@ public static class Utilities
         return (WinLineType)(row + 6);
     }
     // public static bool IsDraw<T>(T Dict) where T : Dictionary<int,T>// where T: Dictionary<int, MonoBehaviour>
-    public static bool IsDraw<T>(Dictionary<int, T> board)
+    public static bool IsDraw<T>(Dictionary<int, T> board) where T: IBoard
     {
         for(int i = 0; i < board.Count; i++)
         {
-            if (((MonoBehaviour)board[i]).GetComponent<Button>().interactable)
+            if (board[i]._button.interactable)
                 return false;
         }
         return true;

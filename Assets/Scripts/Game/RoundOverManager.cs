@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using static Enums;
 
 public class RoundOverManager : NetworkBehaviour
 {
@@ -33,9 +34,9 @@ public class RoundOverManager : NetworkBehaviour
 
     }
 
-    private void Init()
+    private void Init(MarkType MarkType)
     {
-        Debug.Log("Running  init");
+        Debug.Log($"Running  init:  {MarkType}");
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         cg.interactable = true;
         cg.blocksRaycasts = true;

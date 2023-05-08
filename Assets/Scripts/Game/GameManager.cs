@@ -26,7 +26,7 @@ public class GameManager : NetworkBehaviour
     private Dictionary<int, MarkType> BoardCells;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public event Action TimeOut;
+    public event Action<MarkType> TimeOut;
 
     private void Awake()
     {
@@ -153,9 +153,10 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc()
     {
+        MarkType winner = players[CurrentPlayer.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
 
-        RoundOverTimeOutClientRpc();
-        Debug.Log($"Time Out");
+        RoundOverTimeOutClientRpc(winner);
+        Debug.Log($"Time Out: the winner is {winner}");
 
         //Debug.Log($"This player timed out: {myPlayer.MyType}");
         //        TimeOut?.Invoke(players[CurrentPlayer.Value].MyType);
@@ -163,10 +164,12 @@ public class GameManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RoundOverTimeOutClientRpc()
+    public void RoundOverTimeOutClientRpc(MarkType winner)
     {
+        Debug.Log($"whose won:  {winner}        {myPlayer.MyType}");
+
         //validate board and if that win is legit
-        TimeOut?.Invoke();//this should not be a delagte... it should should be a generic round over 
+        TimeOut?.Invoke(winner);//this should not be a delagte... it should should be a generic round over 
 
     }
 

@@ -8,14 +8,14 @@ using DG.Tweening;
 using System.Drawing;
 using Unity.Netcode;
 
-public class MicroBoardManager : MonoBehaviour
+public class MicroBoardManager : MonoBehaviour, IBoard
 {
 
     public MarkType[,] Grid { get; private set; }
-    private Button _button;
-    private byte _index;
-    private byte _row;
-    private byte _col;
+    public Button _button { get; private set; }
+    public byte _index { get; private set; }
+    public byte _row { get; private set; }
+    public byte _col { get; private set; }
     private Transform _placements;
     CanvasGroup cg;
     public Dictionary<int, Cell> _cells { get; private set; }
