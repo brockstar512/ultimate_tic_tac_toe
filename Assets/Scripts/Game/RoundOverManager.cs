@@ -29,6 +29,8 @@ public class RoundOverManager : NetworkBehaviour
         GameManager.Instance.TimeOut += Init;
 
         _playAgainButton.onClick.AddListener(PlayAgainRequest);
+        _acceptButton.onClick.AddListener(HandlePlayAgainAcceptServerRpc);
+
     }
 
     private void Init()
@@ -63,10 +65,13 @@ public class RoundOverManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void HandlePlayAgainRequestServerRpc(ServerRpcParams serverRpcParams)
     {
-        Debug.Log("Server sending request");
-
         PlayAgainOfferClientRpc(serverRpcParams.Receive.SenderClientId);
-        //change the UI
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void HandlePlayAgainAcceptServerRpc()
+    {
+        ResetGameClientRpc();
     }
 
     [ClientRpc]
@@ -90,6 +95,10 @@ public class RoundOverManager : NetworkBehaviour
     void ResetGameClientRpc()
     {
         Debug.Log("Everyone Reset");
+        cg.interactable = false;
+        cg.blocksRaycasts = false;
+        cg.DOFade(0, .15f).SetEase(Ease.OutSine);
+        reset?.Invoke();
     }
 
 
