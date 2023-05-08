@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using static Enums;
 
 
@@ -127,7 +128,8 @@ public class GameManager : NetworkBehaviour
         {
             XUser = xUserId,
             OUser = oUserId,
-            StartTime = DateTime.Now,
+            XUserScore = 0,
+            OUserScore = 0,
             CurrentUser = xUserId,
             LastStarter = xUserId,
     };
@@ -167,6 +169,7 @@ public class GameManager : NetworkBehaviour
         TimeOut?.Invoke();//this should not be a delagte... it should should be a generic round over 
 
     }
+
     public (int xVal, int oVal, bool didWin) EndGameStatus()
     {
 
@@ -181,10 +184,11 @@ public class GameManager : NetworkBehaviour
     {
         public byte XUser { get; set; }
         public byte OUser { get; set; }
+        public byte XUserScore { get; set; }
+        public byte OUserScore { get; set; }
         public byte CurrentUser { get; set; }
         public byte LastStarter { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+
 
         public void SwitchCurrentPlayer()
         {
