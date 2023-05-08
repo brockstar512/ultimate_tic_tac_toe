@@ -12,7 +12,7 @@ public class MacroBoardManager : MonoBehaviour
     public MarkType[,] Grid { get; private set; }
     CanvasGroup cg;
     public Dictionary<int, MicroBoardManager> _boards { get; private set; }
-    public static event Action<WinLineType> winLine;
+    public static event Action<WinLineType, MarkType> winLine;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -63,16 +63,22 @@ public class MacroBoardManager : MonoBehaviour
             //_boards.interactable = false;
             Debug.Log($"Game is over");
             //do whatever animations you need
-            winLine?.Invoke(lineType);//this can be outisde to indicate draw or not
+            winLine?.Invoke(lineType, Grid[row, col]);
             cg.blocksRaycasts = false;
             //win
+        }
+        else if(Utilities.IsDraw(_boards))
+        {
+
+            winLine?.Invoke(WinLineType.None, MarkType.None);
+            cg.blocksRaycasts = false;
         }
         else
         {
             Debug.Log("you can keep going");
-
         }
     }
+
 
 
     private void Reset()

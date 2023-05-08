@@ -18,7 +18,7 @@ public class WinLineHandler : MonoBehaviour
     [SerializeField] Transform DiagonalLine;
     [SerializeField] Transform AntiDiagonalLine;
     const float _speed = 2f;
-    public static event Action roundOver;
+    public static event Action<MarkType> roundOver;
 
     private void Awake()
     {
@@ -26,14 +26,14 @@ public class WinLineHandler : MonoBehaviour
         RoundOverManager.reset += Reset;
     }
 
-    void ConfigLine(WinLineType WinLineType)
+    void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
         Transform prefab = GetLine(WinLineType);
         line = Instantiate(prefab, this.transform).GetComponent<Image>();
         line.color = LineColor;
             //GameManager.Instance.GetColor;
-        StopCoroutine(AnimateLine());
-        StartCoroutine(AnimateLine());
+        StopCoroutine(AnimateLine(MarkType));
+        StartCoroutine(AnimateLine(MarkType));
     }
 
     private Transform GetLine(WinLineType WinLineType)
@@ -72,7 +72,7 @@ public class WinLineHandler : MonoBehaviour
         return line;
     }
 
-    IEnumerator AnimateLine()
+    IEnumerator AnimateLine(MarkType markType)
     {
         yield return new WaitForSeconds(0.5f);
 
@@ -82,7 +82,7 @@ public class WinLineHandler : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(.5f);
-        roundOver?.Invoke();
+        roundOver?.Invoke(markType);
 
     }
 
