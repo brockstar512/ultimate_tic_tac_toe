@@ -167,6 +167,11 @@ public class GameManager : NetworkBehaviour
         TimeOut?.Invoke();//this should not be a delagte... it should should be a generic round over 
 
     }
+    public (int xVal, int oVal, bool didWin) EndGameStatus()
+    {
+
+        return (1,2,true);
+    }
 
 
 

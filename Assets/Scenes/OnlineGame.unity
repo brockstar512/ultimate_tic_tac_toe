@@ -28097,6 +28097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5823b0af32d504c869d52ca07620a3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _wrapUpHandler: {fileID: 8893339851832793520}
   _promptText: {fileID: 8893339850678491890}
   _playAgainButton: {fileID: 8893339851254705756}
   _quitButton: {fileID: 8893339850204344551}
@@ -28779,8 +28780,9 @@ GameObject:
   - component: {fileID: 8893339851832793512}
   - component: {fileID: 8893339851832793513}
   - component: {fileID: 8893339851832793519}
+  - component: {fileID: 8893339851832793520}
   m_Layer: 5
-  m_Name: Final Score Panel
+  m_Name: Final Wrap Up Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28794,10 +28796,25 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8893339851832793515}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &8893339851832793520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339851832793515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c283499f0afc4f63bc5dc37d43b7419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  YourStatus: {fileID: 8893339851318617022}
+  xScore: {fileID: 8893339850266033308}
+  oScore: {fileID: 8893339850067450692}
 --- !u!1 &8893339851834894324
 GameObject:
   m_ObjectHideFlags: 0

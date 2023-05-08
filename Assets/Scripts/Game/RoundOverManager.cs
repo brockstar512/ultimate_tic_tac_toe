@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using System;
 using DG.Tweening;
 using TMPro;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class RoundOverManager : NetworkBehaviour
 {
@@ -15,6 +13,7 @@ public class RoundOverManager : NetworkBehaviour
 
 
     //public const string Initial = "Waiting On Opponent";
+    [SerializeField] WrapUpHandler _wrapUpHandler;
     [SerializeField] TextMeshProUGUI _promptText;
     [SerializeField] Button _playAgainButton;
     [SerializeField] Button _quitButton;
@@ -115,20 +114,21 @@ public class RoundOverManager : NetworkBehaviour
         Debug.Log("Player has Quit");
         //disconnect
         //go to lobby
-        QuitClientRpc();
+        var (xVal, oVal, didWin) = GameManager.Instance.EndGameStatus();
+        QuitClientRpc(xVal, oVal, didWin);
         //this should be in the overall wrap up
         //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
 
     }
 
     [ClientRpc]
-    void QuitClientRpc()
+    void QuitClientRpc(int xScore, int oScore, bool didWin)
     {
         Debug.Log("Everyone Quit");
         //disconnect
         //go to lobby
         NetworkManager.Singleton.Shutdown();
-
+        _wrapUpHandler.Init(xScore, oScore, didWin);
         //this should be in the overall wrap up
         //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
 
