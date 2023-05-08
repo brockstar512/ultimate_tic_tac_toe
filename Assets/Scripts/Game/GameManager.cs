@@ -1,16 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Linq;
 using static Enums;
-using System.Text.RegularExpressions;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
-using System.Reflection;
 
 
 public class GameManager : NetworkBehaviour
@@ -34,7 +26,6 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public event Action TimeOut;
-    //    public event Action<MarkType> TimeOut;
 
     private void Awake()
     {

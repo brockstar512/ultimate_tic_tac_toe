@@ -30,4 +30,12 @@ public class Enums : MonoBehaviour
         AntiDiagonal = -1,
         Diagonal = 1,
     }
+
+    public enum MyScenes
+    {
+        Login,
+        Menu,
+        OnlineGame,
+        LocalGame
+    }
 }

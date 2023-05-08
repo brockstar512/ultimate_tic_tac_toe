@@ -30,6 +30,7 @@ public class RoundOverManager : NetworkBehaviour
 
         _playAgainButton.onClick.AddListener(PlayAgainRequest);
         _acceptButton.onClick.AddListener(HandlePlayAgainAcceptServerRpc);
+        _quitButton.onClick.AddListener(Quit);
 
     }
 
@@ -101,5 +102,43 @@ public class RoundOverManager : NetworkBehaviour
         reset?.Invoke();
     }
 
+    private void Quit()
+    {
+        _quitButton.interactable = false;
+        QuitServerRpc();
+        NetworkManager.Singleton.Shutdown();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void QuitServerRpc()
+    {
+        Debug.Log("Player has Quit");
+        //disconnect
+        //go to lobby
+        QuitClientRpc();
+        //this should be in the overall wrap up
+        //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
+
+    }
+
+    [ClientRpc]
+    void QuitClientRpc()
+    {
+        Debug.Log("Everyone Quit");
+        //disconnect
+        //go to lobby
+        NetworkManager.Singleton.Shutdown();
+
+        //this should be in the overall wrap up
+        //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
+
+    }
+
+    public override void OnDestroy()
+    {
+        _playAgainButton.onClick.RemoveAllListeners();
+        _acceptButton.onClick.RemoveAllListeners();
+        _quitButton.onClick.RemoveAllListeners();
+    }
 
 }
