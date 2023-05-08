@@ -160,42 +160,26 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc()
     {
-        //this should indicate weather it was a time out to round over.
 
-        RoundOverClientRpc();
+        RoundOverTimeOutClientRpc();
+        Debug.Log($"Time Out");
+
         //Debug.Log($"This player timed out: {myPlayer.MyType}");
         //        TimeOut?.Invoke(players[CurrentPlayer.Value].MyType);
         //TimeOut?.Invoke();
-        //either use default params
-        //Or
-        //just use the active game class
-
     }
 
     [ClientRpc]
-    public void RoundOverClientRpc()
+    public void RoundOverTimeOutClientRpc()
     {
         //validate board and if that win is legit
         TimeOut?.Invoke();//this should not be a delagte... it should should be a generic round over 
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RequestPlayAgainServerRpc()
-    {
-        //ClientRpcParams rpcParams = default
-        //if(rpcParams.)
-    }
 
-    public void OnPlayAgain()
-    {
 
-    }
-
-    public void ExitGame()
-    {
-
-    }
+ 
 
     public class Game
     {
