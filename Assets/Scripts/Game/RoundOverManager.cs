@@ -8,12 +8,18 @@ using static Enums;
 
 public class RoundOverManager : NetworkBehaviour
 {
-    public const string Waiting = "Waiting On Opponent...";
-    public const string Requested = "Opponent Wants To Play Again!";
-    public const string OpponentLeft = "Opponent Already Left";
+    public const string WAITING = "Waiting On Opponent...";
+    public const string REQUESTED = "Opponent Wants To Play Again!";
+    public const string OPPONENT_LEFT = "Opponent Already Left";
+    public const string REMATCH = "Rematch?";
 
+    const string TIE = "Round Tied!";
+    const string LOSE = "Round Lost!";
+    const string WIN = "Round Won!";
+    public Color tie_Color;
 
-    //public const string Initial = "Waiting On Opponent";
+    [SerializeField] Image _banner;
+    [SerializeField] TextMeshProUGUI _header;
     [SerializeField] WrapUpHandler _wrapUpHandler;
     [SerializeField] TextMeshProUGUI _promptText;
     [SerializeField] Button _playAgainButton;
@@ -36,12 +42,27 @@ public class RoundOverManager : NetworkBehaviour
 
     private void Init(MarkType MarkType)
     {
+        SetUI(MarkType);
+        _promptText.text = REMATCH;
         Debug.Log($"Running  init:  {MarkType}");
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         cg.interactable = true;
         cg.blocksRaycasts = true;
         _playAgainButton.interactable = true;
         _quitButton.interactable = true;
+    }
+
+    void SetUI(MarkType markType)
+    {
+        Debug.Log($"Running  round over :  {markType} here is my type      {GameManager.Instance.myPlayer.MyType}");
+        if (markType == MarkType.None)
+        {
+            _header.text = TIE;
+            _banner.color = tie_Color;
+            return;
+        }
+        _header.text = GameManager.Instance.myPlayer.MyType == markType ? WIN : LOSE;
+        _banner.color = GameManager.Instance.myPlayer.MyType == markType ? GameManager.Instance.myPlayer.GetMyColor : GameManager.Instance.myPlayer.GetOpponentColor;
     }
 
 
@@ -59,7 +80,7 @@ public class RoundOverManager : NetworkBehaviour
         //serverRpcParams.Receive.SenderClientId
         _playAgainButton.interactable = false;
         _playAgainButton.gameObject.SetActive(false);
-        _promptText.text = Waiting;
+        _promptText.text = WAITING;
         HandlePlayAgainRequestServerRpc(new ServerRpcParams());
     }
 
@@ -86,7 +107,7 @@ public class RoundOverManager : NetworkBehaviour
 
         _playAgainButton.interactable = false;
         _playAgainButton.gameObject.SetActive(false);
-        _promptText.text = Requested;
+        _promptText.text = REQUESTED;
         _acceptButton.gameObject.SetActive(true);
         _acceptButton.interactable = true;
         Debug.Log("Other client wants to play again");

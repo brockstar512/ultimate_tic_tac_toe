@@ -28,10 +28,16 @@ public class WinLineHandler : MonoBehaviour
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
         Debug.Log($"Here is the marktype {MarkType}");
+        if (MarkType == MarkType.None)
+        {
+            roundOver?.Invoke(MarkType);
+            return;
+        }
+
         Transform prefab = GetLine(WinLineType);
         line = Instantiate(prefab, this.transform).GetComponent<Image>();
         line.color = LineColor;
-            //GameManager.Instance.GetColor;
+        
         StopCoroutine(AnimateLine(MarkType));
         StartCoroutine(AnimateLine(MarkType));
     }

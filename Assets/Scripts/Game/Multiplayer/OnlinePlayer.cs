@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
+
 
 public class OnlinePlayer : NetworkBehaviour
 {

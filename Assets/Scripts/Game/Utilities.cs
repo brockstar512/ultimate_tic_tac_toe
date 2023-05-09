@@ -14,6 +14,10 @@ public static class Utilities
         //get the type we are checking for
         var type = Grid[row, col];
 
+        if(type == MarkType.None)
+            return (false, WinLineType.None);
+
+
         //we are only checking the row we placed at... this should be the micro board
         for (int i = 0; i < GRID_SIZE; i++)
         {
@@ -70,7 +74,7 @@ public static class Utilities
         //this runs for boards to determine if its a draw
         for(int i = 0; i < board.Count; i++)
         {
-            Debug.Log($"Is this board still available {board[i]._button.interactable}");
+            Debug.Log($"is this button interactable? if true the draw wont run  ->{board[i]._button.interactable}");
             if (board[i]._button.interactable)
                 return false;
         }

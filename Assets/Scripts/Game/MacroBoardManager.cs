@@ -47,10 +47,13 @@ public class MacroBoardManager : MonoBehaviour
         }
     }
     //todo you should mark the board even when the micro bpard was not claimed
-    void MarkBoard(int row, int col)
+    void MarkBoard(int row, int col, MarkType markType)
     {
+        //i think its probably becase when the bpard is marked we do not chnge the button here
+        Debug.Log($"MACROBOARD CHECK");
+        // GameManager.Instance.GetMarkType
         //Debug.Log($"Marking cell for grid {gameObject.name}");
-        Grid[row, col] = GameManager.Instance.GetMarkType;
+        Grid[row, col] = markType;//this needs to be an argument
         //GameManager.Instance.ActiveGame.GetPlayerType(actor);
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
@@ -69,6 +72,7 @@ public class MacroBoardManager : MonoBehaviour
         }
         else if(Utilities.IsDraw(_boards))
         {
+            Debug.Log("This match is a draw");
 
             winLine?.Invoke(WinLineType.None, MarkType.None);
             cg.blocksRaycasts = false;

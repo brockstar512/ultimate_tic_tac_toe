@@ -20,7 +20,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     public CanvasGroup cg { get; private set; }
     private Transform _placements;
     public Dictionary<int, Cell> _cells { get; private set; }
-    public event Action<int, int> markBoard;
+    public event Action<int, int, MarkType> markBoard;
     public event Action onCellSelected;
     private Image _mark;
 
@@ -59,6 +59,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
     void MarkCell(int row, int col)
     {
+        Debug.Log($"MICROBOARD CHECK");
         //Debug.Log($"Marking cell for grid {gameObject.name}");
         Grid[row, col] = GameManager.Instance.GetMarkType;
 
@@ -78,31 +79,26 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
             _button.interactable = false;
             cg.blocksRaycasts = false;
-            Debug.Log("This board is done");
-            markBoard?.Invoke(_row, _col);
+            Debug.Log("This board is done with a winner");
+            markBoard?.Invoke(_row, _col, GameManager.Instance.GetMarkType);
             Vector3 size = new Vector3(.90f, .90f, .90f);
             _mark.color = GameManager.Instance.GetColor;
             _mark.enabled = true;
             _mark.transform.DOScale(size, .15f);
-            //do whatever animations you need
+            return;
             
         }
         else if (Utilities.IsDraw(_cells))
         {
-
+            Debug.Log("This board is done with a draw");
             _button.interactable = false;
-            StopCoroutine(ResetView(.1f));
-            StartCoroutine(ResetView(.1f));
+            markBoard?.Invoke(_row, _col, MarkType.None);
+            
         }
-        else
-        {
-            //this should just be bellow and we return out of the og if statement
-            Debug.Log("you can keep going");//switch turns
-            StopCoroutine(ResetView(.1f));
-            StartCoroutine(ResetView(.1f));
 
-        }
-        //todoif all the placeces are taken it should not be interactable
+
+        StopCoroutine(ResetView(.1f));
+        StartCoroutine(ResetView(.1f));
     }
 
     IEnumerator ResetView(float pause)
