@@ -1,10 +1,9 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
-using System;
+
 public class WinLineHandler : MonoBehaviour
 {
     [SerializeField] Color LineColor;
@@ -28,6 +27,7 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
+        Debug.Log($"Here is the marktype {MarkType}");
         Transform prefab = GetLine(WinLineType);
         line = Instantiate(prefab, this.transform).GetComponent<Image>();
         line.color = LineColor;

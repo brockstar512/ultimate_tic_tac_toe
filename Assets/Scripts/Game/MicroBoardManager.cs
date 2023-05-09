@@ -8,6 +8,7 @@ using DG.Tweening;
 using System.Drawing;
 using Unity.Netcode;
 
+
 public class MicroBoardManager : MonoBehaviour, IBoard
 {
 
@@ -16,8 +17,8 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     public byte _index { get; private set; }
     public byte _row { get; private set; }
     public byte _col { get; private set; }
+    public CanvasGroup cg { get; private set; }
     private Transform _placements;
-    CanvasGroup cg;
     public Dictionary<int, Cell> _cells { get; private set; }
     public event Action<int, int> markBoard;
     public event Action onCellSelected;
@@ -63,6 +64,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
+        Debug.Log($"All cells are taken now -> {Utilities.IsDraw(_cells)}");
 
         if (isDone)
         {
@@ -74,6 +76,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
                 _cells[i].Reset();
             }
 
+            _button.interactable = false;
             cg.blocksRaycasts = false;
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col);
@@ -84,14 +87,22 @@ public class MicroBoardManager : MonoBehaviour, IBoard
             //do whatever animations you need
             
         }
+        else if (Utilities.IsDraw(_cells))
+        {
+
+            _button.interactable = false;
+            StopCoroutine(ResetView(.1f));
+            StartCoroutine(ResetView(.1f));
+        }
         else
         {
+            //this should just be bellow and we return out of the og if statement
             Debug.Log("you can keep going");//switch turns
             StopCoroutine(ResetView(.1f));
             StartCoroutine(ResetView(.1f));
 
         }
-
+        //todoif all the placeces are taken it should not be interactable
     }
 
     IEnumerator ResetView(float pause)

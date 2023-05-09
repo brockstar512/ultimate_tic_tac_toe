@@ -79,6 +79,7 @@ public class TimeManager : MonoBehaviour
 
     void MarkCellTimeFail()
     {
+        return;
         GameManager.Instance.PlayerTimedOutServerRpc();
     }
 

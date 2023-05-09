@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using static Enums;
 
 
@@ -154,13 +153,7 @@ public class GameManager : NetworkBehaviour
     public void PlayerTimedOutServerRpc()
     {
         MarkType winner = players[CurrentPlayer.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
-
         RoundOverTimeOutClientRpc(winner);
-        Debug.Log($"Time Out: the winner is {winner}");
-
-        //Debug.Log($"This player timed out: {myPlayer.MyType}");
-        //        TimeOut?.Invoke(players[CurrentPlayer.Value].MyType);
-        //TimeOut?.Invoke();
     }
 
     [ClientRpc]

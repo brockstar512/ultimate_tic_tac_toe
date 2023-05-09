@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Enums;
@@ -47,7 +46,7 @@ public class MacroBoardManager : MonoBehaviour
             board.markBoard += MarkBoard;
         }
     }
-
+    //todo you should mark the board even when the micro bpard was not claimed
     void MarkBoard(int row, int col)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
@@ -65,6 +64,7 @@ public class MacroBoardManager : MonoBehaviour
             //do whatever animations you need
             winLine?.Invoke(lineType, Grid[row, col]);
             cg.blocksRaycasts = false;
+            
             //win
         }
         else if(Utilities.IsDraw(_boards))

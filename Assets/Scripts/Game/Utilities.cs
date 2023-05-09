@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using static Enums;
-
+using UnityEngine;
 public static class Utilities
 {
 
@@ -69,8 +66,11 @@ public static class Utilities
     // public static bool IsDraw<T>(T Dict) where T : Dictionary<int,T>// where T: Dictionary<int, MonoBehaviour>
     public static bool IsDraw<T>(Dictionary<int, T> board) where T: IBoard
     {
+        //this runs for cells to determine if the board can go more
+        //this runs for boards to determine if its a draw
         for(int i = 0; i < board.Count; i++)
         {
+            Debug.Log($"Is this board still available {board[i]._button.interactable}");
             if (board[i]._button.interactable)
                 return false;
         }
