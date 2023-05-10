@@ -38,13 +38,40 @@ public class GameManager : NetworkBehaviour
         }
         //BoardCells = new Dictionary< int,MarkType>();
         //Debug.Log("Game manager is initiazlized");
-    }
 
-    private void Update()
+    }
+    //public override void OnNetworkSpawn()
+    //{
+    //    if (!IsServer)
+    //        return;
+
+    //    base.OnNetworkSpawn();
+    //    RoundOverManager.reset += ActiveGame.Reset;
+    //}
+    //public override void OnNetworkDespawn()
+    //{
+    //    if (!IsServer)
+    //        return;
+
+    //    base.OnNetworkDespawn();
+    //    RoundOverManager.reset -= ActiveGame.Reset;
+    //}
+
+    public (int xVal, int oVal, bool didWin) EndGameStatus()
     {
-        if (!IsServer)
-            return;
-        //Debug.Log($"Current turn:{this.ActiveGame.CurrentUser}");
+
+        bool didWin;
+        if (myPlayer.MyType == MarkType.X && xScore.Value > yScore.Value)
+        {
+            didWin = true;
+        }
+        else
+        {
+            didWin = false;
+        }
+
+
+        return (xScore.Value, yScore.Value, didWin);
     }
 
     public void InitializePlayer(OnlinePlayer player)
@@ -52,31 +79,13 @@ public class GameManager : NetworkBehaviour
         players.Add(player);
     }
 
-
-    [ClientRpc]
-    void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
-    {
-        //Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
-        if (myPlayer.IsMyTurn.Value)
-            return;
-        //_boards
-        //byte _row = (byte)(cellIndex / 3);
-        //byte _col = (byte)(cellIndex % 3);
-        //Debug.Log("It would have ran");
-
-        //return;
-        MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();//this is going to run it again for the same player
-
-        //UpdateTurnServerRpc();
-    }
-
-    
-    void UpdateTurn()
+    [ServerRpc(RequireOwnership = false)]
+    void UpdateTurnServerRpc()
     {
         if (!IsServer)
             return;
 
-        //Debug.Log($"Current turn:{this.ActiveGame.CurrentUser}");
+        Debug.Log($"Current turn:{this.ActiveGame.CurrentUser}");
         players[CurrentPlayer.Value].IsMyTurn.Value = false;
         CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
         players[CurrentPlayer.Value].IsMyTurn.Value = true;
@@ -107,24 +116,14 @@ public class GameManager : NetworkBehaviour
         {
             ActiveGame.BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
-            UpdateTurn();
+            UpdateTurnServerRpc();
         }
 
 
     }
 
-    [ClientRpc]
-    void RegisterPlayerClientRpc()
-    {
-        byte index = 0;
-        foreach(OnlinePlayer player in players)
-        {
-            player.Init(index);
-            index++;
-        }
-    }
-
-    public void RegisterGame(byte xUserId, byte oUserId)
+    [ServerRpc(RequireOwnership = false)]
+    public void RegisterGameServerRpc(byte xUserId, byte oUserId)
     {
         if (!IsServer)
             return;
@@ -140,12 +139,14 @@ public class GameManager : NetworkBehaviour
             LastStarter = xUserId,
             BoardCells = new Dictionary<int, MarkType>(),
             Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE],
-    };
+        };
+
+        RoundOverManager.reset += ActiveGame.Reset;
 
         //grid size square * board number + cell index
-        int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE* Utilities.GRID_SIZE);
+        int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
 
-        while(cellCount > 0)
+        while (cellCount > 0)
         {
             //Debug.Log("Cell initialize "+ cellCount);
 
@@ -157,60 +158,6 @@ public class GameManager : NetworkBehaviour
 
         CurrentPlayer.Value = ActiveGame.CurrentUser;
     }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void PlayerTimedOutServerRpc()
-    {
-        MarkType winner = players[CurrentPlayer.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
-        RoundOverTimeOutClientRpc(winner);
-    }
-
-    [ClientRpc]
-    public void RoundOverTimeOutClientRpc(MarkType winner)
-    {
-        //Debug.Log($"whose won:  {winner}        {myPlayer.MyType}");
-
-        //validate board and if that win is legit
-        TimeOut?.Invoke(winner);//this should not be a delagte... it should should be a generic round over 
-
-    }
-
-    public (int xVal, int oVal, EndGameStatus status) EndGameStatus()
-    {
-        //(EndGameStatus)yourInt;
-        int status = -1;
-        if(xScore.Value == yScore.Value)
-        {
-            //tied
-            status = 2;
-        }
-        else if (xScore.Value > yScore.Value)
-        {
-            if (myPlayer.MyType == MarkType.X)
-            {
-                //you won
-                status = 0;
-            }
-            else
-            {
-                status = 1;
-            }
-        }
-        else
-        {
-            if (myPlayer.MyType == MarkType.O)
-            {
-                status = 0;
-            }
-            else
-            {
-                status = 1;
-            }
-        }
-
-        return (xScore.Value, yScore.Value, (EndGameStatus)status);
-    }
-
 
     [ServerRpc(RequireOwnership = false)]
     public void RoundOverStatusServerRpc(MarkType winner)
@@ -229,6 +176,58 @@ public class GameManager : NetworkBehaviour
                 break;
         }
 
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerTimedOutServerRpc()
+    {
+        MarkType winner = players[CurrentPlayer.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
+        RoundOverTimeOutClientRpc(winner);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StartGameServerRpc()
+    {
+        players[CurrentPlayer.Value].IsMyTurn.Value = true;
+    }
+
+    [ClientRpc]
+    public void RoundOverTimeOutClientRpc(MarkType winner)
+    {
+        //Debug.Log($"whose won:  {winner}        {myPlayer.MyType}");
+
+        //validate board and if that win is legit
+        TimeOut?.Invoke(winner);//this should not be a delagte... it should should be a generic round over 
+
+    }
+
+    [ClientRpc]
+    void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
+    {
+        //Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
+        if (myPlayer.IsMyTurn.Value)
+            return;
+
+        MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();//this is going to run it again for the same player
+    }
+
+    [ClientRpc]
+    void RegisterPlayerClientRpc()
+    {
+        byte index = 0;
+        foreach (OnlinePlayer player in players)
+        {
+            player.Init(index);
+            index++;
+        }
+        StartGame();
+
+    }
+
+    private void StartGame()
+    {
+        StopCoroutine(CountDownHandler.Instance.CountDown());
+        StartCoroutine(CountDownHandler.Instance.CountDown());
     }
 
 

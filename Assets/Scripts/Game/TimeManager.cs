@@ -26,6 +26,7 @@ public class TimeManager : MonoBehaviour
 
         timeRemaining = timeCountDown;
         timerIsRunning = false;
+
     }
 
     void Update()
@@ -74,8 +75,6 @@ public class TimeManager : MonoBehaviour
     {
         timerIsRunning = false;
     }
-
-
 
     void MarkCellTimeFail()
     {

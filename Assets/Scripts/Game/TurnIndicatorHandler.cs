@@ -10,6 +10,7 @@ public class TurnIndicatorHandler : MonoBehaviour
 {
     public static TurnIndicatorHandler Instance { get; private set; }
     [SerializeField] TextMeshProUGUI playerText;
+    CanvasGroup cg;
 
     private void Awake()
     {
@@ -21,9 +22,17 @@ public class TurnIndicatorHandler : MonoBehaviour
         {
             Instance = this;
         }
+        cg = GetComponent<CanvasGroup>();
+        cg.alpha = 0;
     }
 
-    public void Show(bool isMyTurn)
+    public void Show(bool isOn)
+    {
+        cg.alpha = isOn ? 1 : 0;
+        Pulse();
+    }
+
+    public void ShowTurn(bool isMyTurn)
     {
         Color _color = GameManager.Instance.GetColor;
 
@@ -41,8 +50,7 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     }
 
-
-     public void Pulse()
+    public void Pulse()
      {
         playerText.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => playerText.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
      }

@@ -26,7 +26,7 @@ public class ConnectionHandler : MonoBehaviour
                 //register game
                 //NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString()
                 Debug.Log($"Register game");
-                GameManager.Instance.RegisterGame((byte)0, (byte)1);
+                GameManager.Instance.RegisterGameServerRpc((byte)0, (byte)1);
 
             }
             

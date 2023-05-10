@@ -54,12 +54,14 @@ public class InspectController : MonoBehaviour
     void Show()
     {
         //if (!GameManager.Instance.InputsEnabled)// wait for UI to update
+        if (!GameManager.Instance.InputsEnabled.Value)
+        {
+            return;
+        }
         if (!GameManager.Instance.myPlayer.IsMyTurn.Value)
         {
             TurnIndicatorHandler.Instance.Pulse();
-            return;
         }
-            
 
         this.transform.SetAsLastSibling();
         _button.onClick.RemoveAllListeners();

@@ -21,7 +21,6 @@ public class OnlinePlayer : NetworkBehaviour
             }
             else
             {
-
                 return new Color32(141, 202, 0, 255); 
             }
         }
@@ -54,7 +53,7 @@ public class OnlinePlayer : NetworkBehaviour
         IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
         {
             TimeManager.Instance.StartTimer(newVal);
-            TurnIndicatorHandler.Instance.Show(newVal);
+            TurnIndicatorHandler.Instance.ShowTurn(newVal);
         };
 
     }
@@ -84,20 +83,23 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
             return;
 
+        IsMyTurn.Value = false;
+        TurnIndicatorHandler.Instance.ShowTurn(false);
+
         if (0 == (int)xUser)
         {
             MyType = MarkType.X;
             OpponentType = MarkType.O;
             MyUsername = 0;
-            IsMyTurn.Value = true;
+            //IsMyTurn.Value = true;
         }
         else
         {
             MyType = MarkType.O;
             OpponentType = MarkType.X;
             MyUsername = 1;
-            IsMyTurn.Value = false;
-            TurnIndicatorHandler.Instance.Show(false);
+            //IsMyTurn.Value = false;
+            //TurnIndicatorHandler.Instance.Show(false);
         }
         //namer = MyUsername;
         Debug.Log(MyType);

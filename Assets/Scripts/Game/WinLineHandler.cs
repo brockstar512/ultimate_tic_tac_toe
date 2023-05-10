@@ -94,7 +94,8 @@ public class WinLineHandler : MonoBehaviour
 
     void Reset()
     {
-        Destroy(line.gameObject);
+        if(line!= null)
+            Destroy(line.gameObject);
     }
 
 
