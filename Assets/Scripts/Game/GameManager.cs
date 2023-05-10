@@ -168,7 +168,8 @@ public class GameManager : NetworkBehaviour
             case MarkType.None:
                 break;
         }
-
+        
+        
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -183,6 +184,8 @@ public class GameManager : NetworkBehaviour
     public void StartGameServerRpc(byte myType)
     {
         Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(byte)players[CurrentPlayer.Value].MyType}");
+        Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayer.Value}-are these the same->{ActiveGame.CurrentUser}");
+
         if (myType != (byte)players[CurrentPlayer.Value].MyType)
             return;
 
