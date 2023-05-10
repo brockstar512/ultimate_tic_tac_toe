@@ -25,9 +25,19 @@ public class CountDownHandler : NetworkBehaviour
         cg.blocksRaycasts = true;
         cg.interactable = true;
     }
+    private void Start()
+    {
+        RoundOverManager.reset += StartCountDown;
+    }
+
+    public void StartCountDown()
+    {
+        StopCoroutine(CountDownHandler.Instance.CountDown());
+        StartCoroutine(CountDownHandler.Instance.CountDown());
+    }
 
 
-    public IEnumerator CountDown()
+    private IEnumerator CountDown()
     {
         TurnIndicatorHandler.Instance.Show(false);
 
@@ -46,6 +56,8 @@ public class CountDownHandler : NetworkBehaviour
         cg.blocksRaycasts = false;
         cg.interactable = false;
         GameManager.Instance.StartGameServerRpc((byte)GameManager.Instance.myPlayer.MyType);
+        TurnIndicatorHandler.Instance.Show(true);
+
     }
 
 

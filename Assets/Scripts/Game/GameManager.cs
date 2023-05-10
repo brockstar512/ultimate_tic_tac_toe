@@ -71,13 +71,17 @@ public class GameManager : NetworkBehaviour
         if (!IsServer)
             return;
 
-        Debug.Log($"Current turn:{this.ActiveGame.CurrentUser}");
-        players[CurrentPlayer.Value].IsMyTurn.Value = false;
-        CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
-        players[CurrentPlayer.Value].IsMyTurn.Value = true;
-        //players[CurrentPlayer.Value].StartTurn();
-        ActiveGame.SwitchCurrentPlayer();
-        //Debug.Log($"New turn:{this.ActiveGame.CurrentUser}");
+        Debug.Log($"Current turn:{this.ActiveGame.CurrentUser} and shoudl the timer still be running: {InputsEnabled.Value}");
+        //todo this might need to change. 
+        if (InputsEnabled.Value)
+        {
+            players[CurrentPlayer.Value].IsMyTurn.Value = false;
+            CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
+            players[CurrentPlayer.Value].IsMyTurn.Value = true;
+            //players[CurrentPlayer.Value].StartTurn();
+            ActiveGame.SwitchCurrentPlayer();
+            //Debug.Log($"New turn:{this.ActiveGame.CurrentUser}");
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -102,7 +106,7 @@ public class GameManager : NetworkBehaviour
         {
             ActiveGame.BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
-            UpdateTurnServerRpc();
+            UpdateTurnServerRpc();//i might need to change how the timer interacts with the utrn switching 
         }
 
 
@@ -151,8 +155,8 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RoundOverStatusServerRpc(MarkType winner)
     {
-        //i feel like validation should be done as you are playing otherwise
-        //its going to get way to complicated for not a very good reason
+        Debug.Log("We have a winner ");
+        InputsEnabled.Value = false;
         switch (winner)
         {
             case MarkType.X:
@@ -171,6 +175,7 @@ public class GameManager : NetworkBehaviour
     public void PlayerTimedOutServerRpc()
     {
         MarkType winner = players[CurrentPlayer.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
+        RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);
     }
 
@@ -188,11 +193,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     public void RoundOverTimeOutClientRpc(MarkType winner)
     {
-        //Debug.Log($"whose won:  {winner}        {myPlayer.MyType}");
-
-        //validate board and if that win is legit
-        TimeOut?.Invoke(winner);//this should not be a delagte... it should should be a generic round over 
-
+        TimeOut?.Invoke(winner);
     }
 
     [ClientRpc]
@@ -218,8 +219,7 @@ public class GameManager : NetworkBehaviour
             index++;
         }
 
-        StopCoroutine(CountDownHandler.Instance.CountDown());
-        StartCoroutine(CountDownHandler.Instance.CountDown());
+        CountDownHandler.Instance.StartCountDown();
     }
 
 

@@ -93,6 +93,8 @@ public class RoundOverManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void HandlePlayAgainAcceptServerRpc()
     {
+        Debug.Log("This should reset on the client");
+        //GameManager.Instance.ActiveGame.Reset();
         ResetGameClientRpc();
     }
 
