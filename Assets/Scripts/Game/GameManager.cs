@@ -60,6 +60,8 @@ public class GameManager : NetworkBehaviour
 
     public void InitializePlayer(OnlinePlayer player)
     {
+        Debug.Log($"Initializing player");
+
         players.Add(player);
     }
 
@@ -210,6 +212,8 @@ public class GameManager : NetworkBehaviour
         byte index = 0;
         foreach (OnlinePlayer player in players)
         {
+            Debug.Log($"this should run twice");
+
             player.Init(index);
             index++;
         }
