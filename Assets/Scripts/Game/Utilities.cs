@@ -74,7 +74,7 @@ public static class Utilities
         //this runs for boards to determine if its a draw
         for(int i = 0; i < board.Count; i++)
         {
-            Debug.Log($"is this button interactable? if true the draw wont run  ->{board[i]._button.interactable}");
+            //Debug.Log($"is this button interactable? if true the draw wont run  ->{board[i]._button.interactable}");
             if (board[i]._button.interactable)
                 return false;
         }

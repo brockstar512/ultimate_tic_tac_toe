@@ -45,7 +45,7 @@ public class TimeManager : MonoBehaviour
     public void StartTimer(bool isBeginningTurn)
     {
         //TurnIndicatorHandler.Instance.Show();
-        Debug.Log("starting timer " + isBeginningTurn);
+        //Debug.Log("starting timer " + isBeginningTurn);
         if (!isBeginningTurn)
             return;
         //maybe have a delay? so consider making this a voroutine
@@ -79,7 +79,6 @@ public class TimeManager : MonoBehaviour
 
     void MarkCellTimeFail()
     {
-        return;
         GameManager.Instance.PlayerTimedOutServerRpc();
     }
 

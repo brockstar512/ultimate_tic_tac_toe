@@ -1,12 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
-using System;
-using DG.Tweening;
-using System.Drawing;
-using Unity.Netcode;
 
 
 public class MicroBoardManager : MonoBehaviour, IBoard
@@ -25,8 +23,6 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     private Image _mark;
 
 
-    //when a cell is selected this read its own board to see if the user won this micro board
-    //then destroy that boards inspect controller
     public void Init(byte index)
     {
         cg = GetComponent<CanvasGroup>();
@@ -59,13 +55,13 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
     void MarkCell(int row, int col)
     {
-        Debug.Log($"MICROBOARD CHECK");
+        //Debug.Log($"MICROBOARD CHECK");
         //Debug.Log($"Marking cell for grid {gameObject.name}");
         Grid[row, col] = GameManager.Instance.GetMarkType;
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
-        Debug.Log($"All cells are taken now -> {Utilities.IsDraw(_cells)}");
+        //Debug.Log($"All cells are taken now -> {Utilities.IsDraw(_cells)}");
 
         if (isDone)
         {
@@ -99,6 +95,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
         StopCoroutine(ResetView(.1f));
         StartCoroutine(ResetView(.1f));
+        
     }
 
     IEnumerator ResetView(float pause)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
@@ -9,7 +10,6 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
     private Game ActiveGame { get; set; }
-    //this is just for validation purposes which is why they should be private
     public MarkType GetMarkType
     {
         get { return myPlayer.IsMyTurn.Value ? myPlayer.MyType : myPlayer.OpponentType; }
@@ -22,7 +22,6 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     private List<OnlinePlayer> players = new List<OnlinePlayer>();
     public OnlinePlayer myPlayer;
-    private Dictionary<int, MarkType> BoardCells;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public event Action<MarkType> TimeOut;
@@ -37,10 +36,16 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
-        BoardCells = new Dictionary< int,MarkType>();
-        Debug.Log("Game manager is initiazlized");
+        //BoardCells = new Dictionary< int,MarkType>();
+        //Debug.Log("Game manager is initiazlized");
     }
 
+    private void Update()
+    {
+        if (!IsServer)
+            return;
+        //Debug.Log($"Current turn:{this.ActiveGame.CurrentUser}");
+    }
 
     public void InitializePlayer(OnlinePlayer player)
     {
@@ -71,11 +76,13 @@ public class GameManager : NetworkBehaviour
         if (!IsServer)
             return;
 
+        //Debug.Log($"Current turn:{this.ActiveGame.CurrentUser}");
         players[CurrentPlayer.Value].IsMyTurn.Value = false;
         CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
         players[CurrentPlayer.Value].IsMyTurn.Value = true;
         //players[CurrentPlayer.Value].StartTurn();
         ActiveGame.SwitchCurrentPlayer();
+        //Debug.Log($"New turn:{this.ActiveGame.CurrentUser}");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -86,9 +93,9 @@ public class GameManager : NetworkBehaviour
         //int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)board + (int)cell;
         //Debug.Log($"Checking board {cellDictIndex}");
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
-        if (BoardCells[cellDictIndex] != MarkType.None)
+        if (ActiveGame.BoardCells[cellDictIndex] != MarkType.None)
         {
-            Debug.Log("Reset the circle to what is saved on this grid");
+            //Debug.Log("Reset the circle to what is saved on this grid");
             //todo
             //make sure the UI matches the grid
             //make sure the local grid matches the server grid... or just tell that cell to equal this with a server rpc
@@ -98,7 +105,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            BoardCells[cellDictIndex] = GetMarkType;
+            ActiveGame.BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             UpdateTurn();
         }
@@ -121,8 +128,8 @@ public class GameManager : NetworkBehaviour
     {
         if (!IsServer)
             return;
-        Debug.Log("Starting new game");
-        Debug.Log($"Player Count {players.Count}");
+        //Debug.Log("Starting new game");
+        //Debug.Log($"Player Count {players.Count}");
         ActiveGame = new Game
         {
             XUser = xUserId,
@@ -131,6 +138,8 @@ public class GameManager : NetworkBehaviour
             OUserScore = 0,
             CurrentUser = xUserId,
             LastStarter = xUserId,
+            BoardCells = new Dictionary<int, MarkType>(),
+            Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE],
     };
 
         //grid size square * board number + cell index
@@ -139,8 +148,8 @@ public class GameManager : NetworkBehaviour
         while(cellCount > 0)
         {
             //Debug.Log("Cell initialize "+ cellCount);
-            
-            BoardCells[cellCount - 1] = MarkType.None;
+
+            ActiveGame.BoardCells[cellCount - 1] = MarkType.None;
             cellCount--;
         }
 
@@ -159,22 +168,69 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     public void RoundOverTimeOutClientRpc(MarkType winner)
     {
-        Debug.Log($"whose won:  {winner}        {myPlayer.MyType}");
+        //Debug.Log($"whose won:  {winner}        {myPlayer.MyType}");
 
         //validate board and if that win is legit
         TimeOut?.Invoke(winner);//this should not be a delagte... it should should be a generic round over 
 
     }
 
-    public (int xVal, int oVal, bool didWin) EndGameStatus()
+    public (int xVal, int oVal, EndGameStatus status) EndGameStatus()
     {
+        //(EndGameStatus)yourInt;
+        int status = -1;
+        if(xScore.Value == yScore.Value)
+        {
+            //tied
+            status = 2;
+        }
+        else if (xScore.Value > yScore.Value)
+        {
+            if (myPlayer.MyType == MarkType.X)
+            {
+                //you won
+                status = 0;
+            }
+            else
+            {
+                status = 1;
+            }
+        }
+        else
+        {
+            if (myPlayer.MyType == MarkType.O)
+            {
+                status = 0;
+            }
+            else
+            {
+                status = 1;
+            }
+        }
 
-        return (1,2,true);
+        return (xScore.Value, yScore.Value, (EndGameStatus)status);
     }
 
 
+    [ServerRpc(RequireOwnership = false)]
+    public void RoundOverStatusServerRpc(MarkType winner)
+    {
+        //i feel like validation should be done as you are playing otherwise
+        //its going to get way to complicated for not a very good reason
+        switch (winner)
+        {
+            case MarkType.X:
+                xScore.Value++;
+                break;
+            case MarkType.O:
+                yScore.Value++;
+                break;
+            case MarkType.None:
+                break;
+        }
 
- 
+    }
+
 
     public class Game
     {
@@ -184,7 +240,8 @@ public class GameManager : NetworkBehaviour
         public byte OUserScore { get; set; }
         public byte CurrentUser { get; set; }
         public byte LastStarter { get; set; }
-
+        public Dictionary<int, MarkType> BoardCells { get; set; }
+        public MarkType[,] Grid { get; set; }
 
         public void SwitchCurrentPlayer()
         {
@@ -193,8 +250,14 @@ public class GameManager : NetworkBehaviour
 
         public void Reset()
         {
-            //here
-            //CurrentUser = XUser;
+
+            int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
+            while (cellCount > 0)
+            {
+                BoardCells[cellCount - 1] = MarkType.None;
+                cellCount--;
+            }
+
             CurrentUser = LastStarter == XUser ? OUser : XUser;
             LastStarter = CurrentUser;
         }
@@ -222,10 +285,16 @@ public class GameManager : NetworkBehaviour
                 return XUser;
             }
         }
-
-        public bool ValidateBoard()
+        //pass winners board
+        public bool ValidateBoard(MarkType[,] Grid)
         {
-            return true;
+ 
+                    return true;
+        }
+
+        void UpdateScore()
+        {
+
         }
     }
 

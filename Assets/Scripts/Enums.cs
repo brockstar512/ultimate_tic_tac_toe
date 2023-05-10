@@ -11,6 +11,13 @@ public class Enums : MonoBehaviour
         O = 2
     }
 
+    public enum EndGameStatus
+    {
+        Win = 0,
+        Lose = 1,
+        Draw = 2
+    }
+
     public enum WinLineType
     {
         None,

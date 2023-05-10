@@ -44,7 +44,7 @@ public class RoundOverManager : NetworkBehaviour
     {
         SetUI(MarkType);
         _promptText.text = REMATCH;
-        Debug.Log($"Running  init:  {MarkType}");
+        //Debug.Log($"Running  init:  {MarkType}");
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         cg.interactable = true;
         cg.blocksRaycasts = true;
@@ -66,14 +66,14 @@ public class RoundOverManager : NetworkBehaviour
     }
 
 
-    [ContextMenu("Reset Button")]
-    private void Reset()
-    {
-        //cg.interactable = false;
-        //cg.blocksRaycasts = false;
-        //cg.DOFade(1, .15f).SetEase(Ease.OutSine);
-        reset?.Invoke();
-    }
+    //[ContextMenu("Reset Button")]
+    //private void Reset()
+    //{
+    //    //cg.interactable = false;
+    //    //cg.blocksRaycasts = false;
+    //    //cg.DOFade(1, .15f).SetEase(Ease.OutSine);
+    //    reset?.Invoke();
+    //}
 
     void PlayAgainRequest()
     {
@@ -110,13 +110,13 @@ public class RoundOverManager : NetworkBehaviour
         _promptText.text = REQUESTED;
         _acceptButton.gameObject.SetActive(true);
         _acceptButton.interactable = true;
-        Debug.Log("Other client wants to play again");
+        //Debug.Log("Other client wants to play again");
     }
 
     [ClientRpc]
     void ResetGameClientRpc()
     {
-        Debug.Log("Everyone Reset");
+        //Debug.Log("Everyone Reset");
         cg.interactable = false;
         cg.blocksRaycasts = false;
         cg.DOFade(0, .15f).SetEase(Ease.OutSine);
@@ -133,7 +133,7 @@ public class RoundOverManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void QuitServerRpc()
     {
-        Debug.Log("Player has Quit");
+        //Debug.Log("Player has Quit");
         //disconnect
         //go to lobby
         var (xVal, oVal, didWin) = GameManager.Instance.EndGameStatus();
@@ -146,7 +146,7 @@ public class RoundOverManager : NetworkBehaviour
     [ClientRpc]
     void QuitClientRpc(int xScore, int oScore, bool didWin)
     {
-        Debug.Log("Everyone Quit");
+        //Debug.Log("Everyone Quit");
         //disconnect
         //go to lobby
         NetworkManager.Singleton.Shutdown();

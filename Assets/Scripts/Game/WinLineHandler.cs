@@ -27,7 +27,7 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
-        Debug.Log($"Here is the marktype {MarkType}");
+        //Debug.Log($"Here is the marktype {MarkType}");
         if (MarkType == MarkType.None)
         {
             roundOver?.Invoke(MarkType);
