@@ -19,7 +19,7 @@ public class GameManager : NetworkBehaviour
         get { return myPlayer.IsMyTurn.Value ? myPlayer.GetMyColor : myPlayer.GetOpponentColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
-    public NetworkVariable<byte> CurrentPlayer = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
+    public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     private List<OnlinePlayer> players = new List<OnlinePlayer>();
     public OnlinePlayer myPlayer;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -71,13 +71,13 @@ public class GameManager : NetworkBehaviour
         if (!IsServer)
             return;
 
-        Debug.Log($"Current turn:{this.ActiveGame.CurrentUser} and shoudl the timer still be running: {InputsEnabled.Value}");
+        Debug.Log($"Current turn:{this.ActiveGame.currentUserIndex} and shoudl the timer still be running: {InputsEnabled.Value}");
         //todo this might need to change. 
         if (InputsEnabled.Value)
         {
-            players[CurrentPlayer.Value].IsMyTurn.Value = false;
-            CurrentPlayer.Value = CurrentPlayer.Value == (byte)0 ? (byte)1 : (byte)0;
-            players[CurrentPlayer.Value].IsMyTurn.Value = true;
+            players[CurrentPlayerIndex.Value].IsMyTurn.Value = false;
+            CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
+            players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
             //players[CurrentPlayer.Value].StartTurn();
             ActiveGame.SwitchCurrentPlayer();
             //Debug.Log($"New turn:{this.ActiveGame.CurrentUser}");
@@ -112,7 +112,7 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    
+    //user id will either be 1 or 0
     public void RegisterGame(byte xUserId, byte oUserId)
     {
         Debug.Log($"Am I the server {IsServer}");
@@ -126,12 +126,9 @@ public class GameManager : NetworkBehaviour
         {
             XUser = xUserId,
             OUser = oUserId,
-            XUserScore = 0,
-            OUserScore = 0,
-            CurrentUser = xUserId,
-            LastStarter = xUserId,
+            currentUserIndex = xUserId,
+            LastStarterIndex = xUserId,
             BoardCells = new Dictionary<int, MarkType>(),
-            Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE],
         };
 
         RoundOverManager.reset += ActiveGame.Reset;
@@ -149,7 +146,7 @@ public class GameManager : NetworkBehaviour
 
         RegisterPlayerClientRpc();
 
-        CurrentPlayer.Value = ActiveGame.CurrentUser;
+        CurrentPlayerIndex.Value = ActiveGame.currentUserIndex;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -175,7 +172,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc()
     {
-        MarkType winner = players[CurrentPlayer.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
+        MarkType winner = players[CurrentPlayerIndex.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);
     }
@@ -183,14 +180,14 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void StartGameServerRpc(byte myType)
     {
-        Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(byte)players[CurrentPlayer.Value].MyType}");
-        Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayer.Value}-are these the same->{ActiveGame.CurrentUser}");
+        Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(int)players[CurrentPlayerIndex.Value].MyType}");//my type should be 1 or 2 shuld never be 0
+        Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayerIndex.Value}-are these the same->{ActiveGame.currentUserIndex}");
 
-        if (myType != (byte)players[CurrentPlayer.Value].MyType)
+        if (myType != (byte)players[CurrentPlayerIndex.Value].MyType)
             return;
 
         InputsEnabled.Value = true;
-        players[CurrentPlayer.Value].IsMyTurn.Value = true;
+        players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
     }
 
     [ClientRpc]
@@ -232,16 +229,13 @@ public class GameManager : NetworkBehaviour
     {
         public byte XUser { get; set; }
         public byte OUser { get; set; }
-        public byte XUserScore { get; set; }
-        public byte OUserScore { get; set; }
-        public byte CurrentUser { get; set; }
-        public byte LastStarter { get; set; }
+        public byte currentUserIndex { get; set; }
+        public byte LastStarterIndex { get; set; }
         public Dictionary<int, MarkType> BoardCells { get; set; }
-        public MarkType[,] Grid { get; set; }
 
         public void SwitchCurrentPlayer()
         {
-            CurrentUser = GetOpponent(CurrentUser);
+            currentUserIndex = GetOpponent(currentUserIndex);
         }
 
         public void Reset()
@@ -254,8 +248,10 @@ public class GameManager : NetworkBehaviour
                 cellCount--;
             }
 
-            CurrentUser = LastStarter == XUser ? OUser : XUser;
-            LastStarter = CurrentUser;
+            currentUserIndex = LastStarterIndex == XUser ? OUser : XUser;
+            LastStarterIndex = currentUserIndex;
+
+            Debug.Log($"The two users we are making the index eqaul are {OUser} and {XUser} now it eauals {CurrentUserIndex}");
         }
 
         public MarkType GetPlayerType(byte userID)
