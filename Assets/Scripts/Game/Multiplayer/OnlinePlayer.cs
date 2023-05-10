@@ -83,6 +83,8 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
             return;
 
+        Debug.Log($"Initializing my player");
+
         IsMyTurn.Value = false;
         TurnIndicatorHandler.Instance.ShowTurn(false);
 

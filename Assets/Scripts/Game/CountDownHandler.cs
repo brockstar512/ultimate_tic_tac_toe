@@ -1,10 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
 
-public class CountDownHandler : MonoBehaviour
+public class CountDownHandler : NetworkBehaviour
 {
 
     public static CountDownHandler Instance { get; private set; }
@@ -46,8 +45,7 @@ public class CountDownHandler : MonoBehaviour
         CanvasGroup cg = GetComponent<CanvasGroup>();
         cg.blocksRaycasts = false;
         cg.interactable = false;
-        TurnIndicatorHandler.Instance.Show(true);
-
+        GameManager.Instance.StartGameServerRpc((byte)GameManager.Instance.myPlayer.MyType);
     }
 
 

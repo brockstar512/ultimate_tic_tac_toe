@@ -5,17 +5,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConnectionHandler : MonoBehaviour
+public class ConnectionHandler : NetworkBehaviour
 {
 
     private const int MaxPlayers = 2;
     [SerializeField] Button joinButton;
     [SerializeField] Button hostButton;
+    [SerializeField] Button serverButton;
 
     void Start()
     {
         joinButton.onClick.AddListener(StartJoin);
         hostButton.onClick.AddListener(StartHost);
+        serverButton.onClick.AddListener(StartServer);
 
         NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
         {
@@ -26,7 +28,7 @@ public class ConnectionHandler : MonoBehaviour
                 //register game
                 //NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString()
                 Debug.Log($"Register game");
-                GameManager.Instance.RegisterGameServerRpc((byte)0, (byte)1);
+                GameManager.Instance.RegisterGame((byte)0, (byte)1);
 
             }
             
@@ -46,6 +48,13 @@ public class ConnectionHandler : MonoBehaviour
         joinButton.interactable = false;
 
         NetworkManager.Singleton.StartClient();
+
+    }
+    public void StartServer()
+    {
+        serverButton.interactable = false;
+
+        NetworkManager.Singleton.StartServer();
 
     }
 

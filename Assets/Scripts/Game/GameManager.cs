@@ -40,22 +40,6 @@ public class GameManager : NetworkBehaviour
         //Debug.Log("Game manager is initiazlized");
 
     }
-    //public override void OnNetworkSpawn()
-    //{
-    //    if (!IsServer)
-    //        return;
-
-    //    base.OnNetworkSpawn();
-    //    RoundOverManager.reset += ActiveGame.Reset;
-    //}
-    //public override void OnNetworkDespawn()
-    //{
-    //    if (!IsServer)
-    //        return;
-
-    //    base.OnNetworkDespawn();
-    //    RoundOverManager.reset -= ActiveGame.Reset;
-    //}
 
     public (int xVal, int oVal, bool didWin) EndGameStatus()
     {
@@ -122,13 +106,16 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void RegisterGameServerRpc(byte xUserId, byte oUserId)
+    
+    public void RegisterGame(byte xUserId, byte oUserId)
     {
+        Debug.Log($"Am I the server {IsServer}");
         if (!IsServer)
             return;
         //Debug.Log("Starting new game");
         //Debug.Log($"Player Count {players.Count}");
+        Debug.Log($"creating the game");
+
         ActiveGame = new Game
         {
             XUser = xUserId,
@@ -186,8 +173,13 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void StartGameServerRpc()
+    public void StartGameServerRpc(byte myType)
     {
+        Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(byte)players[CurrentPlayer.Value].MyType}");
+        if (myType != (byte)players[CurrentPlayer.Value].MyType)
+            return;
+
+        InputsEnabled.Value = true;
         players[CurrentPlayer.Value].IsMyTurn.Value = true;
     }
 
@@ -214,21 +206,19 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc()
     {
+        Debug.Log($"All clients should recieve this");
         byte index = 0;
         foreach (OnlinePlayer player in players)
         {
             player.Init(index);
             index++;
         }
-        StartGame();
 
-    }
-
-    private void StartGame()
-    {
         StopCoroutine(CountDownHandler.Instance.CountDown());
         StartCoroutine(CountDownHandler.Instance.CountDown());
     }
+
+
 
 
     public class Game
