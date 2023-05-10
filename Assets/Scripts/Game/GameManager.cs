@@ -4,12 +4,12 @@ using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
 public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
-    private Game ActiveGame { get; set; }
     public MarkType GetMarkType
     {
         get { return myPlayer.IsMyTurn.Value ? myPlayer.MyType : myPlayer.OpponentType; }
@@ -25,6 +25,8 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public event Action<MarkType> TimeOut;
+    public Dictionary<int, MarkType> BoardCells { get; private set; }
+    private int lastStarterIndex;
 
     private void Awake()
     {
@@ -71,16 +73,12 @@ public class GameManager : NetworkBehaviour
         if (!IsServer)
             return;
 
-        Debug.Log($"Current turn:{this.ActiveGame.currentUserIndex} and shoudl the timer still be running: {InputsEnabled.Value}");
-        //todo this might need to change. 
+        //todo this might need to change for UI reasons with time and time fireing when round is over. 
         if (InputsEnabled.Value)
         {
             players[CurrentPlayerIndex.Value].IsMyTurn.Value = false;
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
             players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
-            //players[CurrentPlayer.Value].StartTurn();
-            ActiveGame.SwitchCurrentPlayer();
-            //Debug.Log($"New turn:{this.ActiveGame.CurrentUser}");
         }
     }
 
@@ -92,7 +90,8 @@ public class GameManager : NetworkBehaviour
         //int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)board + (int)cell;
         //Debug.Log($"Checking board {cellDictIndex}");
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
-        if (ActiveGame.BoardCells[cellDictIndex] != MarkType.None)
+
+        if (BoardCells[cellDictIndex] != MarkType.None)
         {
             //Debug.Log("Reset the circle to what is saved on this grid");
             //todo
@@ -104,7 +103,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            ActiveGame.BoardCells[cellDictIndex] = GetMarkType;
+            BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             UpdateTurnServerRpc();//i might need to change how the timer interacts with the utrn switching 
         }
@@ -122,31 +121,26 @@ public class GameManager : NetworkBehaviour
         //Debug.Log($"Player Count {players.Count}");
         Debug.Log($"creating the game");
 
-        ActiveGame = new Game
-        {
-            XUser = xUserId,
-            OUser = oUserId,
-            currentUserIndex = xUserId,
-            LastStarterIndex = xUserId,
-            BoardCells = new Dictionary<int, MarkType>(),
-        };
+ 
 
-        RoundOverManager.reset += ActiveGame.Reset;
+        RoundOverManager.reset += Reset;
 
         //grid size square * board number + cell index
         int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
+        BoardCells = new Dictionary<int, MarkType>();
 
         while (cellCount > 0)
         {
             //Debug.Log("Cell initialize "+ cellCount);
 
-            ActiveGame.BoardCells[cellCount - 1] = MarkType.None;
+            BoardCells[cellCount - 1] = MarkType.None;
             cellCount--;
         }
 
         RegisterPlayerClientRpc();
 
-        CurrentPlayerIndex.Value = ActiveGame.currentUserIndex;
+        CurrentPlayerIndex.Value = 0;
+        lastStarterIndex = CurrentPlayerIndex.Value;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -180,8 +174,15 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void StartGameServerRpc(byte myType)
     {
-        Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(int)players[CurrentPlayerIndex.Value].MyType}");//my type should be 1 or 2 shuld never be 0
-        Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayerIndex.Value}-are these the same->{ActiveGame.currentUserIndex}");
+        int i = 0;
+        foreach ( OnlinePlayer p in players)
+        {
+            Debug.Log($"Here is the players type at index {i} Type: {p.MyType}");
+            i++;
+        }
+        Debug.Log($"The byte I am sending through should be 1 or 2 {myType} the new index should be 0 or 1 its {CurrentPlayerIndex.Value} and the type at that index is {players[CurrentPlayerIndex.Value].MyType} should be 1 if index: 0 and 2 if index: 1");
+        //Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(int)players[CurrentPlayerIndex.Value].MyType}");//my type should be 1 or 2 shuld never be 0
+        //Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayerIndex.Value}");
 
         if (myType != (byte)players[CurrentPlayerIndex.Value].MyType)
             return;
@@ -209,11 +210,11 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc()
     {
-        Debug.Log($"All clients should recieve this");
+        //Debug.Log($"All clients should recieve this");
         byte index = 0;
         foreach (OnlinePlayer player in players)
         {
-            Debug.Log($"this should run twice");
+            //Debug.Log($"this should run twice");
 
             player.Init(index);
             index++;
@@ -222,72 +223,18 @@ public class GameManager : NetworkBehaviour
         CountDownHandler.Instance.StartCountDown();
     }
 
-
-
-
-    public class Game
+    public void Reset()
     {
-        public byte XUser { get; set; }
-        public byte OUser { get; set; }
-        public byte currentUserIndex { get; set; }
-        public byte LastStarterIndex { get; set; }
-        public Dictionary<int, MarkType> BoardCells { get; set; }
 
-        public void SwitchCurrentPlayer()
+        int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
+        while (cellCount > 0)
         {
-            currentUserIndex = GetOpponent(currentUserIndex);
+            BoardCells[cellCount - 1] = MarkType.None;
+            cellCount--;
         }
-
-        public void Reset()
-        {
-
-            int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
-            while (cellCount > 0)
-            {
-                BoardCells[cellCount - 1] = MarkType.None;
-                cellCount--;
-            }
-
-            currentUserIndex = LastStarterIndex == XUser ? OUser : XUser;
-            LastStarterIndex = currentUserIndex;
-
-            Debug.Log($"The two users we are making the index eqaul are {OUser} and {XUser} now it eauals {CurrentUserIndex}");
-        }
-
-        public MarkType GetPlayerType(byte userID)
-        {
-            if (userID == XUser)
-            {
-                return MarkType.X;
-            }
-            else
-            {
-                return MarkType.O;
-            }
-        }
-
-        private byte GetOpponent(byte currentUser)
-        {
-            if (currentUser == XUser)
-            {
-                return OUser;
-            }
-            else
-            {
-                return XUser;
-            }
-        }
-        //pass winners board
-        public bool ValidateBoard(MarkType[,] Grid)
-        {
- 
-                    return true;
-        }
-
-        void UpdateScore()
-        {
-
-        }
+        CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
+        lastStarterIndex = CurrentPlayerIndex.Value;
+        Debug.Log($"new current player should be {CurrentPlayerIndex.Value}");
     }
 
 }
