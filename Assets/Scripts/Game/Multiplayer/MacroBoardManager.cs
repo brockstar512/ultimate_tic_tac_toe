@@ -68,7 +68,8 @@ public class MacroBoardManager : MonoBehaviour
             //do whatever animations you need
             winLine?.Invoke(lineType, Grid[row, col]);
             cg.blocksRaycasts = false;
-            
+
+
             //win
         }
         else if(Utilities.IsDraw(_boards))
@@ -77,6 +78,8 @@ public class MacroBoardManager : MonoBehaviour
 
             winLine?.Invoke(WinLineType.None, MarkType.None);
             cg.blocksRaycasts = false;
+
+
         }
 
     }

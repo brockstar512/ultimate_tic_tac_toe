@@ -68,6 +68,8 @@ public class GameManager : NetworkBehaviour
         //{
         //    Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
         //    Debug.Log($"Here is the bool: {InputsEnabled.Value}");
+        //    Debug.Log($"Here is the My Turn Status: {myPlayer.IsMyTurn.Value}");
+
 
 
         //    return;
@@ -131,7 +133,7 @@ public class GameManager : NetworkBehaviour
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
 
-            Debug.Log($"Index of players {singleTarget[0]}");
+            //Debug.Log($"Index of players {singleTarget[0]}");
 
             //ExampleMethodClientRpc(index, rpcParams);
             RegisterPlayerClientRpc((byte)index, rpcParams);
@@ -168,7 +170,7 @@ public class GameManager : NetworkBehaviour
 
         if (playerRequesting - 1 == CurrentPlayerIndex.Value)
         {
-            Debug.Log($"Player {(MarkType)playerRequesting} is going");
+            //Debug.Log($"Player {(MarkType)playerRequesting} is going");
             return true;
         }
 
@@ -196,7 +198,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            Debug.Log("Updating board and turn");
+            //Debug.Log("Updating board and turn");
             BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
@@ -211,6 +213,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RoundOverStatusServerRpc(MarkType winner)
     {
+       
         Debug.Log("We have a winner ");
         InputsEnabled.Value = false;
         switch (winner)
@@ -224,6 +227,7 @@ public class GameManager : NetworkBehaviour
             case MarkType.None:
                 break;
         }
+        //TurnOffPlayersClientRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -242,7 +246,7 @@ public class GameManager : NetworkBehaviour
         if (ValidateTurn(playerType))
         {
             InputsEnabled.Value = true;
-            Debug.Log("Starting the game");
+            //Debug.Log("Starting the game");
             lastStarterIndex = lastStarterIndex == 0 ? 1 : 0;
             UpdateTurnServer(false);
         }
@@ -254,6 +258,14 @@ public class GameManager : NetworkBehaviour
         //Debug.Log("UPDATING MY TURN");
         myPlayer.UpdateTurn();
     }
+
+    //[ClientRpc]
+    //void TurnOffPlayersClientRpc()
+    //{
+    //    myPlayer.IsMyTurn.Value = false;
+    //    TurnIndicatorHandler.Instance.Show(false);
+    //}
+
 
     [ClientRpc]
     public void RoundOverTimeOutClientRpc(MarkType winner)
@@ -291,7 +303,8 @@ public class GameManager : NetworkBehaviour
             cellCount--;
         }
         CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
-        lastStarterIndex = CurrentPlayerIndex.Value;
+        Debug.Log($"Reset with this character going first {CurrentPlayerIndex.Value}");
+        //lastStarterIndex = CurrentPlayerIndex.Value;
         //Debug.Log($"new current player should be {CurrentPlayerIndex.Value}");
     }
 

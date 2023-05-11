@@ -29,7 +29,7 @@ public class ConnectionHandler : NetworkBehaviour
                 //SpawnBoard();
                 //register game
                 //NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString()
-                Debug.Log($"Register game player count: {NetworkManager.Singleton.ConnectedClients.Count}");
+                //Debug.Log($"Register game player count: {NetworkManager.Singleton.ConnectedClients.Count}");
                 //ulong _playerOne;
                 //ulong _playerTwo;
                 int playerCount = 0;

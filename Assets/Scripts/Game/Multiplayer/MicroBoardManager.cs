@@ -75,10 +75,13 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
             _button.interactable = false;
             cg.blocksRaycasts = false;
-            Debug.Log("This board is done with a winner");
+            //Debug.Log($"This board is done with a winner color: {GameManager.Instance.GetColor}");
+            _mark.color = GameManager.Instance.GetColor;
             markBoard?.Invoke(_row, _col, GameManager.Instance.GetMarkType);
             Vector3 size = new Vector3(.90f, .90f, .90f);
-            _mark.color = GameManager.Instance.GetColor;
+            //_mark.color = GameManager.Instance.GetColor;//this might be too slow
+            //Debug.Log($"This board is done with a winner color: {GameManager.Instance.GetColor}");
+
             _mark.enabled = true;
             _mark.transform.DOScale(size, .15f);
             return;

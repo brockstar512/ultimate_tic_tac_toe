@@ -52,6 +52,7 @@ public class OnlinePlayer : NetworkBehaviour
         {
             TimeManager.Instance.StartTimer(newVal);
             TurnIndicatorHandler.Instance.ShowTurn(newVal);
+            //consider taking these out
         };
 
     }
@@ -105,7 +106,8 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
             return;
         IsMyTurn.Value = !IsMyTurn.Value;
-
+        TimeManager.Instance.StartTimer(IsMyTurn.Value);
+        TurnIndicatorHandler.Instance.ShowTurn(IsMyTurn.Value);
         //Debug.LogError($"My Status is Update {IsMyTurn.Value}");
         //Debug.Log($"It is my turn {IsMyTurn.Value} for player {(MarkType)MyType.Value}");
     }

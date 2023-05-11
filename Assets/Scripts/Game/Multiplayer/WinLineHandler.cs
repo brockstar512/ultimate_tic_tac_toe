@@ -28,6 +28,7 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
+
         //this might need to be a network object to call the scerver
         if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType)
         {
@@ -37,6 +38,7 @@ public class WinLineHandler : MonoBehaviour
         //Debug.Log($"Here is the marktype {MarkType}");
         if (MarkType == MarkType.None)
         {
+            Debug.Log("Is this ran twice?? ");
             roundOver?.Invoke(MarkType);
             return;
         }
@@ -96,6 +98,8 @@ public class WinLineHandler : MonoBehaviour
         }
         yield return new WaitForSeconds(.5f);
         roundOver?.Invoke(markType);
+        Debug.Log("Is this ran twice?? ");
+
 
     }
 

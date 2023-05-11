@@ -54,7 +54,7 @@ public class RoundOverManager : NetworkBehaviour
 
     void SetUI(MarkType markType)
     {
-        Debug.Log($"Running  round over :  {markType} here is my type      {GameManager.Instance.myPlayer.MyType}");
+        //Debug.Log($"Running  round over :  {markType} here is my type      {GameManager.Instance.myPlayer.MyType.Value}");
         if (markType == MarkType.None)
         {
             _header.text = TIE;
