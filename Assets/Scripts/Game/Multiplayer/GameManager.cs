@@ -11,11 +11,11 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance { get; private set; }
     public MarkType GetMarkType
     {
-        get { return myPlayer.IsMyTurn.Value ? (MarkType)myPlayer.MyType.Value : myPlayer.OpponentType; }
+        get { return CurrentPlayerIndex.Value == 0 ? (MarkType)1 : (MarkType)2; }
     }
     public Color GetColor
     {
-        get { return myPlayer.IsMyTurn.Value ? myPlayer.GetMyColor : myPlayer.GetOpponentColor; }
+        get { return CurrentPlayerIndex.Value == 0 ? new Color32(0, 194, 255, 255) : new Color32(141, 202, 0, 255); }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -64,14 +64,14 @@ public class GameManager : NetworkBehaviour
     {
 
 
-        if (myPlayer != null)
-        {
-            Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
-            Debug.Log($"Here is the bool: {InputsEnabled.Value}");
+        //if (myPlayer != null)
+        //{
+        //    Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
+        //    Debug.Log($"Here is the bool: {InputsEnabled.Value}");
 
 
-            return;
-        }
+        //    return;
+        //}
 
         //if (!IsServer)
         //{
@@ -141,16 +141,18 @@ public class GameManager : NetworkBehaviour
     }
 
 
-    void UpdateTurnServer()
+    void UpdateTurnServer(bool updateBothPlayers = true)
     {
         if (!IsServer)
             return;
 
-
-            ClientRpcParams rpcParams = default;
+        ClientRpcParams rpcParams = default;
+        if (!updateBothPlayers)
+        {
             ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
-            Debug.Log($"Starting player index {CurrentPlayerIndex.Value}");
+            Debug.Log($"Players turn {CurrentPlayerIndex.Value}");
             rpcParams.Send.TargetClientIds = singleTarget;
+        }
             UpdateTurnClientRpc(rpcParams);
             //update players turn for next time this runs
             //CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
@@ -194,6 +196,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
+            Debug.Log("Updating board and turn");
             BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
@@ -226,6 +229,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc(byte PlayerMarkType)
     {
+        return;
         MarkType winner = (MarkType)PlayerMarkType == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);
@@ -240,14 +244,14 @@ public class GameManager : NetworkBehaviour
             InputsEnabled.Value = true;
             Debug.Log("Starting the game");
             lastStarterIndex = lastStarterIndex == 0 ? 1 : 0;
-            UpdateTurnServer();
+            UpdateTurnServer(false);
         }
     }
 
     [ClientRpc]
     void UpdateTurnClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log("UPDATING MY TURN");
+        //Debug.Log("UPDATING MY TURN");
         myPlayer.UpdateTurn();
     }
 
@@ -260,10 +264,11 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
     {
+        Debug.LogError($"Is it my turn {myPlayer.IsMyTurn.Value}");
         //Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
         if (myPlayer.IsMyTurn.Value)
             return;
-
+        
         MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();//this is going to run it again for the same player
     }
 
