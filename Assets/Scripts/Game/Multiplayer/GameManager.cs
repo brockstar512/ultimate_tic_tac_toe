@@ -62,11 +62,34 @@ public class GameManager : NetworkBehaviour
 
     public void InitializePlayer(OnlinePlayer player)
     {
-        Debug.Log($"Initializing player");
+        Debug.Log($"Initializing player whose value is {player.MyType}");
 
         players.Add(player);
     }
+    private void Update()
+    {
+        
 
+        if (!IsServer && myPlayer != null)
+        {
+            Debug.Log($"Here is the Mine: {myPlayer.MyType}");
+
+            return;
+        }
+
+        if (!IsServer)
+        {
+            return;
+        }
+
+        if (players.Count >= 2)
+        {
+            Debug.Log($"Here is the first index: {players[0].MyType}");
+            Debug.Log($"Here is the first index: {players[1].MyType}");
+
+        }
+
+    }
     [ServerRpc(RequireOwnership = false)]
     void UpdateTurnServerRpc()
     {
