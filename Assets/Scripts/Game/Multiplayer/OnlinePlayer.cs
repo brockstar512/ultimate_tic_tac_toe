@@ -106,7 +106,7 @@ public class OnlinePlayer : NetworkBehaviour
             return;
         IsMyTurn.Value = !IsMyTurn.Value;
 
-        Debug.LogError($"My Status is Update {IsMyTurn.Value}");
+        //Debug.LogError($"My Status is Update {IsMyTurn.Value}");
         //Debug.Log($"It is my turn {IsMyTurn.Value} for player {(MarkType)MyType.Value}");
     }
 

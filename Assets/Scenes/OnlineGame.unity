@@ -25945,8 +25945,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278240000
-  m_fontColor: {r: 0.0012528368, g: 0.7647059, b: 0, a: 1}
+    rgba: 4294951424
+  m_fontColor: {r: 0, g: 0.7607843, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -27028,8 +27028,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294951424
-  m_fontColor: {r: 0, g: 0.7607843, b: 1, a: 1}
+    rgba: 4278241933
+  m_fontColor: {r: 0.5529412, g: 0.7921569, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -27436,7 +27436,7 @@ GameObject:
   - component: {fileID: 8893339851238861630}
   - component: {fileID: 8893339851238861631}
   m_Layer: 5
-  m_Name: Blue Name
+  m_Name: Green Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27470,7 +27470,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Blue Name
+  m_text: Green Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
   m_sharedMaterial: {fileID: -5778827652079343894, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
@@ -27479,8 +27479,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294951424
-  m_fontColor: {r: 0, g: 0.7607843, b: 1, a: 1}
+    rgba: 4278241933
+  m_fontColor: {r: 0.5529412, g: 0.7921569, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -28122,7 +28122,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Yellow Name
+  m_text: Blue Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
   m_sharedMaterial: {fileID: -5778827652079343894, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
@@ -28131,8 +28131,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278245121
-  m_fontColor: {r: 0.003921569, g: 0.84313726, b: 0, a: 1}
+    rgba: 4294951424
+  m_fontColor: {r: 0, g: 0.7607843, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -28223,7 +28223,7 @@ GameObject:
   - component: {fileID: 8893339851390580763}
   - component: {fileID: 8893339851390580756}
   m_Layer: 5
-  m_Name: Green Name
+  m_Name: Blue Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

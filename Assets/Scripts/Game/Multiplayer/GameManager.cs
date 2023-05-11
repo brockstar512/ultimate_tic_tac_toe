@@ -15,7 +15,7 @@ public class GameManager : NetworkBehaviour
     }
     public Color GetColor
     {
-        get { return CurrentPlayerIndex.Value == 0 ? new Color32(0, 194, 255, 255) : new Color32(141, 202, 0, 255); }
+        get { return myPlayer.IsMyTurn.Value ? myPlayer.GetMyColor : myPlayer.GetOpponentColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -90,12 +90,12 @@ public class GameManager : NetworkBehaviour
     //user id will either be 1 or 0
     public void RegisterGame(ulong xUserId, ulong oUserId)
     {
-        Debug.Log($"Am I the server {IsServer}");
+        //Debug.Log($"Am I the server {IsServer}");
         if (!IsServer)
             return;
         //Debug.Log("Starting new game");
         //Debug.Log($"Player Count {players.Count}");
-        Debug.Log($"creating the game");
+        //Debug.Log($"creating the game");
 
         clientList = new ulong[]
         {
@@ -264,7 +264,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
     {
-        Debug.LogError($"Is it my turn {myPlayer.IsMyTurn.Value}");
+        //Debug.LogError($"Is it my turn {myPlayer.IsMyTurn.Value}");
         //Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
         if (myPlayer.IsMyTurn.Value)
             return;
@@ -292,7 +292,7 @@ public class GameManager : NetworkBehaviour
         }
         CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
         lastStarterIndex = CurrentPlayerIndex.Value;
-        Debug.Log($"new current player should be {CurrentPlayerIndex.Value}");
+        //Debug.Log($"new current player should be {CurrentPlayerIndex.Value}");
     }
 
 }

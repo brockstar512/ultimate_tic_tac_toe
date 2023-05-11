@@ -53,6 +53,7 @@ public class InspectController : MonoBehaviour
 
     void Show()
     {
+        //Debug.Log("Is it my turn:::   "+GameManager.Instance.myPlayer.IsMyTurn.Value);
         //if (!GameManager.Instance.InputsEnabled)// wait for UI to update
         if (!GameManager.Instance.InputsEnabled.Value)
         {
@@ -61,6 +62,7 @@ public class InspectController : MonoBehaviour
         if (!GameManager.Instance.myPlayer.IsMyTurn.Value)
         {
             TurnIndicatorHandler.Instance.Pulse();
+            return;
         }
 
         this.transform.SetAsLastSibling();

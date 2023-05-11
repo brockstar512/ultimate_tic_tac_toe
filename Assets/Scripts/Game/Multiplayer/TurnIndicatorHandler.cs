@@ -28,12 +28,16 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     public void Show(bool isOn)
     {
+        Debug.Log("Showing show");
+        Color _color = GameManager.Instance.GetColor;
+        playerText.color = _color;
         cg.alpha = isOn ? 1 : 0;
         Pulse();
     }
 
     public void ShowTurn(bool isMyTurn)
     {
+        Debug.Log("Showing header turn");
         Color _color = GameManager.Instance.GetColor;
 
         if (isMyTurn)
