@@ -196,6 +196,7 @@ public class GameManager : NetworkBehaviour
         {
             BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
+            CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
             UpdateTurnServer();//this is board validation
             //i might need to change how the timer interacts with the utrn switching 
         }

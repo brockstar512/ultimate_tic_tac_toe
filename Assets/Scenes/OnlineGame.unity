@@ -862,7 +862,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputsEnabled:
     m_InternalValue: 0
-  CurrentPlayer:
+  CurrentPlayerIndex:
+    m_InternalValue: 0
+  LastPlayerIndex:
     m_InternalValue: 0
   myPlayer: {fileID: 0}
   xScore:
@@ -909,9 +911,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1600920719}
-  - component: {fileID: 1600920723}
+  - component: {fileID: 1600920721}
   - component: {fileID: 1600920720}
-  - component: {fileID: 1600920722}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -961,22 +962,7 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
---- !u!114 &1600920722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1600920718}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4db755085ae1941d3a281940a40ad764, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joinButton: {fileID: 2061821861}
-  hostButton: {fileID: 1987367433}
-  serverButton: {fileID: 620282462}
---- !u!114 &1600920723
+--- !u!114 &1600920721
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
