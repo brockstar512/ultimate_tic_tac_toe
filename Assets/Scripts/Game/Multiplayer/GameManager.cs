@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using static Enums;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
 public class GameManager : NetworkBehaviour
@@ -63,22 +60,23 @@ public class GameManager : NetworkBehaviour
         return (xScore.Value, yScore.Value, didWin);
     }
 
+    private void Update()
+    {
 
-    //private void Update()
-    //{
-        
 
-    //    if (!IsServer && myPlayer != null)
-    //    {
-    //        Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
+        if (myPlayer != null)
+        {
+            Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
+            Debug.Log($"Here is the bool: {InputsEnabled.Value}");
 
-    //        return;
-    //    }
 
-    //    if (!IsServer)
-    //    {
-    //        return;
-    //    }
+            return;
+        }
+
+        //if (!IsServer)
+        //{
+        //    return;
+        //}
 
         //if (players.Count >= 2)
         //{
@@ -86,49 +84,6 @@ public class GameManager : NetworkBehaviour
         //    Debug.Log($"Here is the second index: {(MarkType)players[1].MyType.Value}");
 
         //}
-
-    //}
-
-    [ServerRpc(RequireOwnership = false)]
-    void UpdateTurnServerRpc()
-    {
-        if (!IsServer)
-            return;
-
-
-        if (InputsEnabled.Value)
-        {
-            CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
-            UpdateTurnClientRpc();
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
-    {
-        //int board = 0;
-        //int cell= 0;
-        //int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)board + (int)cell;
-        //Debug.Log($"Checking board {cellDictIndex}");
-        int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
-
-        if (BoardCells[cellDictIndex] != MarkType.None)
-        {
-            //Debug.Log("Reset the circle to what is saved on this grid");
-            //todo
-            //make sure the UI matches the grid
-            //make sure the local grid matches the server grid... or just tell that cell to equal this with a server rpc
-            //continue the timer
-
-            //if the move is not valide return that cell to its state
-        }
-        else
-        {
-            BoardCells[cellDictIndex] = GetMarkType;
-            UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
-            UpdateTurnServerRpc();//i might need to change how the timer interacts with the utrn switching 
-        }
-
 
     }
 
@@ -165,7 +120,10 @@ public class GameManager : NetworkBehaviour
         int index = 0;
         ulong playerX = clientList[0];
         ulong playerO = clientList[1];
-        //Debug.Log($"Index of players {}");
+
+        CurrentPlayerIndex.Value = 0;
+        lastStarterIndex = CurrentPlayerIndex.Value;
+
         while (index < 2)
         {
 
@@ -179,18 +137,72 @@ public class GameManager : NetworkBehaviour
             RegisterPlayerClientRpc((byte)index, rpcParams);
             index++;
         }
-        //ClientRpcParams rpcParams = default;
-        //ulong[] playerOne = new ulong[] { clientList[0] };
-        //ulong[] playerTwo = new ulong[] { clientList[1] };
 
-        //rpcParams.Send.TargetClientIds = playerOne;
-        //RegisterPlayerClientRpc(0, rpcParams);
-        //rpcParams.Send.TargetClientIds = playerTwo;
-        //RegisterPlayerClientRpc(1, rpcParams);
-
-        CurrentPlayerIndex.Value = 0;
-        lastStarterIndex = CurrentPlayerIndex.Value;
     }
+
+
+    void UpdateTurnServer()
+    {
+        if (!IsServer)
+            return;
+
+
+            ClientRpcParams rpcParams = default;
+            ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
+            Debug.Log($"Starting player index {CurrentPlayerIndex.Value}");
+            rpcParams.Send.TargetClientIds = singleTarget;
+            UpdateTurnClientRpc(rpcParams);
+            //update players turn for next time this runs
+            //CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
+
+       
+    }
+
+
+    bool ValidateTurn(byte playerRequesting)
+    {
+        if (!IsServer)
+            return false;
+
+        if (playerRequesting - 1 == CurrentPlayerIndex.Value)
+        {
+            Debug.Log($"Player {(MarkType)playerRequesting} is going");
+            return true;
+        }
+
+        return false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
+    {
+        //int board = 0;
+        //int cell= 0;
+        //int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)board + (int)cell;
+        //Debug.Log($"Checking board {cellDictIndex}");
+        int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
+
+        if (BoardCells[cellDictIndex] != MarkType.None)
+        {
+            //Debug.Log("Reset the circle to what is saved on this grid");
+            //todo
+            //make sure the UI matches the grid
+            //make sure the local grid matches the server grid... or just tell that cell to equal this with a server rpc
+            //continue the timer
+
+            //if the move is not valide return that cell to its state
+        }
+        else
+        {
+            BoardCells[cellDictIndex] = GetMarkType;
+            UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
+            UpdateTurnServer();//this is board validation
+            //i might need to change how the timer interacts with the utrn switching 
+        }
+
+
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void RoundOverStatusServerRpc(MarkType winner)
@@ -219,27 +231,23 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void StartGameServerRpc(byte myType)
+    public void StartGameServerRpc(byte playerType)
     {
-
-        //if (myType != players[CurrentPlayerIndex.Value].MyType.Value)
-        //    return;
-
-        //InputsEnabled.Value = true;
-        //players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
+        
+        if (ValidateTurn(playerType))
+        {
+            InputsEnabled.Value = true;
+            Debug.Log("Starting the game");
+            lastStarterIndex = lastStarterIndex == 0 ? 1 : 0;
+            UpdateTurnServer();
+        }
     }
 
     [ClientRpc]
-    void UpdateTurnClientRpc()
+    void UpdateTurnClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        if (!IsOwner)
-            return;
-
-
-        if (InputsEnabled.Value)
-        {
-            myPlayer.UpdateTurn();
-        }
+        Debug.Log("UPDATING MY TURN");
+        myPlayer.UpdateTurn();
     }
 
     [ClientRpc]
@@ -263,9 +271,7 @@ public class GameManager : NetworkBehaviour
     {
         Debug.Log($"You have pinged client client {index}");
 
-
         myPlayer.Init(index);
-        return;
         CountDownHandler.Instance.StartCountDown();
     }
 

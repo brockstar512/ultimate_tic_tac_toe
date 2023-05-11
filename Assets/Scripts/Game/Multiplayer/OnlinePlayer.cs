@@ -104,6 +104,7 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
             return;
         IsMyTurn.Value = !IsMyTurn.Value;
+        Debug.Log($"It is my turn {IsMyTurn.Value} for player {MyType}");
     }
 
     public override void OnNetworkDespawn()

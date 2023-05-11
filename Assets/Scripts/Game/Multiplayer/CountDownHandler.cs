@@ -55,7 +55,6 @@ public class CountDownHandler : NetworkBehaviour
         CanvasGroup cg = GetComponent<CanvasGroup>();
         cg.blocksRaycasts = false;
         cg.interactable = false;
-        Debug.Log($"I am sending my type as {(int)GameManager.Instance.myPlayer.MyType.Value} and as a byte {(byte)GameManager.Instance.myPlayer.MyType.Value}");
         GameManager.Instance.StartGameServerRpc(GameManager.Instance.myPlayer.MyType.Value);
         TurnIndicatorHandler.Instance.Show(true);
 
