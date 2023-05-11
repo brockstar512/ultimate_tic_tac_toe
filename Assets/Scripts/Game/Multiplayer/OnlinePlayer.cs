@@ -96,7 +96,7 @@ public class OnlinePlayer : NetworkBehaviour
 
         }
         //namer = MyUsername;
-        Debug.Log(MyType);
+        Debug.Log((MarkType)MyType.Value);
     }
 
     public void UpdateTurn()

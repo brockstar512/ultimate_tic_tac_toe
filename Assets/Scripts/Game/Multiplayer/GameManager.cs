@@ -165,16 +165,28 @@ public class GameManager : NetworkBehaviour
         int index = 0;
         ulong playerX = clientList[0];
         ulong playerO = clientList[1];
-
-        while(index < 2)
+        //Debug.Log($"Index of players {}");
+        while (index < 2)
         {
+
             ClientRpcParams rpcParams = default;
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
 
+            Debug.Log($"Index of players {singleTarget[0]}");
+
             //ExampleMethodClientRpc(index, rpcParams);
-            RegisterPlayerClientRpc(index, rpcParams);
+            RegisterPlayerClientRpc((byte)index, rpcParams);
+            index++;
         }
+        //ClientRpcParams rpcParams = default;
+        //ulong[] playerOne = new ulong[] { clientList[0] };
+        //ulong[] playerTwo = new ulong[] { clientList[1] };
+
+        //rpcParams.Send.TargetClientIds = playerOne;
+        //RegisterPlayerClientRpc(0, rpcParams);
+        //rpcParams.Send.TargetClientIds = playerTwo;
+        //RegisterPlayerClientRpc(1, rpcParams);
 
         CurrentPlayerIndex.Value = 0;
         lastStarterIndex = CurrentPlayerIndex.Value;
@@ -247,26 +259,12 @@ public class GameManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RegisterPlayerClientRpc(int index, ClientRpcParams clientRpcParams = default)
+    void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log($"You have pinged plaient client");
+        Debug.Log($"You have pinged client client {index}");
 
-        if (!IsOwner)
-            return;
-        //Debug.Log($"All clients should recieve this");
-        //byte index = 0;
-        //foreach (OnlinePlayer player in players)
-        //{
-        //    player.Init(index);
-        //    index++;
-        //}
-        //send player their index
 
-        //ulong playerX = clientList[0];
-        //ulong playerO = clientList[1];
-
-        Debug.Log($"You have pinged player {index}");
-
+        myPlayer.Init(index);
         return;
         CountDownHandler.Instance.StartCountDown();
     }

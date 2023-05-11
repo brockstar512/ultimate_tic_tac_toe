@@ -22,13 +22,34 @@ public class ConnectionHandler : NetworkBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
         {
             Debug.Log($"ClientID {clienId} has joined");//IsServer
+            ulong _playerOne = 0;
+            ulong _playerTwo = 0;
             if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 2)
             {
                 //SpawnBoard();
                 //register game
                 //NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString()
-                Debug.Log($"Register game");
-                GameManager.Instance.RegisterGame(NetworkManager.Singleton.ConnectedClients[0].ClientId, NetworkManager.Singleton.ConnectedClients[1].ClientId);
+                Debug.Log($"Register game {NetworkManager.Singleton.ConnectedClients.Count}");
+                //ulong _playerOne;
+                //ulong _playerTwo;
+                int playerCount = 0;
+                foreach (ulong client in NetworkManager.Singleton.ConnectedClients.Keys)
+                {
+                    if (playerCount == 0)
+                    {
+                        _playerOne = client;
+                    }
+                    else
+                    {
+                        _playerTwo = client;
+
+                    }
+  
+                    playerCount++;
+                }
+
+
+                GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
 
             }
             
