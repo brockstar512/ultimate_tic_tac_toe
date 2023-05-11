@@ -28,7 +28,7 @@ public class ConnectionHandler : NetworkBehaviour
                 //register game
                 //NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString()
                 Debug.Log($"Register game");
-                GameManager.Instance.RegisterGame((byte)0, (byte)1);
+                GameManager.Instance.RegisterGame(NetworkManager.Singleton.ConnectedClients[0].ClientId, NetworkManager.Singleton.ConnectedClients[1].ClientId);
 
             }
             

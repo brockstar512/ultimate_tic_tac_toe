@@ -5,11 +5,8 @@ using static Enums;
 
 public class OnlinePlayer : NetworkBehaviour
 {
-    public NetworkVariable<PlayerPacket> playerPacket = new NetworkVariable<PlayerPacket>(
-        new PlayerPacket{
-            MyType = 0,
-            IsMyTurn = false,
-        });
+    public NetworkVariable<byte> MyType = new NetworkVariable<byte>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Owner);
     public MarkType OpponentType { get; private set; }
     public Color GetMyColor
     {
@@ -51,7 +48,7 @@ public class OnlinePlayer : NetworkBehaviour
         }
 
         base.OnNetworkSpawn();
-        playerPacket.Value.IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
+        IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
         {
             TimeManager.Instance.StartTimer(newVal);
             TurnIndicatorHandler.Instance.ShowTurn(newVal);
@@ -71,7 +68,7 @@ public class OnlinePlayer : NetworkBehaviour
             GameManager.Instance.myPlayer = this;
         }
 
-        GameManager.Instance.InitializePlayer(this);
+        //GameManager.Instance.InitializePlayer(this);
     }
 
     private void Update()
@@ -89,12 +86,8 @@ public class OnlinePlayer : NetworkBehaviour
 
         if (0 == (int)xUser)
         {
-            playerPacket = new NetworkVariable<PlayerPacket>()
-            {
-                MyType = (byte)MarkType.X,
-            };
+            MyType.Value = (byte)MarkType.X;
             OpponentType = MarkType.O;
-
         }
         else
         {
@@ -116,16 +109,5 @@ public class OnlinePlayer : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         IsMyTurn.OnValueChanged = null;
-    }
-    public struct PlayerPacket : INetworkSerializable
-    {
-        public byte MyType;
-        public bool IsMyTurn;
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref MyType);
-            serializer.SerializeValue(ref IsMyTurn);
-
-        }
     }
 }

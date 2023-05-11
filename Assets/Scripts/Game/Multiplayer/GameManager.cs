@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Enums;
+using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
@@ -19,14 +21,15 @@ public class GameManager : NetworkBehaviour
         get { return myPlayer.IsMyTurn.Value ? myPlayer.GetMyColor : myPlayer.GetOpponentColor; }
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
-    public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
-    private List<OnlinePlayer> players = new List<OnlinePlayer>();
+    public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<byte> LastPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);                                                                                                                                                       
     public OnlinePlayer myPlayer;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public event Action<MarkType> TimeOut;
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
+    private ulong[] clientList;
 
     private void Awake()
     {
@@ -60,36 +63,32 @@ public class GameManager : NetworkBehaviour
         return (xScore.Value, yScore.Value, didWin);
     }
 
-    public void InitializePlayer(OnlinePlayer player)
-    {
-        Debug.Log($"Initializing player whose value is {player.MyType.Value}");
 
-        players.Add(player);
-    }
-    private void Update()
-    {
+    //private void Update()
+    //{
         
 
-        if (!IsServer && myPlayer != null)
-        {
-            Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
+    //    if (!IsServer && myPlayer != null)
+    //    {
+    //        Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
 
-            return;
-        }
+    //        return;
+    //    }
 
-        if (!IsServer)
-        {
-            return;
-        }
+    //    if (!IsServer)
+    //    {
+    //        return;
+    //    }
 
-        if (players.Count >= 2)
-        {
-            Debug.Log($"Here is the first index: {(MarkType)players[0].MyType.Value}");
-            Debug.Log($"Here is the second index: {(MarkType)players[1].MyType.Value}");
+        //if (players.Count >= 2)
+        //{
+        //    Debug.Log($"Here is the first index: {(MarkType)players[0].MyType.Value}");
+        //    Debug.Log($"Here is the second index: {(MarkType)players[1].MyType.Value}");
 
-        }
+        //}
 
-    }
+    //}
+
     [ServerRpc(RequireOwnership = false)]
     void UpdateTurnServerRpc()
     {
@@ -99,9 +98,8 @@ public class GameManager : NetworkBehaviour
 
         if (InputsEnabled.Value)
         {
-            players[CurrentPlayerIndex.Value].UpdateTurn();
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
-            players[CurrentPlayerIndex.Value].UpdateTurn();
+            UpdateTurnClientRpc();
         }
     }
 
@@ -135,7 +133,7 @@ public class GameManager : NetworkBehaviour
     }
 
     //user id will either be 1 or 0
-    public void RegisterGame(byte xUserId, byte oUserId)
+    public void RegisterGame(ulong xUserId, ulong oUserId)
     {
         Debug.Log($"Am I the server {IsServer}");
         if (!IsServer)
@@ -144,7 +142,11 @@ public class GameManager : NetworkBehaviour
         //Debug.Log($"Player Count {players.Count}");
         Debug.Log($"creating the game");
 
- 
+        clientList = new ulong[]
+        {
+            xUserId,
+            oUserId
+        };
 
         RoundOverManager.reset += Reset;
 
@@ -160,7 +162,19 @@ public class GameManager : NetworkBehaviour
             cellCount--;
         }
 
-        RegisterPlayerClientRpc();
+        int index = 0;
+        ulong playerX = clientList[0];
+        ulong playerO = clientList[1];
+
+        while(index < 2)
+        {
+            ClientRpcParams rpcParams = default;
+            ulong[] singleTarget = new ulong[] { clientList[index] };
+            rpcParams.Send.TargetClientIds = singleTarget;
+
+            //ExampleMethodClientRpc(index, rpcParams);
+            RegisterPlayerClientRpc(index, rpcParams);
+        }
 
         CurrentPlayerIndex.Value = 0;
         lastStarterIndex = CurrentPlayerIndex.Value;
@@ -185,9 +199,9 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlayerTimedOutServerRpc()
+    public void PlayerTimedOutServerRpc(byte PlayerMarkType)
     {
-        MarkType winner = (MarkType)players[CurrentPlayerIndex.Value].MyType.Value == MarkType.X ? MarkType.O : MarkType.X;
+        MarkType winner = (MarkType)PlayerMarkType == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);
     }
@@ -195,21 +209,25 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void StartGameServerRpc(byte myType)
     {
-        int i = 0;
-        foreach ( OnlinePlayer p in players)
-        {
-            Debug.Log($"Here is the players type at index {i} Type: {p.MyType}");
-            i++;
-        }
-        Debug.Log($"The byte I am sending through should be 1 or 2 {myType} the new index should be 0 or 1 its {CurrentPlayerIndex.Value} and the type at that index is {players[CurrentPlayerIndex.Value].MyType} should be 1 if index: 0 and 2 if index: 1");
-        //Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(int)players[CurrentPlayerIndex.Value].MyType}");//my type should be 1 or 2 shuld never be 0
-        //Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayerIndex.Value}");
 
-        if (myType != players[CurrentPlayerIndex.Value].MyType.Value)
+        //if (myType != players[CurrentPlayerIndex.Value].MyType.Value)
+        //    return;
+
+        //InputsEnabled.Value = true;
+        //players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
+    }
+
+    [ClientRpc]
+    void UpdateTurnClientRpc()
+    {
+        if (!IsOwner)
             return;
 
-        InputsEnabled.Value = true;
-        players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
+
+        if (InputsEnabled.Value)
+        {
+            myPlayer.UpdateTurn();
+        }
     }
 
     [ClientRpc]
@@ -229,16 +247,27 @@ public class GameManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RegisterPlayerClientRpc()
+    void RegisterPlayerClientRpc(int index, ClientRpcParams clientRpcParams = default)
     {
-        //Debug.Log($"All clients should recieve this");
-        byte index = 0;
-        foreach (OnlinePlayer player in players)
-        {
-            player.Init(index);
-            index++;
-        }
+        Debug.Log($"You have pinged plaient client");
 
+        if (!IsOwner)
+            return;
+        //Debug.Log($"All clients should recieve this");
+        //byte index = 0;
+        //foreach (OnlinePlayer player in players)
+        //{
+        //    player.Init(index);
+        //    index++;
+        //}
+        //send player their index
+
+        //ulong playerX = clientList[0];
+        //ulong playerO = clientList[1];
+
+        Debug.Log($"You have pinged player {index}");
+
+        return;
         CountDownHandler.Instance.StartCountDown();
     }
 
