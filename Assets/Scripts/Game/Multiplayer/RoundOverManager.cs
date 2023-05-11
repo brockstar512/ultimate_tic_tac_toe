@@ -61,8 +61,8 @@ public class RoundOverManager : NetworkBehaviour
             _banner.color = tie_Color;
             return;
         }
-        _header.text = GameManager.Instance.myPlayer.MyType == markType ? WIN : LOSE;
-        _banner.color = GameManager.Instance.myPlayer.MyType == markType ? GameManager.Instance.myPlayer.GetMyColor : GameManager.Instance.myPlayer.GetOpponentColor;
+        _header.text = (MarkType)GameManager.Instance.myPlayer.MyType.Value == markType ? WIN : LOSE;
+        _banner.color = (MarkType)GameManager.Instance.myPlayer.MyType.Value == markType ? GameManager.Instance.myPlayer.GetMyColor : GameManager.Instance.myPlayer.GetOpponentColor;
     }
 
 

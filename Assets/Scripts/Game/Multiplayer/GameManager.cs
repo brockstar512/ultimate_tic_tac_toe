@@ -12,7 +12,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance { get; private set; }
     public MarkType GetMarkType
     {
-        get { return myPlayer.IsMyTurn.Value ? myPlayer.MyType : myPlayer.OpponentType; }
+        get { return myPlayer.IsMyTurn.Value ? (MarkType)myPlayer.MyType.Value : myPlayer.OpponentType; }
     }
     public Color GetColor
     {
@@ -47,7 +47,7 @@ public class GameManager : NetworkBehaviour
     {
 
         bool didWin;
-        if (myPlayer.MyType == MarkType.X && xScore.Value > yScore.Value)
+        if ((MarkType)myPlayer.MyType.Value == MarkType.X && xScore.Value > yScore.Value)
         {
             didWin = true;
         }
@@ -62,7 +62,7 @@ public class GameManager : NetworkBehaviour
 
     public void InitializePlayer(OnlinePlayer player)
     {
-        Debug.Log($"Initializing player whose value is {player.MyType}");
+        Debug.Log($"Initializing player whose value is {player.MyType.Value}");
 
         players.Add(player);
     }
@@ -72,7 +72,7 @@ public class GameManager : NetworkBehaviour
 
         if (!IsServer && myPlayer != null)
         {
-            Debug.Log($"Here is the Mine: {myPlayer.MyType}");
+            Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
 
             return;
         }
@@ -84,8 +84,8 @@ public class GameManager : NetworkBehaviour
 
         if (players.Count >= 2)
         {
-            Debug.Log($"Here is the first index: {players[0].MyType}");
-            Debug.Log($"Here is the first index: {players[1].MyType}");
+            Debug.Log($"Here is the first index: {(MarkType)players[0].MyType.Value}");
+            Debug.Log($"Here is the second index: {(MarkType)players[1].MyType.Value}");
 
         }
 
@@ -96,12 +96,12 @@ public class GameManager : NetworkBehaviour
         if (!IsServer)
             return;
 
-        //todo this might need to change for UI reasons with time and time fireing when round is over. 
+
         if (InputsEnabled.Value)
         {
-            players[CurrentPlayerIndex.Value].IsMyTurn.Value = false;
+            players[CurrentPlayerIndex.Value].UpdateTurn();
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
-            players[CurrentPlayerIndex.Value].IsMyTurn.Value = true;
+            players[CurrentPlayerIndex.Value].UpdateTurn();
         }
     }
 
@@ -182,14 +182,12 @@ public class GameManager : NetworkBehaviour
             case MarkType.None:
                 break;
         }
-        
-        
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc()
     {
-        MarkType winner = players[CurrentPlayerIndex.Value].MyType == MarkType.X ? MarkType.O : MarkType.X;
+        MarkType winner = (MarkType)players[CurrentPlayerIndex.Value].MyType.Value == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);
     }
@@ -207,7 +205,7 @@ public class GameManager : NetworkBehaviour
         //Debug.Log($"We are starting the game we are comparning players type {myType} with the servers type {(int)players[CurrentPlayerIndex.Value].MyType}");//my type should be 1 or 2 shuld never be 0
         //Debug.Log($"This is where I might have to switch the users and make the current users whatever activegame is {CurrentPlayerIndex.Value}");
 
-        if (myType != (byte)players[CurrentPlayerIndex.Value].MyType)
+        if (myType != players[CurrentPlayerIndex.Value].MyType.Value)
             return;
 
         InputsEnabled.Value = true;
@@ -237,8 +235,6 @@ public class GameManager : NetworkBehaviour
         byte index = 0;
         foreach (OnlinePlayer player in players)
         {
-            //Debug.Log($"this should run twice");
-
             player.Init(index);
             index++;
         }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
@@ -7,15 +5,17 @@ using static Enums;
 
 public class OnlinePlayer : NetworkBehaviour
 {
-    //public byte namer;
-    public byte MyUsername { get; private set; }
-    public MarkType MyType { get; private set; }
+    public NetworkVariable<PlayerPacket> playerPacket = new NetworkVariable<PlayerPacket>(
+        new PlayerPacket{
+            MyType = 0,
+            IsMyTurn = false,
+        });
     public MarkType OpponentType { get; private set; }
     public Color GetMyColor
     {
         get
         {
-            if (MyType == MarkType.X)
+            if ((MarkType)MyType.Value == MarkType.X)
             {
                 return new Color32(0, 194, 255, 255);
             }
@@ -40,7 +40,8 @@ public class OnlinePlayer : NetworkBehaviour
             }
         }
     }
-    public NetworkVariable<bool> IsMyTurn = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
+
+
 
     public override void OnNetworkSpawn()
     {
@@ -50,7 +51,7 @@ public class OnlinePlayer : NetworkBehaviour
         }
 
         base.OnNetworkSpawn();
-        IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
+        playerPacket.Value.IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
         {
             TimeManager.Instance.StartTimer(newVal);
             TurnIndicatorHandler.Instance.ShowTurn(newVal);
@@ -83,35 +84,48 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        Debug.Log($"Initializing my player");
-
-        IsMyTurn.Value = false;
         TurnIndicatorHandler.Instance.ShowTurn(false);
+
 
         if (0 == (int)xUser)
         {
-            MyType = MarkType.X;
+            playerPacket = new NetworkVariable<PlayerPacket>()
+            {
+                MyType = (byte)MarkType.X,
+            };
             OpponentType = MarkType.O;
-            MyUsername = 0;
-            //IsMyTurn.Value = true;
+
         }
         else
         {
-            MyType = MarkType.O;
+            MyType.Value = (byte)MarkType.O;
             OpponentType = MarkType.X;
-            MyUsername = 1;
-            //IsMyTurn.Value = false;
-            //TurnIndicatorHandler.Instance.Show(false);
+
         }
         //namer = MyUsername;
         Debug.Log(MyType);
-
-
     }
 
+    public void UpdateTurn()
+    {
+        if (!IsOwner)
+            return;
+        IsMyTurn.Value = !IsMyTurn.Value;
+    }
 
     public override void OnNetworkDespawn()
     {
         IsMyTurn.OnValueChanged = null;
+    }
+    public struct PlayerPacket : INetworkSerializable
+    {
+        public byte MyType;
+        public bool IsMyTurn;
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref MyType);
+            serializer.SerializeValue(ref IsMyTurn);
+
+        }
     }
 }
