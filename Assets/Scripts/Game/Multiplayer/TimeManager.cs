@@ -45,6 +45,7 @@ public class TimeManager : MonoBehaviour
     //when i read that it is my turn
     public void StartTimer(bool isBeginningTurn)
     {
+        Debug.Log("Timer is running");
         //TurnIndicatorHandler.Instance.Show();
         //Debug.Log("starting timer " + isBeginningTurn);
         if (!isBeginningTurn)

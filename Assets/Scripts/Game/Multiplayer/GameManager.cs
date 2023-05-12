@@ -157,7 +157,7 @@ public class GameManager : NetworkBehaviour
     {
        
         InputsEnabled.Value = false;
-
+        Debug.Log("Updating Score");
         switch (winner)
         {
             case MarkType.X:
@@ -174,6 +174,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc(byte PlayerMarkType)
     {
+        Debug.LogError("Time out");
         MarkType winner = (MarkType)PlayerMarkType == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);

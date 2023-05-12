@@ -74,7 +74,7 @@ public class OnlinePlayer : NetworkBehaviour
 
     private void Update()
     {
-        Debug.Log(IsMyTurn.Value);
+        //Debug.Log(IsMyTurn.Value);
     }
 
     public void Init(byte xUser)
@@ -113,8 +113,10 @@ public class OnlinePlayer : NetworkBehaviour
     {
         if (!IsOwner)
             return;
+        Debug.Log("Forcing player off");
         IsMyTurn.Value = false;
         //TimeManager.Instance.StartTimer(false);
+        TimeManager.Instance.StopTimer();
         TurnIndicatorHandler.Instance.Show(false);
 
     }
