@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
@@ -105,26 +104,13 @@ public class GameManager : NetworkBehaviour
             oUserId
         };
 
-        RoundOverManager.reset += Reset;
-
-        //grid size square * board number + cell index
-        //int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
-        //BoardCells = new Dictionary<int, MarkType>();
-
-        //while (cellCount > 0)
-        //{
-        //    //Debug.Log("Cell initialize "+ cellCount);
-
-        //    BoardCells[cellCount - 1] = MarkType.None;
-        //    cellCount--;
-        //}
 
         int index = 0;
         ulong playerX = clientList[0];
         ulong playerO = clientList[1];
 
         CurrentPlayerIndex.Value = 0;
-        //lastStarterIndex = CurrentPlayerIndex.Value;//register gam
+        lastStarterIndex = clientList.Length;//start game
 
         while (index < 2)
         {
@@ -142,7 +128,6 @@ public class GameManager : NetworkBehaviour
 
     }
 
-
     void UpdateTurnServer(bool updateBothPlayers = true)
     {
         if (!IsServer)
@@ -157,11 +142,9 @@ public class GameManager : NetworkBehaviour
         }
             UpdateTurnClientRpc(rpcParams);
             //update players turn for next time this runs
-            //CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
 
        
     }
-
 
     bool ValidateTurn(byte playerRequesting)
     {
@@ -189,19 +172,12 @@ public class GameManager : NetworkBehaviour
         if (BoardCells[cellDictIndex] != MarkType.None)
         {
             Debug.Log("Failed Validation reset");
-            //GameManager.Instance.myPlayer.MyType.Value
-            //ValidateTurn(GameManager.Instance.myPlayer.MyType.Value);
-            //Debug.Log("Reset the circle to what is saved on this grid");
-            //todo
-            //make sure the UI matches the grid
-            //make sure the local grid matches the server grid... or just tell that cell to equal this with a server rpc
-            //continue the timer
+
             ClientRpcParams rpcParams = default;
             ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
             rpcParams.Send.TargetClientIds = singleTarget;
             UserFailedBoardValidationClientRpc(boardIndex,cellIndex, (byte)BoardCells[cellDictIndex], rpcParams);
 
-            //if the move is not valide return that cell to its state
         }
         else
         {
@@ -216,13 +192,14 @@ public class GameManager : NetworkBehaviour
 
     }
 
-
     [ServerRpc(RequireOwnership = false)]
     public void RoundOverStatusServerRpc(MarkType winner)
     {
+        //reset gamemanager here if this runs once
        
         Debug.Log("We have a winner ");
         InputsEnabled.Value = false;
+
         switch (winner)
         {
             case MarkType.X:
@@ -234,7 +211,6 @@ public class GameManager : NetworkBehaviour
             case MarkType.None:
                 break;
         }
-        //TurnOffPlayersClientRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -252,7 +228,6 @@ public class GameManager : NetworkBehaviour
         
         if (ValidateTurn(playerType))
         {
-            Debug.Log("Resetting servers board");
             int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
             BoardCells = new Dictionary<int, MarkType>();
 
@@ -264,9 +239,9 @@ public class GameManager : NetworkBehaviour
 
             InputsEnabled.Value = true;
             //Debug.Log("Starting the game");
+            CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
             lastStarterIndex = CurrentPlayerIndex.Value;//start game
-                                                        //lastStarterIndex == 0 ? 1 : 0;//hrh.. not sure if i need this
-            Debug.Log($"who is going first? {lastStarterIndex}");
+            Debug.Log($"Next Game our starter will be {CurrentPlayerIndex.Value}");
 
             UpdateTurnServer(false);
         }
@@ -279,8 +254,6 @@ public class GameManager : NetworkBehaviour
         myPlayer.UpdateTurn();
     }
 
-
-
     [ClientRpc]
     void UserFailedBoardValidationClientRpc(byte boardIndex, byte cellIndex, byte markTypeOwner, ClientRpcParams clientRpcParams = default)
     {
@@ -288,7 +261,6 @@ public class GameManager : NetworkBehaviour
         MacroBoardManager.Instance._boards[boardIndex].FailedValidation(cellIndex, markTypeOwner);
         TimeManager.Instance.ContinueTime();
     }
-
 
     [ClientRpc]
     public void RoundOverTimeOutClientRpc(MarkType winner)
@@ -316,21 +288,6 @@ public class GameManager : NetworkBehaviour
         CountDownHandler.Instance.StartCountDown();
     }
 
-    public void Reset()
-    {
-        Debug.Log($"Reset with this character going first {CurrentPlayerIndex.Value}");
 
-        //BoardCells = new Dictionary<int, MarkType>();
-        int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
-        while (cellCount > 0)
-        {
-            BoardCells[cellCount - 1] = MarkType.None;
-            cellCount--;
-        }
-        CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;//reset game.. get opposite who started last time
-        Debug.Log($"Reset with this character going first {CurrentPlayerIndex.Value}");
-        //lastStarterIndex = CurrentPlayerIndex.Value;
-        //Debug.Log($"new current player should be {CurrentPlayerIndex.Value}");
-    }
 
 }

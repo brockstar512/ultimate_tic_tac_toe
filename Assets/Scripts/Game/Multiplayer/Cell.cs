@@ -1,13 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Reflection;
 using DG.Tweening;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using static Enums;
 
 public class Cell : MonoBehaviour, IBoard
 {

@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
 using static Enums;
 
 public class LineConfig : MonoBehaviour

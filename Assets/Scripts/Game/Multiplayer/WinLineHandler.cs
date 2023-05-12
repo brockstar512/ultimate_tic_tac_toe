@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
@@ -28,8 +27,7 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
-        
-        //this might need to be a network object to call the scerver
+        TimeManager.Instance.StopTimer();
         if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType)
         {
             GameManager.Instance.RoundOverStatusServerRpc(MarkType);
@@ -98,7 +96,6 @@ public class WinLineHandler : MonoBehaviour
         }
         yield return new WaitForSeconds(.5f);
         roundOver?.Invoke(markType);
-        Debug.Log("Is this ran twice?? ");
 
 
     }
