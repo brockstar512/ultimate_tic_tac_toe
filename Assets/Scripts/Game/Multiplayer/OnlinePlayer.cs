@@ -74,7 +74,7 @@ public class OnlinePlayer : NetworkBehaviour
 
     private void Update()
     {
-        //Debug.Log(IsMyTurn.Value);
+        Debug.Log(IsMyTurn.Value);
     }
 
     public void Init(byte xUser)
