@@ -28,6 +28,12 @@ public class TimeManager : MonoBehaviour
         timerIsRunning = false;
 
     }
+    private void OnEnable()
+    {
+        time.text = $"{timeCountDown}:00";
+        timeRemaining = timeCountDown;
+
+    }
 
     void Update()
     {

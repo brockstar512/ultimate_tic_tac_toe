@@ -35,12 +35,12 @@ public class TurnIndicatorHandler : MonoBehaviour
         Pulse();
     }
 
-    public void ShowTurn(bool isMyTurn)
+    public void ShowTurn()
     {
         //Debug.Log("Showing header turn");
         Color _color = GameManager.Instance.GetColor;
 
-        if (isMyTurn)
+        if (GameManager.Instance.myPlayer.IsMyTurn.Value)
         {
             playerText.text = "Your";
         }

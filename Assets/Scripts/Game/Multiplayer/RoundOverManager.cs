@@ -87,6 +87,7 @@ public class RoundOverManager : NetworkBehaviour
     void HandlePlayAgainAcceptServerRpc()
     {
         ResetGameClientRpc();
+
     }
 
     [ClientRpc]
@@ -109,6 +110,7 @@ public class RoundOverManager : NetworkBehaviour
         cg.interactable = false;
         cg.blocksRaycasts = false;
         cg.DOFade(0, .15f).SetEase(Ease.OutSine);
+        TimeManager.Instance.gameObject.SetActive(true);
         reset?.Invoke();
     }
 

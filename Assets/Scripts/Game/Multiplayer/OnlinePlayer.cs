@@ -82,7 +82,7 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        TurnIndicatorHandler.Instance.ShowTurn(false);
+        TurnIndicatorHandler.Instance.ShowTurn();
 
 
         if (0 == (int)xUser)
@@ -107,7 +107,7 @@ public class OnlinePlayer : NetworkBehaviour
             return;
         IsMyTurn.Value = !IsMyTurn.Value;
         TimeManager.Instance.StartTimer(IsMyTurn.Value);
-        TurnIndicatorHandler.Instance.ShowTurn(IsMyTurn.Value);
+        TurnIndicatorHandler.Instance.ShowTurn();
     }
     public void ForceOff()
     {

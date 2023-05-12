@@ -27,7 +27,9 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
-        TimeManager.Instance.StopTimer();
+        Debug.Log("Hide Timer and TurnIndicator");
+        TimeManager.Instance.gameObject.SetActive(false);
+        TurnIndicatorHandler.Instance.Show(false);
         if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType)
         {
             GameManager.Instance.RoundOverStatusServerRpc(MarkType);
