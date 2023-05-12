@@ -11,7 +11,7 @@ using static Enums;
 
 public class Cell : MonoBehaviour, IBoard
 {
-    Image _mark;
+    public Image _mark { get; private set; }
     public Button _button { get; private set; }
     public byte _index { get; private set; }
     public byte _row { get; private set; }
@@ -54,7 +54,7 @@ public class Cell : MonoBehaviour, IBoard
         _mark.transform.DOScale(size, .1f).SetEase(Ease.OutElastic);
     }
 
-    
+
 
     public void Reset()
     {

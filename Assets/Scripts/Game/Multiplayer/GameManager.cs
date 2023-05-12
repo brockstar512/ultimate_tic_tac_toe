@@ -188,11 +188,18 @@ public class GameManager : NetworkBehaviour
 
         if (BoardCells[cellDictIndex] != MarkType.None)
         {
+            Debug.Log("Failed Validation reset");
+            //GameManager.Instance.myPlayer.MyType.Value
+            //ValidateTurn(GameManager.Instance.myPlayer.MyType.Value);
             //Debug.Log("Reset the circle to what is saved on this grid");
             //todo
             //make sure the UI matches the grid
             //make sure the local grid matches the server grid... or just tell that cell to equal this with a server rpc
             //continue the timer
+            ClientRpcParams rpcParams = default;
+            ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
+            rpcParams.Send.TargetClientIds = singleTarget;
+            UserFailedBoardValidationClientRpc(boardIndex,cellIndex, (byte)BoardCells[cellDictIndex], rpcParams);
 
             //if the move is not valide return that cell to its state
         }
@@ -245,6 +252,18 @@ public class GameManager : NetworkBehaviour
         
         if (ValidateTurn(playerType))
         {
+
+            //int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
+            //BoardCells = new Dictionary<int, MarkType>();
+
+            //while (cellCount > 0)
+            //{
+            //    //Debug.Log("Cell initialize "+ cellCount);
+
+            //    BoardCells[cellCount - 1] = MarkType.None;
+            //    cellCount--;
+            //}
+
             InputsEnabled.Value = true;
             //Debug.Log("Starting the game");
             lastStarterIndex = CurrentPlayerIndex.Value;//start game
@@ -268,6 +287,14 @@ public class GameManager : NetworkBehaviour
     //    myPlayer.IsMyTurn.Value = false;
     //    TurnIndicatorHandler.Instance.Show(false);
     //}
+
+    [ClientRpc]
+    void UserFailedBoardValidationClientRpc(byte boardIndex, byte cellIndex, byte markTypeOwner, ClientRpcParams clientRpcParams = default)
+    {
+        Debug.Log("I need to reset my board and coninue the clock");
+        MacroBoardManager.Instance._boards[boardIndex].FailedValidation(cellIndex, markTypeOwner);
+        //TimeManager.Instance.ContinueTime();
+    }
 
 
     [ClientRpc]
@@ -298,7 +325,9 @@ public class GameManager : NetworkBehaviour
 
     public void Reset()
     {
+        Debug.Log($"Reset with this character going first {CurrentPlayerIndex.Value}");
 
+        //BoardCells = new Dictionary<int, MarkType>();
         int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
         while (cellCount > 0)
         {

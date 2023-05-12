@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,6 +53,28 @@ public class MicroBoardManager : MonoBehaviour, IBoard
             cell.markCell += MarkCell;
 
         }
+    }
+
+    public void FailedValidation(byte cellIndex, byte markTypeOwner)
+    {
+        Debug.Log($"This board faile validation for my cell {cellIndex}... it should be {markTypeOwner}");
+        //if it failed validation it's probabaly because its owned by the opponeet
+        _row = (byte)(cellIndex / 3);
+        _col = (byte)(cellIndex % 3);
+        Grid[_row, _col] = (MarkType)markTypeOwner;
+
+        //in case it is not there turn
+        if ((MarkType)markTypeOwner == MarkType.None)
+        {
+            _cells[cellIndex]._mark.transform.localScale = new Vector3(.25f, .25f, .25f);
+            _cells[cellIndex]._mark.enabled = false;
+            //.transform.DOScale(new Vector3(.25f, .25f, .25f), .1f).SetEase(Ease.OutElastic);
+            return;
+        }
+
+        _cells[cellIndex]._mark.color =
+            markTypeOwner == GameManager.Instance.myPlayer.MyType.Value ?
+            GameManager.Instance.myPlayer.GetMyColor : GameManager.Instance.myPlayer.GetOpponentColor; 
     }
 
     void MarkCell(int row, int col)
