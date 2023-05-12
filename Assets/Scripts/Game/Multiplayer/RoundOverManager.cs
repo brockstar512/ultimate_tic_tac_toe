@@ -43,9 +43,12 @@ public class RoundOverManager : NetworkBehaviour
     private void Init(MarkType MarkType)
     {
         GameManager.Instance.myPlayer.ForceOff();
+        _playAgainButton.gameObject.SetActive(true);
+        _quitButton.gameObject.SetActive(true);
+        _acceptButton.gameObject.SetActive(false);
+
         SetUI(MarkType);
         _promptText.text = REMATCH;
-        //Debug.Log($"Running  init:  {MarkType}");
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         cg.interactable = true;
         cg.blocksRaycasts = true;
@@ -55,7 +58,6 @@ public class RoundOverManager : NetworkBehaviour
 
     void SetUI(MarkType markType)
     {
-        //Debug.Log($"Running  round over :  {markType} here is my type      {GameManager.Instance.myPlayer.MyType.Value}");
         if (markType == MarkType.None)
         {
             _header.text = TIE;
@@ -66,19 +68,8 @@ public class RoundOverManager : NetworkBehaviour
         _banner.color = (MarkType)GameManager.Instance.myPlayer.MyType.Value == markType ? GameManager.Instance.myPlayer.GetMyColor : GameManager.Instance.myPlayer.GetOpponentColor;
     }
 
-
-    //[ContextMenu("Reset Button")]
-    //private void Reset()
-    //{
-    //    //cg.interactable = false;
-    //    //cg.blocksRaycasts = false;
-    //    //cg.DOFade(1, .15f).SetEase(Ease.OutSine);
-    //    reset?.Invoke();
-    //}
-
     void PlayAgainRequest()
     {
-        //serverRpcParams.Receive.SenderClientId
         _playAgainButton.interactable = false;
         _playAgainButton.gameObject.SetActive(false);
         _promptText.text = WAITING;
@@ -88,22 +79,19 @@ public class RoundOverManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void HandlePlayAgainRequestServerRpc(ServerRpcParams serverRpcParams)
     {
+        GameManager.Instance.ResetPlayerOrder();
         PlayAgainOfferClientRpc(serverRpcParams.Receive.SenderClientId);
     }
 
     [ServerRpc(RequireOwnership = false)]
     void HandlePlayAgainAcceptServerRpc()
     {
-        Debug.Log("This should reset on the client");
-        //GameManager.Instance.ActiveGame.Reset();
         ResetGameClientRpc();
     }
 
     [ClientRpc]
     void PlayAgainOfferClientRpc(ulong RequestOwner)
     {
-        //OwnerClientId isd is outputting wrong number its giving the same numbers for both clients... maybe the client id is the netcode objects id and not the client
-        //Debug.Log($"Server send request made by {RequestOwner} and this is who is recieving it {OwnerClientId} and here is the network signleton {NetworkManager.Singleton.LocalClientId}");
 
         if (NetworkManager.Singleton.LocalClientId == RequestOwner)
             return;
@@ -113,13 +101,11 @@ public class RoundOverManager : NetworkBehaviour
         _promptText.text = REQUESTED;
         _acceptButton.gameObject.SetActive(true);
         _acceptButton.interactable = true;
-        //Debug.Log("Other client wants to play again");
     }
 
     [ClientRpc]
     void ResetGameClientRpc()
     {
-        //Debug.Log("Everyone Reset");
         cg.interactable = false;
         cg.blocksRaycasts = false;
         cg.DOFade(0, .15f).SetEase(Ease.OutSine);
@@ -136,26 +122,17 @@ public class RoundOverManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void QuitServerRpc()
     {
-        //Debug.Log("Player has Quit");
-        //disconnect
-        //go to lobby
+
         var (xVal, oVal, didWin) = GameManager.Instance.EndGameStatus();
         QuitClientRpc(xVal, oVal, didWin);
-        //this should be in the overall wrap up
-        //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
-
     }
 
     [ClientRpc]
     void QuitClientRpc(int xScore, int oScore, bool didWin)
     {
-        //Debug.Log("Everyone Quit");
-        //disconnect
-        //go to lobby
+
         NetworkManager.Singleton.Shutdown();
         _wrapUpHandler.Init(xScore, oScore, didWin);
-        //this should be in the overall wrap up
-        //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
 
     }
 

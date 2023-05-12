@@ -111,11 +111,10 @@ public class OnlinePlayer : NetworkBehaviour
     }
     public void ForceOff()
     {
-        //Debug.LogError($"Am I the owner? {IsOwner}");
         if (!IsOwner)
             return;
         IsMyTurn.Value = false;
-        TimeManager.Instance.StartTimer(false);
+        //TimeManager.Instance.StartTimer(false);
         TurnIndicatorHandler.Instance.Show(false);
 
     }

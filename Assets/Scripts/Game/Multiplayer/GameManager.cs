@@ -18,7 +18,6 @@ public class GameManager : NetworkBehaviour
     }
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public NetworkVariable<byte> LastPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);                                                                                                                                                       
     public OnlinePlayer myPlayer;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -37,8 +36,6 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
-        //BoardCells = new Dictionary< int,MarkType>();
-        //Debug.Log("Game manager is initiazlized");
 
     }
 
@@ -59,44 +56,10 @@ public class GameManager : NetworkBehaviour
         return (xScore.Value, yScore.Value, didWin);
     }
 
-    private void Update()
-    {
-
-
-        //if (myPlayer != null)
-        //{
-        //    Debug.Log($"Here is the Mine: {(MarkType)myPlayer.MyType.Value}");
-        //    Debug.Log($"Here is the bool: {InputsEnabled.Value}");
-        //    Debug.Log($"Here is the My Turn Status: {myPlayer.IsMyTurn.Value}");
-
-
-
-        //    return;
-        //}
-
-        //if (!IsServer)
-        //{
-        //    return;
-        //}
-
-        //if (players.Count >= 2)
-        //{
-        //    Debug.Log($"Here is the first index: {(MarkType)players[0].MyType.Value}");
-        //    Debug.Log($"Here is the second index: {(MarkType)players[1].MyType.Value}");
-
-        //}
-
-    }
-
-    //user id will either be 1 or 0
     public void RegisterGame(ulong xUserId, ulong oUserId)
     {
-        //Debug.Log($"Am I the server {IsServer}");
         if (!IsServer)
             return;
-        //Debug.Log("Starting new game");
-        //Debug.Log($"Player Count {players.Count}");
-        //Debug.Log($"creating the game");
 
         clientList = new ulong[]
         {
@@ -110,7 +73,7 @@ public class GameManager : NetworkBehaviour
         ulong playerO = clientList[1];
 
         CurrentPlayerIndex.Value = 0;
-        lastStarterIndex = clientList.Length;//start game
+        lastStarterIndex = CurrentPlayerIndex.Value;//start game
 
         while (index < 2)
         {
@@ -119,9 +82,6 @@ public class GameManager : NetworkBehaviour
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
 
-            //Debug.Log($"Index of players {singleTarget[0]}");
-
-            //ExampleMethodClientRpc(index, rpcParams);
             RegisterPlayerClientRpc((byte)index, rpcParams);
             index++;
         }
@@ -137,13 +97,9 @@ public class GameManager : NetworkBehaviour
         if (!updateBothPlayers)
         {
             ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
-            Debug.Log($"Players turn {CurrentPlayerIndex.Value}");
             rpcParams.Send.TargetClientIds = singleTarget;
         }
             UpdateTurnClientRpc(rpcParams);
-            //update players turn for next time this runs
-
-       
     }
 
     bool ValidateTurn(byte playerRequesting)
@@ -153,20 +109,24 @@ public class GameManager : NetworkBehaviour
 
         if (playerRequesting - 1 == CurrentPlayerIndex.Value)
         {
-            //Debug.Log($"Player {(MarkType)playerRequesting} is going");
             return true;
         }
 
         return false;
     }
 
+    public void ResetPlayerOrder()
+    {
+        if (!IsServer)
+            return;
+
+        CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
+        lastStarterIndex = CurrentPlayerIndex.Value;
+    }
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
-        //int board = 0;
-        //int cell= 0;
-        //int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)board + (int)cell;
-        //Debug.Log($"Checking board {cellDictIndex}");
+
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
 
         if (BoardCells[cellDictIndex] != MarkType.None)
@@ -195,9 +155,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RoundOverStatusServerRpc(MarkType winner)
     {
-        //reset gamemanager here if this runs once
        
-        Debug.Log("We have a winner ");
         InputsEnabled.Value = false;
 
         switch (winner)
@@ -216,7 +174,6 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc(byte PlayerMarkType)
     {
-        return;
         MarkType winner = (MarkType)PlayerMarkType == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
         RoundOverTimeOutClientRpc(winner);
@@ -238,11 +195,9 @@ public class GameManager : NetworkBehaviour
             }
 
             InputsEnabled.Value = true;
-            //Debug.Log("Starting the game");
-            CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
-            lastStarterIndex = CurrentPlayerIndex.Value;//start game
-            Debug.Log($"Next Game our starter will be {CurrentPlayerIndex.Value}");
-
+            //CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
+            //lastStarterIndex = CurrentPlayerIndex.Value;
+            Debug.Log($"Player who is starting {CurrentPlayerIndex.Value}");
             UpdateTurnServer(false);
         }
     }
@@ -250,14 +205,12 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void UpdateTurnClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        //Debug.Log("UPDATING MY TURN");
         myPlayer.UpdateTurn();
     }
 
     [ClientRpc]
     void UserFailedBoardValidationClientRpc(byte boardIndex, byte cellIndex, byte markTypeOwner, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log("I need to reset my board and coninue the clock");
         MacroBoardManager.Instance._boards[boardIndex].FailedValidation(cellIndex, markTypeOwner);
         TimeManager.Instance.ContinueTime();
     }
@@ -271,8 +224,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void UpdateAwaitingPlayersBoardClientRpc(byte boardIndex, byte cellIndex)
     {
-        //Debug.LogError($"Is it my turn {myPlayer.IsMyTurn.Value}");
-        //Debug.Log("My boarddoes not need to be updated: "+myPlayer.IsMyTurn.Value);
+
         if (myPlayer.IsMyTurn.Value)
             return;
         
@@ -282,8 +234,6 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log($"You have pinged client client {index}");
-
         myPlayer.Init(index);
         CountDownHandler.Instance.StartCountDown();
     }
