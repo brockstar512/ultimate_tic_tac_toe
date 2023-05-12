@@ -41,11 +41,6 @@ public class Cell : MonoBehaviour, IBoard
 
     public void CellClicked()
     {
-        //if (GameManager.Instance.myPlayer.IsMyTurn.Value)
-        //{
-            //TimeManager.Instance.StopTimer();
-        //}
-
         _mark.color = GameManager.Instance.GetColor;
         _button.interactable = false;
         _mark.enabled = true;

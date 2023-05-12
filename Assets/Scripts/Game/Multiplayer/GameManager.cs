@@ -108,16 +108,16 @@ public class GameManager : NetworkBehaviour
         RoundOverManager.reset += Reset;
 
         //grid size square * board number + cell index
-        int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
-        BoardCells = new Dictionary<int, MarkType>();
+        //int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
+        //BoardCells = new Dictionary<int, MarkType>();
 
-        while (cellCount > 0)
-        {
-            //Debug.Log("Cell initialize "+ cellCount);
+        //while (cellCount > 0)
+        //{
+        //    //Debug.Log("Cell initialize "+ cellCount);
 
-            BoardCells[cellCount - 1] = MarkType.None;
-            cellCount--;
-        }
+        //    BoardCells[cellCount - 1] = MarkType.None;
+        //    cellCount--;
+        //}
 
         int index = 0;
         ulong playerX = clientList[0];
@@ -252,17 +252,15 @@ public class GameManager : NetworkBehaviour
         
         if (ValidateTurn(playerType))
         {
+            Debug.Log("Resetting servers board");
+            int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
+            BoardCells = new Dictionary<int, MarkType>();
 
-            //int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
-            //BoardCells = new Dictionary<int, MarkType>();
-
-            //while (cellCount > 0)
-            //{
-            //    //Debug.Log("Cell initialize "+ cellCount);
-
-            //    BoardCells[cellCount - 1] = MarkType.None;
-            //    cellCount--;
-            //}
+            while (cellCount > 0)
+            {
+                BoardCells[cellCount - 1] = MarkType.None;
+                cellCount--;
+            }
 
             InputsEnabled.Value = true;
             //Debug.Log("Starting the game");
@@ -281,19 +279,14 @@ public class GameManager : NetworkBehaviour
         myPlayer.UpdateTurn();
     }
 
-    //[ClientRpc]
-    //void TurnOffPlayersClientRpc()
-    //{
-    //    myPlayer.IsMyTurn.Value = false;
-    //    TurnIndicatorHandler.Instance.Show(false);
-    //}
+
 
     [ClientRpc]
     void UserFailedBoardValidationClientRpc(byte boardIndex, byte cellIndex, byte markTypeOwner, ClientRpcParams clientRpcParams = default)
     {
         Debug.Log("I need to reset my board and coninue the clock");
         MacroBoardManager.Instance._boards[boardIndex].FailedValidation(cellIndex, markTypeOwner);
-        //TimeManager.Instance.ContinueTime();
+        TimeManager.Instance.ContinueTime();
     }
 
 
