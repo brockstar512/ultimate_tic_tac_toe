@@ -110,8 +110,9 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
     private void Reset()
     {
-        //_button.interactable = true;
+        _button.interactable = true;
         cg.blocksRaycasts = true;
+
         for (int col = 0; col < Grid.GetLength(0); col++)
         {
             for (int row = 0; row < Grid.GetLength(1); row++)

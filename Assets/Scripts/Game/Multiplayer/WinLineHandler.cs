@@ -28,7 +28,7 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
-
+        
         //this might need to be a network object to call the scerver
         if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType)
         {

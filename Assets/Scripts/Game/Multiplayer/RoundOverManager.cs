@@ -42,6 +42,7 @@ public class RoundOverManager : NetworkBehaviour
 
     private void Init(MarkType MarkType)
     {
+        GameManager.Instance.myPlayer.ForceOff();
         SetUI(MarkType);
         _promptText.text = REMATCH;
         //Debug.Log($"Running  init:  {MarkType}");

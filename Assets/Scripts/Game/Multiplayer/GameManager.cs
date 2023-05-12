@@ -124,7 +124,7 @@ public class GameManager : NetworkBehaviour
         ulong playerO = clientList[1];
 
         CurrentPlayerIndex.Value = 0;
-        lastStarterIndex = CurrentPlayerIndex.Value;
+        //lastStarterIndex = CurrentPlayerIndex.Value;//register gam
 
         while (index < 2)
         {
@@ -247,7 +247,10 @@ public class GameManager : NetworkBehaviour
         {
             InputsEnabled.Value = true;
             //Debug.Log("Starting the game");
-            lastStarterIndex = lastStarterIndex == 0 ? 1 : 0;
+            lastStarterIndex = CurrentPlayerIndex.Value;//start game
+                                                        //lastStarterIndex == 0 ? 1 : 0;//hrh.. not sure if i need this
+            Debug.Log($"who is going first? {lastStarterIndex}");
+
             UpdateTurnServer(false);
         }
     }
@@ -302,7 +305,7 @@ public class GameManager : NetworkBehaviour
             BoardCells[cellCount - 1] = MarkType.None;
             cellCount--;
         }
-        CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
+        CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;//reset game.. get opposite who started last time
         Debug.Log($"Reset with this character going first {CurrentPlayerIndex.Value}");
         //lastStarterIndex = CurrentPlayerIndex.Value;
         //Debug.Log($"new current player should be {CurrentPlayerIndex.Value}");

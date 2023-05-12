@@ -92,11 +92,13 @@ public class MacroBoardManager : MonoBehaviour
         {
             for (int row = 0; row < Grid.GetLength(1); row++)
             {
-                _boards = new Dictionary<int, MicroBoardManager>();
+                //_boards = new Dictionary<int, MicroBoardManager>();
                 Grid[row, col] = MarkType.None;
             }
         }
         cg.blocksRaycasts = true;
+
+
 
     }
 

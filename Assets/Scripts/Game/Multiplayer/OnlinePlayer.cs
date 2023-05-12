@@ -48,12 +48,12 @@ public class OnlinePlayer : NetworkBehaviour
         }
 
         base.OnNetworkSpawn();
-        IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
-        {
-            TimeManager.Instance.StartTimer(newVal);
-            TurnIndicatorHandler.Instance.ShowTurn(newVal);
-            //consider taking these out
-        };
+        //IsMyTurn.OnValueChanged += (bool previousValue, bool newVal) =>
+        //{
+        //    TimeManager.Instance.StartTimer(newVal);
+        //    TurnIndicatorHandler.Instance.ShowTurn(newVal);
+        //    //consider taking these out
+        //};
 
     }
 
@@ -74,7 +74,7 @@ public class OnlinePlayer : NetworkBehaviour
 
     private void Update()
     {
-        //Debug.Log(IsMyTurn.Value);
+        Debug.Log(IsMyTurn.Value);
     }
 
     public void Init(byte xUser)
@@ -108,8 +108,16 @@ public class OnlinePlayer : NetworkBehaviour
         IsMyTurn.Value = !IsMyTurn.Value;
         TimeManager.Instance.StartTimer(IsMyTurn.Value);
         TurnIndicatorHandler.Instance.ShowTurn(IsMyTurn.Value);
-        //Debug.LogError($"My Status is Update {IsMyTurn.Value}");
-        //Debug.Log($"It is my turn {IsMyTurn.Value} for player {(MarkType)MyType.Value}");
+    }
+    public void ForceOff()
+    {
+        //Debug.LogError($"Am I the owner? {IsOwner}");
+        if (!IsOwner)
+            return;
+        IsMyTurn.Value = false;
+        TimeManager.Instance.StartTimer(false);
+        TurnIndicatorHandler.Instance.Show(false);
+
     }
 
     public override void OnNetworkDespawn()
