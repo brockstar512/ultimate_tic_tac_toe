@@ -68,6 +68,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
         {
             _cells[cellIndex]._mark.transform.localScale = new Vector3(.25f, .25f, .25f);
             _cells[cellIndex]._mark.enabled = false;
+            _cells[cellIndex]._button.interactable = true; 
             //.transform.DOScale(new Vector3(.25f, .25f, .25f), .1f).SetEase(Ease.OutElastic);
             return;
         }

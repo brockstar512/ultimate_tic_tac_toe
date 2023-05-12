@@ -85,7 +85,6 @@ public class MacroBoardManager : MonoBehaviour
     }
 
 
-
     private void Reset()
     {
         for (int col = 0; col < Grid.GetLength(0); col++)
