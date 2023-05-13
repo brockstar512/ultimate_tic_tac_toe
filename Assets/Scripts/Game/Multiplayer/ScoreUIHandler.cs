@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
 using Unity.Netcode;
+using UnityEngine;
 
 public class ScoreUIHandler : NetworkBehaviour
 {
@@ -17,7 +15,7 @@ public class ScoreUIHandler : NetworkBehaviour
         {
             xScore.text = newVal.ToString();
         };
-        GameManager.Instance.yScore.OnValueChanged += (byte previousValue, byte newVal) =>
+        GameManager.Instance.oScore.OnValueChanged += (byte previousValue, byte newVal) =>
         {
             yScore.text = newVal.ToString();
         };

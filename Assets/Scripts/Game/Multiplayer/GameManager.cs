@@ -20,7 +20,7 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public OnlinePlayer myPlayer;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public NetworkVariable<byte> yScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<byte> oScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public event Action<MarkType> TimeOut;
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
@@ -39,11 +39,38 @@ public class GameManager : NetworkBehaviour
 
     }
 
+    void UpdateTurnServer(bool updateBothPlayers = true)
+    {
+        if (!IsServer)
+            return;
+
+        ClientRpcParams rpcParams = default;
+        if (!updateBothPlayers)
+        {
+            ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
+            rpcParams.Send.TargetClientIds = singleTarget;
+        }
+        UpdateTurnClientRpc(rpcParams);
+    }
+
+    bool ValidateTurn(byte playerRequesting)
+    {
+        if (!IsServer)
+            return false;
+
+        if (playerRequesting - 1 == CurrentPlayerIndex.Value)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public (int xVal, int oVal) EndGameStatus()
     {
 
 
-        return (xScore.Value, yScore.Value);
+        return (xScore.Value, oScore.Value);
     }
 
     public void RegisterGame(ulong xUserId, ulong oUserId)
@@ -56,7 +83,8 @@ public class GameManager : NetworkBehaviour
             xUserId,
             oUserId
         };
-
+        xScore.Value = 0;
+        oScore.Value = 0;
 
         int index = 0;
         ulong playerX = clientList[0];
@@ -78,33 +106,6 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    void UpdateTurnServer(bool updateBothPlayers = true)
-    {
-        if (!IsServer)
-            return;
-
-        ClientRpcParams rpcParams = default;
-        if (!updateBothPlayers)
-        {
-            ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
-            rpcParams.Send.TargetClientIds = singleTarget;
-        }
-            UpdateTurnClientRpc(rpcParams);
-    }
-
-    bool ValidateTurn(byte playerRequesting)
-    {
-        if (!IsServer)
-            return false;
-
-        if (playerRequesting - 1 == CurrentPlayerIndex.Value)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     public void ResetPlayerOrder()
     {
         if (!IsServer)
@@ -113,6 +114,7 @@ public class GameManager : NetworkBehaviour
         CurrentPlayerIndex.Value = (byte)lastStarterIndex == (byte)0 ? (byte)1 : (byte)0;
         lastStarterIndex = CurrentPlayerIndex.Value;
     }
+
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
@@ -154,7 +156,7 @@ public class GameManager : NetworkBehaviour
                 xScore.Value++;
                 break;
             case MarkType.O:
-                yScore.Value++;
+                oScore.Value++;
                 break;
             case MarkType.None:
                 break;
@@ -230,6 +232,11 @@ public class GameManager : NetworkBehaviour
         CountDownHandler.Instance.StartCountDown();
     }
 
-
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        TimeOut = null;
+        BoardCells = null;
+    }
 
 }

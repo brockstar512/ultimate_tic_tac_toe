@@ -8,12 +8,12 @@ public class TimeManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeTitle;
     public TextMeshProUGUI time;
     private float timeRemaining;
-    const float timeCountDown = 5;
+    const float timeCountDown = 3;
     [SerializeField] bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
 
 
-    private void Awake()
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -28,7 +28,8 @@ public class TimeManager : MonoBehaviour
         timerIsRunning = false;
 
     }
-    private void OnEnable()
+
+    void OnEnable()
     {
         time.text = $"{timeCountDown}:00";
         timeRemaining = timeCountDown;
@@ -47,13 +48,28 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    //reset.
+    void MarkCellTimeFail()
+    {
+        GameManager.Instance.PlayerTimedOutServerRpc(GameManager.Instance.myPlayer.MyType.Value);
+    }
+
+    void DisplayTime(float timeToDisplay)
+    {
+        TimeSpan timeLeft = TimeSpan.FromSeconds(timeToDisplay);
+        time.text = string.Format("{0:00}:{1:00}", timeLeft.Seconds, timeLeft.Milliseconds);
+        if (timeToDisplay < 0)
+        {
+            MarkCellTimeFail();
+            time.text = string.Format("{0:00}:{1:00}", 00, 00);
+            time.text = "00:00";
+            timerIsRunning = false;
+            timeRemaining = timeCountDown;
+        }
+    }
+
     //when i read that it is my turn
     public void StartTimer(bool isBeginningTurn)
     {
-        Debug.Log("Timer is running");
-        //TurnIndicatorHandler.Instance.Show();
-        //Debug.Log("starting timer " + isBeginningTurn);
         if (!isBeginningTurn)
             return;
         //maybe have a delay? so consider making this a voroutine
@@ -77,28 +93,5 @@ public class TimeManager : MonoBehaviour
         timerIsRunning = true;
     }
 
-
-    void MarkCellTimeSuccess()
-    {
-        timerIsRunning = false;
-    }
-
-    void MarkCellTimeFail()
-    {
-        GameManager.Instance.PlayerTimedOutServerRpc(GameManager.Instance.myPlayer.MyType.Value);
-    }
-
-    void DisplayTime(float timeToDisplay)
-    {
-        TimeSpan timeLeft = TimeSpan.FromSeconds(timeToDisplay);
-        time.text = string.Format("{0:00}:{1:00}", timeLeft.Seconds, timeLeft.Milliseconds);
-        if (timeToDisplay < 0)
-        {
-            MarkCellTimeFail();
-            time.text = string.Format("{0:00}:{1:00}", 00, 00);
-            time.text = "00:00";
-            timerIsRunning = false;
-            timeRemaining = timeCountDown;
-        }
-    }
+    
 }

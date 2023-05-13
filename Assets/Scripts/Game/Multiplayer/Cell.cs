@@ -27,9 +27,6 @@ public class Cell : MonoBehaviour, IBoard
         _button.onClick.AddListener(delegate { GameManager.Instance.UpdateBoardServerRpc(_board, _index); });
         this.gameObject.name = $"Cell: [{_row},{_col}] board number {_board}";
         RoundOverManager.reset += Reset;
-        //GameManager.Instance.UpdateBoardServerRpc(_board, _index);//take it out of here and just add it to the cell click button?
-
-        //GameManager.Instance.InitializeBoardValidation(_board,_index);
     }
 
 
@@ -53,12 +50,11 @@ public class Cell : MonoBehaviour, IBoard
         _mark.transform.DOScale(size, .15f).SetEase(Ease.InElastic).OnComplete(() => { _mark.enabled = false; });
     }
 
-    //private void OnDestroy()
-    //{
-    //    _button.onClick.RemoveAllListeners();
-        
-    //    markCell = null;
-    //}
+    private void OnDestroy()
+    {
+        _button.onClick.RemoveAllListeners();
+        markCell = null;
+    }
 
 }
 

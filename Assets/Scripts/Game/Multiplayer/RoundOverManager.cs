@@ -1,13 +1,12 @@
 using System;
-using System.Reflection;
+using System.Linq;
+using System.Threading;
 using DG.Tweening;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 using static Enums;
-using UnityEditor.PackageManager;
 
 public class RoundOverManager : NetworkBehaviour
 {
@@ -31,7 +30,7 @@ public class RoundOverManager : NetworkBehaviour
     CanvasGroup cg;
     public static event Action reset;
 
-    private void Awake()
+    void Awake()
     {
         cg = this.GetComponent<CanvasGroup>();
         WinLineHandler.roundOver += Init;
@@ -43,7 +42,7 @@ public class RoundOverManager : NetworkBehaviour
 
     }
 
-    private void Init(MarkType MarkType)
+    void Init(MarkType MarkType)
     {
         GameManager.Instance.myPlayer.ForceOff();
         _playAgainButton.gameObject.SetActive(true);
@@ -79,6 +78,13 @@ public class RoundOverManager : NetworkBehaviour
         HandlePlayAgainRequestServerRpc(new ServerRpcParams());
     }
 
+    private void Quit()
+    {
+        _quitButton.interactable = false;
+        QuitServerRpc();
+    }
+   
+
     [ServerRpc(RequireOwnership = false)]
     void HandlePlayAgainRequestServerRpc(ServerRpcParams serverRpcParams)
     {
@@ -91,37 +97,6 @@ public class RoundOverManager : NetworkBehaviour
     {
         ResetGameClientRpc();
 
-    }
-
-    [ClientRpc]
-    void PlayAgainOfferClientRpc(ulong RequestOwner)
-    {
-
-        if (NetworkManager.Singleton.LocalClientId == RequestOwner)
-            return;
-
-        _playAgainButton.interactable = false;
-        _playAgainButton.gameObject.SetActive(false);
-        _promptText.text = REQUESTED;
-        _acceptButton.gameObject.SetActive(true);
-        _acceptButton.interactable = true;
-    }
-
-    [ClientRpc]
-    void ResetGameClientRpc()
-    {
-        cg.interactable = false;
-        cg.blocksRaycasts = false;
-        cg.DOFade(0, .15f).SetEase(Ease.OutSine);
-        TimeManager.Instance.gameObject.SetActive(true);
-        reset?.Invoke();
-    }
-
-    private void Quit()
-    {
-        _quitButton.interactable = false;
-        QuitServerRpc();
-        //NetworkManager.Singleton.Shutdown();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -156,7 +131,12 @@ public class RoundOverManager : NetworkBehaviour
     [ClientRpc]
     void QuitClientRpc(int xScore, int oScore, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log("Client has quit");
+        Debug.Log($"xScore {xScore}");
+        Debug.Log($"oScore {oScore}");
+        Debug.Log($"my type {(MarkType)GameManager.Instance.myPlayer.MyType.Value}");
+        Debug.Log($"did win? {(MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType.X && xScore > oScore}");
+
+
         bool didWin;
         if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType.X && xScore > oScore)
         {
@@ -166,22 +146,48 @@ public class RoundOverManager : NetworkBehaviour
         {
             didWin = false;
         }
-        
         _wrapUpHandler.Init(xScore, oScore, didWin);
         NetworkManager.Singleton.Shutdown();
-
     }
 
     [ClientRpc]
     void OpponentHasLeftClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log($"opponent has left");
-
         _promptText.text = OPPONENT_LEFT;
         _playAgainButton.gameObject.SetActive(false);
         _acceptButton.gameObject.SetActive(false);
     }
 
+    [ClientRpc]
+    void PlayAgainOfferClientRpc(ulong RequestOwner)
+    {
+
+        if (NetworkManager.Singleton.LocalClientId == RequestOwner)
+            return;
+
+        _playAgainButton.interactable = false;
+        _playAgainButton.gameObject.SetActive(false);
+        _promptText.text = REQUESTED;
+        _acceptButton.gameObject.SetActive(true);
+        _acceptButton.interactable = true;
+    }
+
+    [ClientRpc]
+    void ResetGameClientRpc()
+    {
+        cg.interactable = false;
+        cg.blocksRaycasts = false;
+        cg.DOFade(0, .15f).SetEase(Ease.OutSine);
+        TimeManager.Instance.gameObject.SetActive(true);
+        reset?.Invoke();
+    }
+
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        reset = null;
+    }
     public override void OnDestroy()
     {
         _playAgainButton.onClick.RemoveAllListeners();

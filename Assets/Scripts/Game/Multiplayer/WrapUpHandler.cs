@@ -49,7 +49,7 @@ public class WrapUpHandler : MonoBehaviour
 
     IEnumerator Continue()
     {
-        yield return new WaitForSeconds(3f);
+        //yield return new WaitForSeconds(3f);
 
         yield return new WaitForSeconds(3f);
         LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);

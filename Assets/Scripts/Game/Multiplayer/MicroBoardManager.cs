@@ -55,7 +55,6 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
     public void FailedValidation(byte cellIndex, byte markTypeOwner)
     {
-        Debug.Log($"This board faile validation for my cell {cellIndex}... it should be {markTypeOwner}");
         //if it failed validation it's probabaly because its owned by the opponeet
         _row = (byte)(cellIndex / 3);
         _col = (byte)(cellIndex % 3);
@@ -67,7 +66,6 @@ public class MicroBoardManager : MonoBehaviour, IBoard
             _cells[cellIndex]._mark.transform.localScale = new Vector3(.25f, .25f, .25f);
             _cells[cellIndex]._mark.enabled = false;
             _cells[cellIndex]._button.interactable = true; 
-            //.transform.DOScale(new Vector3(.25f, .25f, .25f), .1f).SetEase(Ease.OutElastic);
             return;
         }
 
@@ -78,13 +76,10 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
     void MarkCell(int row, int col)
     {
-        //Debug.Log($"MICROBOARD CHECK");
-        //Debug.Log($"Marking cell for grid {gameObject.name}");
+
         Grid[row, col] = GameManager.Instance.GetMarkType;
 
-        //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
-        var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
-        //Debug.Log($"All cells are taken now -> {Utilities.IsDraw(_cells)}");
+        var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);
 
         if (isDone)
         {
@@ -98,12 +93,10 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
             _button.interactable = false;
             cg.blocksRaycasts = false;
-            //Debug.Log($"This board is done with a winner color: {GameManager.Instance.GetColor}");
             _mark.color = GameManager.Instance.GetColor;
             markBoard?.Invoke(_row, _col, GameManager.Instance.GetMarkType);
             Vector3 size = new Vector3(.90f, .90f, .90f);
-            //_mark.color = GameManager.Instance.GetColor;//this might be too slow
-            //Debug.Log($"This board is done with a winner color: {GameManager.Instance.GetColor}");
+
 
             _mark.enabled = true;
             _mark.transform.DOScale(size, .15f);
@@ -152,12 +145,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     {
         markBoard = null;
         onCellSelected = null;
-        RoundOverManager.reset -= Reset;
     }
 
 
 }
-//void UpdateBoard(Net_OnMarkCell msg)
-//{
-//    _cells[msg.Index].UpdateUI(msg.Actor);
-//}

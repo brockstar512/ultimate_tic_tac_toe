@@ -864,12 +864,10 @@ MonoBehaviour:
     m_InternalValue: 0
   CurrentPlayerIndex:
     m_InternalValue: 0
-  LastPlayerIndex:
-    m_InternalValue: 0
   myPlayer: {fileID: 0}
   xScore:
     m_InternalValue: 0
-  yScore:
+  oScore:
     m_InternalValue: 0
 --- !u!114 &1371501550
 MonoBehaviour:
@@ -24695,8 +24693,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294951424
-  m_fontColor: {r: 0, g: 0.7607843, b: 1, a: 1}
+    rgba: 4278241936
+  m_fontColor: {r: 0.5647059, g: 0.7921569, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -25315,8 +25313,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278240000
-  m_fontColor: {r: 0, g: 0.7647059, b: 0, a: 1}
+    rgba: 4294951424
+  m_fontColor: {r: 0, g: 0.7607843, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using static Enums;
-using System;
 
 public class TurnIndicatorHandler : MonoBehaviour
 {
@@ -28,8 +24,15 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     public void Show(bool isOn)
     {
-        //Debug.Log("Showing show");
         Color _color = GameManager.Instance.GetColor;
+        if (GameManager.Instance.myPlayer.IsMyTurn.Value)
+        {
+            playerText.text = "Your";
+        }
+        else
+        {
+            playerText.text = "Enemies";
+        }
         playerText.color = _color;
         cg.alpha = isOn ? 1 : 0;
         Pulse();

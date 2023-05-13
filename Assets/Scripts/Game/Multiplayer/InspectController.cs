@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
-using static UnityEngine.UI.Image;
-using static UnityEngine.GraphicsBuffer;
-using Unity.Netcode;
+using static Enums;
 
 [RequireComponent(typeof(Button))]
 public class InspectController : MonoBehaviour
@@ -37,6 +33,7 @@ public class InspectController : MonoBehaviour
         targetMarkMin = target.anchorMin;
         _button.onClick.AddListener(Show);
         HandleMarks(false);
+        GameManager.Instance.TimeOut += TimeOutMinimize;
     }
 
     void Start()
@@ -49,7 +46,14 @@ public class InspectController : MonoBehaviour
         HandleSubscription(false);
     }
 
+    void TimeOutMinimize(MarkType markType)
+    {
+        if (!_button.enabled)
+        {
+            Return();
+        }
 
+    }
 
     void Show()
     {
