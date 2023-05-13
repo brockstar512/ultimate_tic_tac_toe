@@ -24,7 +24,7 @@ public class GameManager : NetworkBehaviour
     public event Action<MarkType> TimeOut;
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
-    private ulong[] clientList;
+    public ulong[] clientList { get; private set; }
 
     private void Awake()
     {

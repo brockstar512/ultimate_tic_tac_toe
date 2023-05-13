@@ -1,16 +1,19 @@
 using System;
+using System.Reflection;
 using DG.Tweening;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 using static Enums;
+using UnityEditor.PackageManager;
 
 public class RoundOverManager : NetworkBehaviour
 {
     public const string WAITING = "Waiting On Opponent...";
     public const string REQUESTED = "Opponent Wants To Play Again!";
-    public const string OPPONENT_LEFT = "Opponent Already Left";
+    public const string OPPONENT_LEFT = "Opponent Has Left";
     public const string REMATCH = "Rematch?";
 
     const string TIE = "Round Tied!";
@@ -122,20 +125,45 @@ public class RoundOverManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void QuitServerRpc()
+    void QuitServerRpc(ServerRpcParams serverRpcParams = default)
     {
 
+        ulong leavingClientId = serverRpcParams.Receive.SenderClientId;
+        ClientRpcParams rpcParams = default;
+        ulong[] singleTarget = new ulong[] { leavingClientId };
+        rpcParams.Send.TargetClientIds = singleTarget;
+        //send the sender this
         var (xVal, oVal, didWin) = GameManager.Instance.EndGameStatus();
-        QuitClientRpc(xVal, oVal, didWin);
+        QuitClientRpc(xVal, oVal, didWin, rpcParams);
+
+        Debug.Log($"How many people are here? {NetworkManager.ConnectedClients.Count}");
+        if (NetworkManager.ConnectedClients.Count == 1)
+        {
+            //sned the other...OpponentHasLeft()
+            //if someone is still around
+            ulong updateClientId = GameManager.Instance.clientList.FirstOrDefault(otherPlayer => otherPlayer != serverRpcParams.Receive.SenderClientId);
+            rpcParams = default;
+            singleTarget = new ulong[] { updateClientId };
+            rpcParams.Send.TargetClientIds = singleTarget;
+            OpponentHasLeft(rpcParams);
+        }
+
     }
 
     [ClientRpc]
-    void QuitClientRpc(int xScore, int oScore, bool didWin)
+    void QuitClientRpc(int xScore, int oScore, bool didWin, ClientRpcParams clientRpcParams = default)
     {
 
         NetworkManager.Singleton.Shutdown();
         _wrapUpHandler.Init(xScore, oScore, didWin);
 
+    }
+
+    void OpponentHasLeft(ClientRpcParams clientRpcParams = default)
+    {
+        _promptText.text = OPPONENT_LEFT;
+        _playAgainButton.gameObject.SetActive(false);
+        _acceptButton.gameObject.SetActive(false);
     }
 
     public override void OnDestroy()
