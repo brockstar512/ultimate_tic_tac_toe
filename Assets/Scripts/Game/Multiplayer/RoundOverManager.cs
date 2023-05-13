@@ -121,46 +121,62 @@ public class RoundOverManager : NetworkBehaviour
     {
         _quitButton.interactable = false;
         QuitServerRpc();
-        NetworkManager.Singleton.Shutdown();
+        //NetworkManager.Singleton.Shutdown();
     }
 
     [ServerRpc(RequireOwnership = false)]
     void QuitServerRpc(ServerRpcParams serverRpcParams = default)
     {
 
+        Debug.Log($"How many people are here? {NetworkManager.ConnectedClients.Count}");
+        if (NetworkManager.ConnectedClients.Count == 2)
+        {
+            Debug.Log($"Sending the other player that the opponent left?");
+
+            //sned the other...OpponentHasLeft()
+            //if someone is still around
+            ulong updateClientId = GameManager.Instance.clientList.FirstOrDefault(otherPlayer => otherPlayer != serverRpcParams.Receive.SenderClientId);
+            ClientRpcParams opponentRpcParams = default;
+            ulong[] opponentTarget = new ulong[] { updateClientId };
+            opponentRpcParams.Send.TargetClientIds = opponentTarget;
+            OpponentHasLeftClientRpc(opponentRpcParams);
+        }
         ulong leavingClientId = serverRpcParams.Receive.SenderClientId;
         ClientRpcParams rpcParams = default;
         ulong[] singleTarget = new ulong[] { leavingClientId };
         rpcParams.Send.TargetClientIds = singleTarget;
         //send the sender this
-        var (xVal, oVal, didWin) = GameManager.Instance.EndGameStatus();
-        QuitClientRpc(xVal, oVal, didWin, rpcParams);
+        var (xVal, oVal) = GameManager.Instance.EndGameStatus();
+        QuitClientRpc(xVal, oVal, rpcParams);
 
-        Debug.Log($"How many people are here? {NetworkManager.ConnectedClients.Count}");
-        if (NetworkManager.ConnectedClients.Count == 1)
-        {
-            //sned the other...OpponentHasLeft()
-            //if someone is still around
-            ulong updateClientId = GameManager.Instance.clientList.FirstOrDefault(otherPlayer => otherPlayer != serverRpcParams.Receive.SenderClientId);
-            rpcParams = default;
-            singleTarget = new ulong[] { updateClientId };
-            rpcParams.Send.TargetClientIds = singleTarget;
-            OpponentHasLeft(rpcParams);
-        }
+
 
     }
 
     [ClientRpc]
-    void QuitClientRpc(int xScore, int oScore, bool didWin, ClientRpcParams clientRpcParams = default)
+    void QuitClientRpc(int xScore, int oScore, ClientRpcParams clientRpcParams = default)
     {
-
-        NetworkManager.Singleton.Shutdown();
+        Debug.Log("Client has quit");
+        bool didWin;
+        if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType.X && xScore > oScore)
+        {
+            didWin = true;
+        }
+        else
+        {
+            didWin = false;
+        }
+        
         _wrapUpHandler.Init(xScore, oScore, didWin);
+        NetworkManager.Singleton.Shutdown();
 
     }
 
-    void OpponentHasLeft(ClientRpcParams clientRpcParams = default)
+    [ClientRpc]
+    void OpponentHasLeftClientRpc(ClientRpcParams clientRpcParams = default)
     {
+        Debug.Log($"opponent has left");
+
         _promptText.text = OPPONENT_LEFT;
         _playAgainButton.gameObject.SetActive(false);
         _acceptButton.gameObject.SetActive(false);

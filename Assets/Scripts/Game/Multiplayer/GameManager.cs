@@ -39,21 +39,11 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    public (int xVal, int oVal, bool didWin) EndGameStatus()
+    public (int xVal, int oVal) EndGameStatus()
     {
 
-        bool didWin;
-        if ((MarkType)myPlayer.MyType.Value == MarkType.X && xScore.Value > yScore.Value)
-        {
-            didWin = true;
-        }
-        else
-        {
-            didWin = false;
-        }
 
-
-        return (xScore.Value, yScore.Value, didWin);
+        return (xScore.Value, yScore.Value);
     }
 
     public void RegisterGame(ulong xUserId, ulong oUserId)
