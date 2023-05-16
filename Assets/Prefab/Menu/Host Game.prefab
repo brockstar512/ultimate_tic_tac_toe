@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2679179094384373443}
   - component: {fileID: 2679179094384373441}
   - component: {fileID: 2679179094384373440}
+  - component: {fileID: 2046783960091729139}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -135,6 +136,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!225 &2046783960091729139
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2679179094384373442}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2679179094765112292
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,6 +496,7 @@ GameObject:
   - component: {fileID: 2679179095396364878}
   - component: {fileID: 2679179095396364876}
   - component: {fileID: 2679179095396364879}
+  - component: {fileID: 7972404022727030258}
   m_Layer: 5
   m_Name: Host Game
   m_TagString: Untagged
@@ -549,6 +563,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7972404022727030258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2679179095396364881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cb6ce82e6b4d43e68a30fb40f89dbc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _joinCodeText: {fileID: 2679179096078753736}
+  _copy: {fileID: 2679179094904818319}
+  _cancel: {fileID: 2679179095663637553}
+  copyPromptCG: {fileID: 2046783960091729139}
 --- !u!1 &2679179095663637555
 GameObject:
   m_ObjectHideFlags: 0

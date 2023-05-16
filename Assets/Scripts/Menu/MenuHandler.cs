@@ -10,28 +10,38 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using System;
 
 public class MenuHandler : MonoBehaviour
 {
-    [SerializeField] Button findMatch;
-    [SerializeField] private TMP_Text _joinCodeText;
-    [SerializeField] private TMP_InputField _joinInput;
-    [SerializeField] private GameObject _buttons;
+    //[SerializeField] Button findMatch;
+    [SerializeField] Button hostMatch;
+    [SerializeField] Button joinMatch;
+    //public delegate void JoinDelegate();
+    public Action<string> JoinDelegate;
+    //[SerializeField] private TMP_Text _joinCodeText;
+    //[SerializeField] private TMP_InputField _joinInput;
+    //[SerializeField] private GameObject _buttons;
     private UnityTransport _transport;
     private const int MaxPlayers = 2;
+    [SerializeField] HostUI hostScreen;
+    [SerializeField] JoinUI joinScreen;
 
 
     //LoadingManager.Instance.LoadScene(target.ToString())
     private async void Awake()
     {
         _transport = FindObjectOfType<UnityTransport>();
+        JoinDelegate += JoinGame;
 
-        _buttons.SetActive(false);
+        //_buttons.SetActive(false);
 
         await Authenticate();
 
-        _buttons.SetActive(true);
-        findMatch.onClick.AddListener(FindMatch);
+        //_buttons.SetActive(true);
+        //findMatch.onClick.AddListener(FindMatch);
+        hostMatch.onClick.AddListener(CreateGame);
+        joinMatch.onClick.AddListener(ShowJoin);
     }
 
     private static async Task Authenticate()
@@ -42,44 +52,45 @@ public class MenuHandler : MonoBehaviour
 
     public async void CreateGame()
     {
-        _buttons.SetActive(false);
+        Debug.Log("Create Game");
+        hostMatch.interactable = false;
+        //_buttons.SetActive(false);
 
         Allocation a = await RelayService.Instance.CreateAllocationAsync(MaxPlayers);
-        _joinCodeText.text = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
-
+        string joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
+        HostMatch(joinCode);
         _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
 
         NetworkManager.Singleton.StartHost();
     }
 
-    public async void JoinGame()
+    public async void JoinGame(string code)
     {
-        _buttons.SetActive(false);
+        //_buttons.SetActive(false);
 
-        JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(_joinInput.text);
+        JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(code);
 
         _transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
 
         NetworkManager.Singleton.StartClient();
     }
 
-
-    void FindMatch()
+    void ShowJoin()
     {
+        Instantiate(joinScreen, this.transform.parent).Init(JoinDelegate);
 
     }
-    void JoinMatch()
-    {
 
-    }
-    void HostMatch()
-    {
 
+    void HostMatch(string code)
+    {
+        Instantiate(hostScreen, this.transform.parent).Init(code);
     }
 
 
     private void OnDestroy()
     {
-        findMatch.onClick.RemoveAllListeners();
+        hostMatch.onClick.RemoveAllListeners();
+        JoinDelegate -= JoinGame;
     }
 }
