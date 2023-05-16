@@ -59,14 +59,17 @@ public class ConnectionHandler : NetworkBehaviour
                 }
 
 
-                GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
-
+                //GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
+                LoadingManager.Instance.LoadNetwork(Enums.MyScenes.OnlineGame);
             }
             
         };
     }
 
-
+    public void StartGame()
+    {
+        GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
+    }
 
     public void StartHost()
     {

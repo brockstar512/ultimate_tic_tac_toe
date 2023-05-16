@@ -868,6 +868,7 @@ MonoBehaviour:
     m_InternalValue: 0
   oScore:
     m_InternalValue: 0
+  _playerPrefab: {fileID: 556943187026298173, guid: 19f969dfeb584494e8b33e9cd6103d23, type: 3}
 --- !u!114 &1371501550
 MonoBehaviour:
   m_ObjectHideFlags: 0

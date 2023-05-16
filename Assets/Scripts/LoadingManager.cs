@@ -38,6 +38,7 @@ public class LoadingManager : MonoBehaviour
     public void LoadNetwork(MyScenes targetScene)
     {
         NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
+        Debug.Log("Show Loading screen");
     }
 
     public void QuickLoad(MyScenes target)

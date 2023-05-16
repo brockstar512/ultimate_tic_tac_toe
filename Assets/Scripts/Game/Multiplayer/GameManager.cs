@@ -16,6 +16,7 @@ public class GameManager : NetworkBehaviour
     {
         get { return myPlayer.IsMyTurn.Value ? myPlayer.GetMyColor : myPlayer.GetOpponentColor; }
     }
+
     public NetworkVariable<bool> InputsEnabled = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);//this is global
     public NetworkVariable<byte> CurrentPlayerIndex = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public OnlinePlayer myPlayer;
@@ -25,6 +26,7 @@ public class GameManager : NetworkBehaviour
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
     public ulong[] clientList { get; private set; }
+    [SerializeField] OnlinePlayer _playerPrefab;
 
     private void Awake()
     {
@@ -37,6 +39,16 @@ public class GameManager : NetworkBehaviour
             Instance = this;
         }
 
+    }
+    void Start()
+    {
+        Debug.Log("Hide loading screen");
+        Debug.Log("Instantiate your player");//todo only server can spawn player
+        Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
+        
+        if (!IsServer)
+            return;
+        ConnectionHandler.Instance.StartGame();
     }
 
     void UpdateTurnServer(bool updateBothPlayers = true)
@@ -75,6 +87,7 @@ public class GameManager : NetworkBehaviour
 
     public void RegisterGame(ulong xUserId, ulong oUserId)
     {
+        //Debug.Log("Hide loading screen");
         if (!IsServer)
             return;
 
