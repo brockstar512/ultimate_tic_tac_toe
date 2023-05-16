@@ -63,11 +63,17 @@ public class OnlinePlayer : NetworkBehaviour
         if (!IsOwner)
         {
             this.enabled = false;
+            return;
         }
         else
         {
-            GameManager.Instance.myPlayer = this;
+            Debug.Log($"I am the Owner: {IsClient}");
+
+            //GameManager.
+            //    Instance.
+            //    myPlayer = this;
         }
+        //Debug.Log("I am the Owner");
 
         //GameManager.Instance.InitializePlayer(this);
     }
@@ -83,6 +89,8 @@ public class OnlinePlayer : NetworkBehaviour
             return;
 
         TurnIndicatorHandler.Instance.ShowTurn();
+
+        GameManager.Instance.myPlayer = this;
 
 
         if (0 == (int)xUser)

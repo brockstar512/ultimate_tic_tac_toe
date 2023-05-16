@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using static Enums;
 
@@ -38,16 +39,18 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
+        Debug.Log("Game Manager");
 
     }
     void Start()
     {
         Debug.Log("Hide loading screen");
-        Debug.Log("Instantiate your player");//todo only server can spawn player
-        Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
         
         if (!IsServer)
             return;
+
+        //Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
+        //return;
         ConnectionHandler.Instance.StartGame();
     }
 
@@ -106,17 +109,28 @@ public class GameManager : NetworkBehaviour
         CurrentPlayerIndex.Value = 0;
         lastStarterIndex = CurrentPlayerIndex.Value;//start game
 
+        //RegisterPlayerClientRpc();
+        
         while (index < 2)
         {
 
             ClientRpcParams rpcParams = default;
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
-
+            Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
             RegisterPlayerClientRpc((byte)index, rpcParams);
             index++;
         }
 
+    }
+    [ClientRpc]
+    void RegisterPlayerClientRpc(ClientRpcParams rpcParams = default)
+    {
+        //GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
+        Debug.Log($"Client {NetworkManager.Singleton.LocalClientId}");
+        Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
+
+        Debug.Log("Regiter the player");
     }
 
     public void ResetPlayerOrder()
@@ -241,7 +255,10 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        myPlayer.Init(index);
+        Debug.Log($"Client id in GameManager");
+        return;
+        //NullReferenceException: Object reference not set to an instance of an object
+        myPlayer.Init(index);//todo this is causing issues 
         CountDownHandler.Instance.StartCountDown();
     }
 
