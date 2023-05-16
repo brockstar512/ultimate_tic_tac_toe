@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Enums;
+using Unity.Netcode;
 
 public class LoadingManager : MonoBehaviour
 {
@@ -32,6 +33,11 @@ public class LoadingManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void LoadNetwork(MyScenes targetScene)
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
     }
 
     public void QuickLoad(MyScenes target)

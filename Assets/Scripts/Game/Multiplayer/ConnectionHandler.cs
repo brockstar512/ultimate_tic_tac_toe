@@ -7,31 +7,41 @@ using UnityEngine.UI;
 
 public class ConnectionHandler : NetworkBehaviour
 {
+    public static ConnectionHandler Instance { get; private set; }
 
     private const int MaxPlayers = 2;
-    [SerializeField] Button joinButton;
-    [SerializeField] Button hostButton;
-    [SerializeField] Button serverButton;
+    ulong _playerOne;
+    ulong _playerTwo;
+
+    //[SerializeField] Button joinButton;
+    //[SerializeField] Button hostButton;
+    //[SerializeField] Button serverButton;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(this);
+    }
 
     void Start()
     {
-        joinButton.onClick.AddListener(StartJoin);
-        hostButton.onClick.AddListener(StartHost);
-        serverButton.onClick.AddListener(StartServer);
+        //joinButton.onClick.AddListener(StartJoin);
+        //hostButton.onClick.AddListener(StartHost);
+        //serverButton.onClick.AddListener(StartServer);
 
         NetworkManager.Singleton.OnClientConnectedCallback += (clienId) =>
         {
             Debug.Log($"ClientID {clienId} has joined");//IsServer
-            ulong _playerOne = 0;
-            ulong _playerTwo = 0;
+            _playerOne = 0;
+            _playerTwo = 0;
             if (NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClients.Count == 2)
             {
-                //SpawnBoard();
-                //register game
-                //NetworkManager.Singleton.ConnectedClients[1].ClientId.ToString()
-                //Debug.Log($"Register game player count: {NetworkManager.Singleton.ConnectedClients.Count}");
-                //ulong _playerOne;
-                //ulong _playerTwo;
                 int playerCount = 0;
                 foreach (ulong client in NetworkManager.Singleton.ConnectedClients.Keys)
                 {
@@ -60,20 +70,21 @@ public class ConnectionHandler : NetworkBehaviour
 
     public void StartHost()
     {
-        hostButton.interactable = false;
+        //hostButton.interactable = false;
 
         NetworkManager.Singleton.StartHost();
     }
     public void StartJoin()
     {
-        joinButton.interactable = false;
+        //joinButton.interactable = false;
 
         NetworkManager.Singleton.StartClient();
 
     }
+
     public void StartServer()
     {
-        serverButton.interactable = false;
+        //serverButton.interactable = false;
 
         NetworkManager.Singleton.StartServer();
 
