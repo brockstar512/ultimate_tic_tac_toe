@@ -39,7 +39,7 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
-        Debug.Log("Game Manager");
+        //Debug.Log("Game Manager");
 
     }
     void Start()
@@ -52,6 +52,11 @@ public class GameManager : NetworkBehaviour
         //Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
         //return;
         ConnectionHandler.Instance.StartGame();
+    }
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log("network spawn");
+        base.OnNetworkSpawn();
     }
 
     void UpdateTurnServer(bool updateBothPlayers = true)
@@ -123,15 +128,7 @@ public class GameManager : NetworkBehaviour
         }
 
     }
-    [ClientRpc]
-    void RegisterPlayerClientRpc(ClientRpcParams rpcParams = default)
-    {
-        //GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
-        Debug.Log($"Client {NetworkManager.Singleton.LocalClientId}");
-        Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId);
 
-        Debug.Log("Regiter the player");
-    }
 
     public void ResetPlayerOrder()
     {
@@ -255,8 +252,10 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log($"Client id in GameManager");
+        //Debug.Log($"Client id in GameManager");
         return;
+        //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
+
         //NullReferenceException: Object reference not set to an instance of an object
         myPlayer.Init(index);//todo this is causing issues 
         CountDownHandler.Instance.StartCountDown();
