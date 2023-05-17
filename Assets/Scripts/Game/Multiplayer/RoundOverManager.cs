@@ -81,7 +81,26 @@ public class RoundOverManager : NetworkBehaviour
     private void Quit()
     {
         _quitButton.interactable = false;
-        QuitServerRpc();
+
+        if (NetworkManager.Singleton.IsClient)
+        {
+            QuitServerRpc();
+        }
+        else
+        {
+            Debug.Log("Network is dead");
+            var (xVal, oVal) = GameManager.Instance.EndGameStatus();
+            bool didWin;
+            if ((MarkType)GameManager.Instance.myPlayer.MyType.Value == MarkType.X && xVal > oVal)
+            {
+                didWin = true;
+            }
+            else
+            {
+                didWin = false;
+            }
+            _wrapUpHandler.Init(xVal, oVal, didWin);
+        }
     }
    
 
@@ -102,11 +121,11 @@ public class RoundOverManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void QuitServerRpc(ServerRpcParams serverRpcParams = default)
     {
-
-        Debug.Log($"How many people are here? {NetworkManager.ConnectedClients.Count}");
+       
+        //Debug.Log($"How many people are here? {NetworkManager.ConnectedClients.Count}");
         if (NetworkManager.ConnectedClients.Count == 2)
         {
-            Debug.Log($"Sending the other player that the opponent left?");
+            //Debug.Log($"Sending the other player that the opponent left?");
 
             //sned the other...OpponentHasLeft()
             //if someone is still around

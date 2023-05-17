@@ -27,7 +27,7 @@ public class MenuHandler : MonoBehaviour
     [SerializeField] HostUI hostScreen;
     [SerializeField] JoinUI joinScreen;
 
-
+    //this could be the login button
     //LoadingManager.Instance.LoadScene(target.ToString())
     private async void Awake()
     {

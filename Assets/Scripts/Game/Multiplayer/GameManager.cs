@@ -41,6 +41,7 @@ public class GameManager : NetworkBehaviour
         //Debug.Log("Game Manager");
 
     }
+
     void Start()
     {
 
@@ -49,6 +50,7 @@ public class GameManager : NetworkBehaviour
 
         ConnectionHandler.Instance.StartGameServerRpc();
     }
+
     public override void OnNetworkSpawn()
     {
         Debug.Log("network spawn");
@@ -127,7 +129,6 @@ public class GameManager : NetworkBehaviour
 
     }
 
-
     public void ResetPlayerOrder()
     {
         if (!IsServer)
@@ -197,7 +198,6 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void StartGameServerRpc(byte playerType)
     {
-        Debug.Log($"Start Game Server stopping");
        
         if (ValidateTurn(playerType))
         {
@@ -251,7 +251,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log($"HIDE Loading screen for byte {index}");
+        //Debug.Log($"HIDE Loading screen for byte {index}");
         //NetworkManager.LocalClient.PlayerObject.gameObject.SetActive(false);
         this.myPlayer = NetworkManager.LocalClient.PlayerObject.GetComponent<OnlinePlayer>();
         myPlayer.Init(index);
