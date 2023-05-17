@@ -198,7 +198,7 @@ public class GameManager : NetworkBehaviour
     public void StartGameServerRpc(byte playerType)
     {
         Debug.Log($"Start Game Server stopping");
-        return;
+       
         if (ValidateTurn(playerType))
         {
             int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
