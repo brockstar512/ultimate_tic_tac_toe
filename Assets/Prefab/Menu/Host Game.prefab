@@ -940,7 +940,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GSHAKAISS
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}
   m_sharedMaterial: {fileID: -5778827652079343894, guid: 3e23b9ba36c374d7392b5cb89cea7e00, type: 2}

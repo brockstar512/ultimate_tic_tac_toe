@@ -47,10 +47,6 @@ public class GameManager : NetworkBehaviour
         if (IsServer)
             return;
 
-        Debug.Log("Game manager present");
-
-        //Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
-        //return;
         ConnectionHandler.Instance.StartGameServerRpc();
     }
     public override void OnNetworkSpawn()
@@ -252,10 +248,13 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log($"Client id in GameManager is players game manager or servers?");
-        return;
-        //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
+        Debug.Log("HIDE Loading screen");
 
+        //Debug.Log($"Client id in GameManager is players game manager or servers?");
+
+        //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
+        Debug.Log("Am I client " + IsClient);
+        Debug.Break();
         //NullReferenceException: Object reference not set to an instance of an object
         myPlayer.Init(index);//todo this is causing issues 
         CountDownHandler.Instance.StartCountDown();

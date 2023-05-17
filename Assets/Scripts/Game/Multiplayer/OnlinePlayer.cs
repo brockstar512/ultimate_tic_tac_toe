@@ -51,7 +51,7 @@ public class OnlinePlayer : NetworkBehaviour
     }
 
 
-    private void Start()
+    private void Awake()
     {
         if (!IsOwner)
         {
@@ -66,9 +66,6 @@ public class OnlinePlayer : NetworkBehaviour
                 Instance.
                 myPlayer = this;
         }
-        //Debug.Log("I am the Owner");
-
-        //GameManager.Instance.InitializePlayer(this);
     }
 
     private void Update()
