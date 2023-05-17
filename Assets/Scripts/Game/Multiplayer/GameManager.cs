@@ -119,7 +119,7 @@ public class GameManager : NetworkBehaviour
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
             index++;
-            Debug.Log($"Index for the Client {index}");
+            //Debug.Log($"Index for the Client {index}");
 
             RegisterPlayerClientRpc((byte)index, rpcParams);
         }
@@ -197,7 +197,8 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void StartGameServerRpc(byte playerType)
     {
-        
+        Debug.Log($"Start Game Server stopping");
+        return;
         if (ValidateTurn(playerType))
         {
             int cellCount = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (Utilities.GRID_SIZE * Utilities.GRID_SIZE);
@@ -253,14 +254,7 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"HIDE Loading screen for byte {index}");
         //NetworkManager.LocalClient.PlayerObject.gameObject.SetActive(false);
         this.myPlayer = NetworkManager.LocalClient.PlayerObject.GetComponent<OnlinePlayer>();
-        //Debug.Log($"Client id in GameManager is players game manager or servers?");
-
-        //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
-        //Debug.Log("Am I client " + IsClient);
-
-        //NullReferenceException: Object reference not set to an instance of an object
-        myPlayer.Init(index);//todo this is causing issues
-        return;
+        myPlayer.Init(index);
         CountDownHandler.Instance.StartCountDown();
     }
 
