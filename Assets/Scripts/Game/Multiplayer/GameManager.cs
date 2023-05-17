@@ -51,7 +51,7 @@ public class GameManager : NetworkBehaviour
 
         //Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
         //return;
-        ConnectionHandler.Instance.StartGame();
+        ConnectionHandler.Instance.StartGameServerRpc();
     }
     public override void OnNetworkSpawn()
     {

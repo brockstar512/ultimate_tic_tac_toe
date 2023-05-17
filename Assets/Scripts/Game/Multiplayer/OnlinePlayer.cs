@@ -62,9 +62,9 @@ public class OnlinePlayer : NetworkBehaviour
         {
             Debug.Log($"I am the Owner: {IsClient}");
 
-            //GameManager.
-            //    Instance.
-            //    myPlayer = this;
+            GameManager.
+                Instance.
+                myPlayer = this;
         }
         //Debug.Log("I am the Owner");
 

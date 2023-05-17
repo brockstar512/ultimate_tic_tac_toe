@@ -66,7 +66,8 @@ public class ConnectionHandler : NetworkBehaviour
         };
     }
 
-    public void StartGame()
+    [ServerRpc(RequireOwnership = false)]
+    public void StartGameServerRpc()
     {
         Debug.Log("Start Game");
 

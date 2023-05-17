@@ -327,7 +327,7 @@ PrefabInstance:
     - target: {fileID: 1886799190866970186, guid: abf5c942639fc49d59e14e8e23eca4b8, type: 3}
       propertyPath: NetworkConfig.NetworkPrefabs.Array.data[0].Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 556943187026298170, guid: 19f969dfeb584494e8b33e9cd6103d23, type: 3}
     - target: {fileID: 1886799190866970187, guid: abf5c942639fc49d59e14e8e23eca4b8, type: 3}
       propertyPath: m_ProtocolType
       value: 1
