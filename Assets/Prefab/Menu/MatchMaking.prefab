@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1629933752219711882}
   - component: {fileID: 1629933752219711876}
   - component: {fileID: 1629933752219711877}
+  - component: {fileID: 8841224853220957276}
   m_Layer: 5
-  m_Name: Search for Match
+  m_Name: MatchMaking
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,6 +78,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8841224853220957276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629933752219711883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e1dd97b2ba964558ae7af07c79c08d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cancel: {fileID: 5047266123618300364}
 --- !u!1 &5047266122567192009
 GameObject:
   m_ObjectHideFlags: 0

@@ -1113,6 +1113,7 @@ GameObject:
   - component: {fileID: 6230386771046473726}
   - component: {fileID: 6230386771046473727}
   - component: {fileID: 6230386771046473728}
+  - component: {fileID: 6230386771046473729}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -1174,6 +1175,21 @@ MonoBehaviour:
   joinMatch: {fileID: 6230386772254380677}
   hostScreen: {fileID: 7972404022727030258, guid: 0501078d82520430f937d3e8d1be37d8, type: 3}
   joinScreen: {fileID: 5351380002273477697, guid: c354ac970caf74161b3117dd2b42de4f, type: 3}
+--- !u!114 &6230386771046473729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6230386771046473721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 130301b59c4464c9197cf97e60f5ec52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buttons: {fileID: 0}
+  matchMakingMatch: {fileID: 6230386771537134718}
+  matchMakingScreen: {fileID: 8841224853220957276, guid: 5f49aa7fb3dec4fbd8acc6bfdb091d03, type: 3}
 --- !u!224 &6230386771073442888
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1767,7 +1783,7 @@ GameObject:
   - component: {fileID: 6230386771537134717}
   - component: {fileID: 6230386771537134718}
   m_Layer: 5
-  m_Name: Find Opponent Button
+  m_Name: Matchmaking Match
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

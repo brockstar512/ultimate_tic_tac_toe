@@ -19,7 +19,6 @@ public class JoinUI : MonoBehaviour
         _cancel.onClick.AddListener(Cancel);
         _join.onClick.AddListener(delegate { JoinDelegate?.Invoke(_joinInput.text); });
 
-
     }
 
     void Cancel()

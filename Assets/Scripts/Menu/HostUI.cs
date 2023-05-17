@@ -29,7 +29,7 @@ public class HostUI : MonoBehaviour
     void Copy()
     {
         GUIUtility.systemCopyBuffer = _joinCodeText.text;
-        copyPromptCG.DOFade(1, 0).OnComplete(() => { copyPromptCG.DOFade(0, 3); });
+        copyPromptCG.DOFade(1, 0).OnComplete(() => { copyPromptCG.DOFade(1, 1).OnComplete(() => { copyPromptCG.DOFade(0, 2); }); });
     }
 
     private void OnDestroy()

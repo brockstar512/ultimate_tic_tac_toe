@@ -11,6 +11,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 #if UNITY_EDITOR
 using ParrelSync;
@@ -18,19 +19,23 @@ using ParrelSync;
 
 public class Matchmaking : MonoBehaviour
 {
-    [SerializeField] private GameObject _buttons;
+    //[SerializeField] private GameObject _buttons;
 
     private Lobby _connectedLobby;
     private QueryResponse _lobbies;
     private UnityTransport _transport;
     private const string JoinCodeKey = "j";
     private string _playerId;
+    [SerializeField] Button matchMakingMatch;
+    [SerializeField] MatchMakingUI matchMakingScreen;
+
 
     private void Awake() => _transport = FindObjectOfType<UnityTransport>();
 
     private void Start()
     {
-        
+        matchMakingMatch.onClick.AddListener(ShowMatchmaking);
+
     }
     public async void CreateOrJoinLobby()
     {
@@ -38,7 +43,7 @@ public class Matchmaking : MonoBehaviour
 
         _connectedLobby = await QuickJoinLobby() ?? await CreateLobby();
 
-        if (_connectedLobby != null) _buttons.SetActive(false);
+        //if (_connectedLobby != null) _buttons.SetActive(false);
     }
 
     public async Task Authenticate()
@@ -85,7 +90,7 @@ public class Matchmaking : MonoBehaviour
     {
         try
         {
-            const int maxPlayers = 100;
+            const int maxPlayers = 2;
 
             // Create a relay allocation and generate a join code to share with the lobby
             var a = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
@@ -130,8 +135,18 @@ public class Matchmaking : MonoBehaviour
         }
     }
 
+    void ShowMatchmaking()
+    {
+        Instantiate(matchMakingScreen, this.transform.parent);
+        CreateOrJoinLobby();
+        //Init();
+
+    }
+
     private void OnDestroy()
     {
+        matchMakingMatch.onClick.RemoveAllListeners();
+
         try
         {
             StopAllCoroutines();

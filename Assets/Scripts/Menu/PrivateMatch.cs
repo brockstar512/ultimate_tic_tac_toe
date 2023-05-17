@@ -12,25 +12,21 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using System;
 
-public class MenuHandler : MonoBehaviour
+public class PrivateMatch : MonoBehaviour
 {
-    //[SerializeField] Button findMatch;
     [SerializeField] Button hostMatch;
     [SerializeField] Button joinMatch;
-    //public delegate void JoinDelegate();
     public Action<string> JoinDelegate;
-    //[SerializeField] private TMP_Text _joinCodeText;
-    //[SerializeField] private TMP_InputField _joinInput;
-    //[SerializeField] private GameObject _buttons;
     private UnityTransport _transport;
     private const int MaxPlayers = 2;
     [SerializeField] HostUI hostScreen;
     [SerializeField] JoinUI joinScreen;
 
-    //this could be the login button
-    //LoadingManager.Instance.LoadScene(target.ToString())
+
+
     private async void Awake()
     {
+        return;
         _transport = FindObjectOfType<UnityTransport>();
         JoinDelegate += JoinGame;
 
@@ -42,6 +38,7 @@ public class MenuHandler : MonoBehaviour
         //findMatch.onClick.AddListener(FindMatch);
         hostMatch.onClick.AddListener(CreateGame);
         joinMatch.onClick.AddListener(ShowJoin);
+        //matchMakingMatch.onClick.AddListener(ShowMatchmaking);
     }
 
     private static async Task Authenticate()
@@ -52,9 +49,7 @@ public class MenuHandler : MonoBehaviour
 
     public async void CreateGame()
     {
-        Debug.Log("Create Game");
         hostMatch.interactable = false;
-        //_buttons.SetActive(false);
 
         Allocation a = await RelayService.Instance.CreateAllocationAsync(MaxPlayers);
         string joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
@@ -66,7 +61,6 @@ public class MenuHandler : MonoBehaviour
 
     public async void JoinGame(string code)
     {
-        //_buttons.SetActive(false);
 
         JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(code);
 
@@ -86,6 +80,8 @@ public class MenuHandler : MonoBehaviour
     {
         Instantiate(hostScreen, this.transform.parent).Init(code);
     }
+
+
 
 
     private void OnDestroy()
