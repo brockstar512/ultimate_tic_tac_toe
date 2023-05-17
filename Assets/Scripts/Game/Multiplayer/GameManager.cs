@@ -27,7 +27,7 @@ public class GameManager : NetworkBehaviour
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
     public ulong[] clientList { get; private set; }
-    [SerializeField] OnlinePlayer _playerPrefab;
+    //[SerializeField] OnlinePlayer _playerPrefab;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -89,7 +89,7 @@ public class GameManager : NetworkBehaviour
         return (xScore.Value, oScore.Value);
     }
 
-    public async void RegisterGame(ulong xUserId, ulong oUserId)
+    public void RegisterGame(ulong xUserId, ulong oUserId)
     {
         //Debug.Log("Hide loading screen");
         if (!IsServer)
@@ -120,7 +120,7 @@ public class GameManager : NetworkBehaviour
             rpcParams.Send.TargetClientIds = singleTarget;
             //OnlinePlayer p = Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
             //await p.Birth((byte)index);
-            Debug.Log("Been birthed");
+            //Debug.Log("Been birthed");
             index++;
             RegisterPlayerClientRpc((byte)index, rpcParams);
 

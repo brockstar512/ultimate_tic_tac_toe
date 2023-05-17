@@ -1,8 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
-using System.Threading.Tasks;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
+
 
 public class OnlinePlayer : NetworkBehaviour
 {
@@ -45,73 +44,59 @@ public class OnlinePlayer : NetworkBehaviour
     {
         if (!IsOwner)
         {
+            this.enabled = false;
             return;
         }
 
         base.OnNetworkSpawn();
-    }
-
-    // public async Task Birth()
-    public async Task Birth(byte xUser)
-    {
         Debug.Log($"I am the Owner: {IsClient}");
 
-        if (!IsOwner)
-        {
-            this.enabled = false;
-            await Task.Yield();
-        }
-        else
-        {
-            //TurnIndicatorHandler.Instance.ShowTurn();
-
-            //Debug.Log($"I am the Owner: {IsClient}");
-
-            GameManager.Instance.myPlayer = this;
-            if (0 == (int)xUser)
-            {
-                MyType.Value = (byte)MarkType.X;
-                OpponentType = MarkType.O;
-            }
-            else
-            {
-                MyType.Value = (byte)MarkType.O;
-                OpponentType = MarkType.X;
-
-            }
-
-            Debug.Log((MarkType)MyType.Value);
-            TurnIndicatorHandler.Instance.ShowTurn();
-            await Task.Yield();
-        }
     }
 
-    private void Update()
-    {
-        //Debug.Log(IsMyTurn.Value);
-    }
 
-    //public void Init(byte xUser)
+    //private void Awake()
     //{
+    //    Debug.Log($"I am the Owner: {IsClient}");
+
     //    if (!IsOwner)
-    //        return;
-
-    //    TurnIndicatorHandler.Instance.ShowTurn();
-
-    //    if (0 == (int)xUser)
     //    {
-    //        MyType.Value = (byte)MarkType.X;
-    //        OpponentType = MarkType.O;
+    //        //this.enabled = false;
+    //        //return;
     //    }
     //    else
     //    {
-    //        MyType.Value = (byte)MarkType.O;
-    //        OpponentType = MarkType.X;
+    //        //Debug.Log($"I am the Owner: {IsClient}");
 
+    //        GameManager.Instance.myPlayer = this;
     //    }
-    //    //namer = MyUsername;
-    //    Debug.Log((MarkType)MyType.Value);
     //}
+
+    //private void Update()
+    //{
+    //    //Debug.Log(IsMyTurn.Value);
+    //}
+
+    public void Init(byte xUser)
+    {
+        if (!IsOwner)
+            return;
+
+        TurnIndicatorHandler.Instance.ShowTurn();
+
+        if (0 == (int)xUser)
+        {
+            MyType.Value = (byte)MarkType.X;
+            OpponentType = MarkType.O;
+        }
+        else
+        {
+            MyType.Value = (byte)MarkType.O;
+            OpponentType = MarkType.X;
+
+        }
+        //namer = MyUsername;
+        Debug.Log((MarkType)MyType.Value);
+    }
 
     public void UpdateTurn()
     {
