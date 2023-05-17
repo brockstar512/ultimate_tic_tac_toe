@@ -253,7 +253,8 @@ public class GameManager : NetworkBehaviour
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
         Debug.Log("HIDE Loading screen");
-
+        //NetworkManager.LocalClient.PlayerObject.gameObject.SetActive(false);
+        this.myPlayer = NetworkManager.LocalClient.PlayerObject.GetComponent<OnlinePlayer>();
         //Debug.Log($"Client id in GameManager is players game manager or servers?");
 
         //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);

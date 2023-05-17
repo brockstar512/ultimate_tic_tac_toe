@@ -44,6 +44,8 @@ public class OnlinePlayer : NetworkBehaviour
     {
         if (!IsOwner)
         {
+            Debug.Log($"I am turning off");
+
             this.enabled = false;
             return;
         }
@@ -79,7 +81,10 @@ public class OnlinePlayer : NetworkBehaviour
     public void Init(byte xUser)
     {
         if (!IsOwner)
+        {
+            this.enabled = false;
             return;
+        }
 
         TurnIndicatorHandler.Instance.ShowTurn();
 
