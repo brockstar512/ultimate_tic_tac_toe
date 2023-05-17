@@ -89,7 +89,7 @@ public class GameManager : NetworkBehaviour
         return (xScore.Value, oScore.Value);
     }
 
-    public void RegisterGame(ulong xUserId, ulong oUserId)
+    public async void RegisterGame(ulong xUserId, ulong oUserId)
     {
         //Debug.Log("Hide loading screen");
         if (!IsServer)
@@ -118,10 +118,14 @@ public class GameManager : NetworkBehaviour
             ClientRpcParams rpcParams = default;
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
-            Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
-            RegisterPlayerClientRpc((byte)index, rpcParams);
+            //OnlinePlayer p = Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
+            //await p.Birth((byte)index);
+            Debug.Log("Been birthed");
             index++;
+            RegisterPlayerClientRpc((byte)index, rpcParams);
+
         }
+
 
     }
 
@@ -253,10 +257,11 @@ public class GameManager : NetworkBehaviour
         //Debug.Log($"Client id in GameManager is players game manager or servers?");
 
         //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
-        Debug.Log("Am I client " + IsClient);
-        Debug.Break();
+        //Debug.Log("Am I client " + IsClient);
+
         //NullReferenceException: Object reference not set to an instance of an object
-        myPlayer.Init(index);//todo this is causing issues 
+        //myPlayer.Init(index);//todo this is causing issues
+        return;
         CountDownHandler.Instance.StartCountDown();
     }
 

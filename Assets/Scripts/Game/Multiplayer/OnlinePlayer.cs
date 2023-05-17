@@ -1,7 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using static Enums;
-
+using System.Threading.Tasks;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class OnlinePlayer : NetworkBehaviour
 {
@@ -50,21 +51,38 @@ public class OnlinePlayer : NetworkBehaviour
         base.OnNetworkSpawn();
     }
 
-
-    private void Awake()
+    // public async Task Birth()
+    public async Task Birth(byte xUser)
     {
+        Debug.Log($"I am the Owner: {IsClient}");
+
         if (!IsOwner)
         {
             this.enabled = false;
-            return;
+            await Task.Yield();
         }
         else
         {
-            Debug.Log($"I am the Owner: {IsClient}");
+            //TurnIndicatorHandler.Instance.ShowTurn();
 
-            GameManager.
-                Instance.
-                myPlayer = this;
+            //Debug.Log($"I am the Owner: {IsClient}");
+
+            GameManager.Instance.myPlayer = this;
+            if (0 == (int)xUser)
+            {
+                MyType.Value = (byte)MarkType.X;
+                OpponentType = MarkType.O;
+            }
+            else
+            {
+                MyType.Value = (byte)MarkType.O;
+                OpponentType = MarkType.X;
+
+            }
+
+            Debug.Log((MarkType)MyType.Value);
+            TurnIndicatorHandler.Instance.ShowTurn();
+            await Task.Yield();
         }
     }
 
@@ -73,27 +91,27 @@ public class OnlinePlayer : NetworkBehaviour
         //Debug.Log(IsMyTurn.Value);
     }
 
-    public void Init(byte xUser)
-    {
-        if (!IsOwner)
-            return;
+    //public void Init(byte xUser)
+    //{
+    //    if (!IsOwner)
+    //        return;
 
-        TurnIndicatorHandler.Instance.ShowTurn();
+    //    TurnIndicatorHandler.Instance.ShowTurn();
 
-        if (0 == (int)xUser)
-        {
-            MyType.Value = (byte)MarkType.X;
-            OpponentType = MarkType.O;
-        }
-        else
-        {
-            MyType.Value = (byte)MarkType.O;
-            OpponentType = MarkType.X;
+    //    if (0 == (int)xUser)
+    //    {
+    //        MyType.Value = (byte)MarkType.X;
+    //        OpponentType = MarkType.O;
+    //    }
+    //    else
+    //    {
+    //        MyType.Value = (byte)MarkType.O;
+    //        OpponentType = MarkType.X;
 
-        }
-        //namer = MyUsername;
-        Debug.Log((MarkType)MyType.Value);
-    }
+    //    }
+    //    //namer = MyUsername;
+    //    Debug.Log((MarkType)MyType.Value);
+    //}
 
     public void UpdateTurn()
     {
