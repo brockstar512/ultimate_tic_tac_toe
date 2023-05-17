@@ -51,7 +51,7 @@ public class WrapUpHandler : MonoBehaviour
     {
         //yield return new WaitForSeconds(3f);
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
         LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
         yield return null;
     }

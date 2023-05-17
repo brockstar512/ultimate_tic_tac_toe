@@ -60,7 +60,7 @@ public class ConnectionHandler : NetworkBehaviour
 
 
                 //GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
-                LoadingManager.Instance.LoadNetwork(Enums.MyScenes.OnlineGame);
+                LoadingManager.Instance.LoadScene(Enums.MyScenes.OnlineGame);
             }
             
         };

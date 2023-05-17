@@ -253,6 +253,8 @@ public class GameManager : NetworkBehaviour
     {
         //Debug.Log($"HIDE Loading screen for byte {index}");
         //NetworkManager.LocalClient.PlayerObject.gameObject.SetActive(false);
+        LoadingManager.Instance.Exit();
+
         this.myPlayer = NetworkManager.LocalClient.PlayerObject.GetComponent<OnlinePlayer>();
         myPlayer.Init(index);
         CountDownHandler.Instance.StartCountDown();
