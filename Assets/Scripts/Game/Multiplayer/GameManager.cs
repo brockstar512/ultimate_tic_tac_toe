@@ -118,12 +118,10 @@ public class GameManager : NetworkBehaviour
             ClientRpcParams rpcParams = default;
             ulong[] singleTarget = new ulong[] { clientList[index] };
             rpcParams.Send.TargetClientIds = singleTarget;
-            //OnlinePlayer p = Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
-            //await p.Birth((byte)index);
-            //Debug.Log("Been birthed");
             index++;
-            RegisterPlayerClientRpc((byte)index, rpcParams);
+            Debug.Log($"Index for the Client {index}");
 
+            RegisterPlayerClientRpc((byte)index, rpcParams);
         }
 
 
@@ -252,7 +250,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        Debug.Log("HIDE Loading screen");
+        Debug.Log($"HIDE Loading screen for byte {index}");
         //NetworkManager.LocalClient.PlayerObject.gameObject.SetActive(false);
         this.myPlayer = NetworkManager.LocalClient.PlayerObject.GetComponent<OnlinePlayer>();
         //Debug.Log($"Client id in GameManager is players game manager or servers?");
@@ -261,7 +259,7 @@ public class GameManager : NetworkBehaviour
         //Debug.Log("Am I client " + IsClient);
 
         //NullReferenceException: Object reference not set to an instance of an object
-        //myPlayer.Init(index);//todo this is causing issues
+        myPlayer.Init(index);//todo this is causing issues
         return;
         CountDownHandler.Instance.StartCountDown();
     }

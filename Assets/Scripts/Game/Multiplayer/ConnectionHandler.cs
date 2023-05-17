@@ -69,8 +69,6 @@ public class ConnectionHandler : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void StartGameServerRpc()
     {
-        Debug.Log("Start Game");
-
         GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
     }
 

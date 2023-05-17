@@ -55,29 +55,6 @@ public class OnlinePlayer : NetworkBehaviour
 
     }
 
-
-    //private void Awake()
-    //{
-    //    Debug.Log($"I am the Owner: {IsClient}");
-
-    //    if (!IsOwner)
-    //    {
-    //        //this.enabled = false;
-    //        //return;
-    //    }
-    //    else
-    //    {
-    //        //Debug.Log($"I am the Owner: {IsClient}");
-
-    //        GameManager.Instance.myPlayer = this;
-    //    }
-    //}
-
-    //private void Update()
-    //{
-    //    //Debug.Log(IsMyTurn.Value);
-    //}
-
     public void Init(byte xUser)
     {
         if (!IsOwner)
@@ -88,7 +65,7 @@ public class OnlinePlayer : NetworkBehaviour
 
         TurnIndicatorHandler.Instance.ShowTurn();
 
-        if (0 == (int)xUser)
+        if (1 == (int)xUser)
         {
             MyType.Value = (byte)MarkType.X;
             OpponentType = MarkType.O;
