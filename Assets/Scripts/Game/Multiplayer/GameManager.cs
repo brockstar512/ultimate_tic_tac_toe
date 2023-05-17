@@ -28,7 +28,6 @@ public class GameManager : NetworkBehaviour
     private int lastStarterIndex;
     public ulong[] clientList { get; private set; }
     [SerializeField] OnlinePlayer _playerPrefab;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -44,10 +43,11 @@ public class GameManager : NetworkBehaviour
     }
     void Start()
     {
-        Debug.Log("Hide loading screen");
-        
-        if (!IsServer)
+
+        if (IsServer)
             return;
+
+        Debug.Log("Game manager present");
 
         //Instantiate(_playerPrefab).GetComponent<NetworkObject>().Spawn();
         //return;
@@ -252,7 +252,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     void RegisterPlayerClientRpc(byte index, ClientRpcParams clientRpcParams = default)
     {
-        //Debug.Log($"Client id in GameManager");
+        Debug.Log($"Client id in GameManager is players game manager or servers?");
         return;
         //Instantiate(_playerPrefab).GetComponent<NetworkObject>().SpawnWithOwnership(clientList[index]);
 

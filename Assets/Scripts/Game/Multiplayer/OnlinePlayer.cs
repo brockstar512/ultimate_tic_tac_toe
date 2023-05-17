@@ -83,9 +83,6 @@ public class OnlinePlayer : NetworkBehaviour
 
         TurnIndicatorHandler.Instance.ShowTurn();
 
-        GameManager.Instance.myPlayer = this;
-
-
         if (0 == (int)xUser)
         {
             MyType.Value = (byte)MarkType.X;

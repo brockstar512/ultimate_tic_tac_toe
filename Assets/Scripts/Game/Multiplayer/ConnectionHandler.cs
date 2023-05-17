@@ -68,6 +68,8 @@ public class ConnectionHandler : NetworkBehaviour
 
     public void StartGame()
     {
+        Debug.Log("Start Game");
+
         GameManager.Instance.RegisterGame(_playerOne, _playerTwo);
     }
 
