@@ -48,6 +48,9 @@ public class Matchmaking : MonoBehaviour
 
     public async Task Authenticate()
     {
+        if (UnityServices.State == ServicesInitializationState.Initialized)
+            return;
+
         var options = new InitializationOptions();
 
 #if UNITY_EDITOR

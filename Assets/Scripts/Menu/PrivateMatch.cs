@@ -26,7 +26,7 @@ public class PrivateMatch : MonoBehaviour
 
     private async void Awake()
     {
-        return;
+        
         _transport = FindObjectOfType<UnityTransport>();
         JoinDelegate += JoinGame;
 
@@ -43,6 +43,9 @@ public class PrivateMatch : MonoBehaviour
 
     private static async Task Authenticate()
     {
+        if (UnityServices.State == ServicesInitializationState.Initialized)
+            return;
+
         await UnityServices.InitializeAsync();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
