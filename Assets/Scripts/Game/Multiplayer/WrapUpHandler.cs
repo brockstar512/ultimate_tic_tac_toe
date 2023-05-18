@@ -13,6 +13,7 @@ public class WrapUpHandler : MonoBehaviour
     const string TIE ="You Tied!";
     const string WIN = "You Won!";
     const string LOSE = "You Lost!";
+    [SerializeField] AudioClip _finishedGame;
 
     private void Awake()
     {
@@ -22,7 +23,7 @@ public class WrapUpHandler : MonoBehaviour
     public void Init(int xScore, int oScore, bool didWin)
     {
         Debug.Log($"initialize wrap up {xScore} and {oScore} and {didWin}");
-
+        SoundManager.Instance.PlaySound(_finishedGame);
         this.transform.localScale = new Vector3(1, 1, 1);
         if (didWin)
         {

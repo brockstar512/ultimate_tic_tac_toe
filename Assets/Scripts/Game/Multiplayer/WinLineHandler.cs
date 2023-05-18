@@ -18,6 +18,7 @@ public class WinLineHandler : MonoBehaviour
     [SerializeField] Transform AntiDiagonalLine;
     const float _speed = 2f;
     public static event Action<MarkType> roundOver;
+    [SerializeField] AudioClip winLineSound;
 
     private void Awake()
     {
@@ -27,6 +28,8 @@ public class WinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
+        SoundManager.Instance.PlaySound(winLineSound);
+
         Debug.Log("Hide Timer and TurnIndicator");
         TimeManager.Instance.gameObject.SetActive(false);
         TurnIndicatorHandler.Instance.Show(false);

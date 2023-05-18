@@ -29,6 +29,7 @@ public class RoundOverManager : NetworkBehaviour
     [SerializeField] Button _acceptButton;
     CanvasGroup cg;
     public static event Action reset;
+    [SerializeField] AudioClip roundOverSoundFX;
 
     void Awake()
     {
@@ -44,6 +45,8 @@ public class RoundOverManager : NetworkBehaviour
 
     void Init(MarkType MarkType)
     {
+        SoundManager.Instance.PlaySound(roundOverSoundFX);
+
         GameManager.Instance.myPlayer.ForceOff();
         _playAgainButton.gameObject.SetActive(true);
         _quitButton.gameObject.SetActive(true);

@@ -19,7 +19,6 @@ public class InspectController : MonoBehaviour
     [SerializeField]CanvasGroup _placements;
     //OnlinePlayer _player;
     [SerializeField] AudioClip _maximize;
-    [SerializeField] AudioClip _minimize;
 
 
     void Awake()
@@ -95,7 +94,6 @@ public class InspectController : MonoBehaviour
         this.GetComponent<RectTransform>().DOAnchorMin(originMarkMin, speed).SetEase(Ease.InOutSine);
         HandleMarks(false);
         _button.onClick.AddListener(Show);
-        SoundManager.Instance.PlaySound(_minimize);
 
     }
 

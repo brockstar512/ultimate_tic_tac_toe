@@ -6,7 +6,6 @@ public class TurnIndicatorHandler : MonoBehaviour
 {
     public static TurnIndicatorHandler Instance { get; private set; }
     [SerializeField] TextMeshProUGUI playerText;
-    [SerializeField] AudioClip _turnSwitch;
     CanvasGroup cg;
 
     private void Awake()
@@ -25,10 +24,6 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     public void Show(bool isOn)
     {
-        if (isOn)
-        {
-            SoundManager.Instance.PlaySound(_turnSwitch);
-        }
 
         Color _color = GameManager.Instance.GetColor;
         if (GameManager.Instance.myPlayer.IsMyTurn.Value)
@@ -48,7 +43,6 @@ public class TurnIndicatorHandler : MonoBehaviour
     {
         //Debug.Log("Showing header turn");
         Color _color = GameManager.Instance.GetColor;
-        SoundManager.Instance.PlaySound(_turnSwitch);
 
         if (GameManager.Instance.myPlayer.IsMyTurn.Value)
         {

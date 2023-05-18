@@ -221,6 +221,7 @@ MonoBehaviour:
   BottomHorizontalLine: {fileID: 1322068376461934121, guid: 33d38e9ecdbf0471d9471f325c7d2795, type: 3}
   DiagonalLine: {fileID: 5142970442049040025, guid: c71b60ef33bdb4a489f39b4a3ce64569, type: 3}
   AntiDiagonalLine: {fileID: 8327954537397497886, guid: 42933296e954b468da4211cdb6d85d70, type: 3}
+  winLineSound: {fileID: 8300000, guid: d9a6ccfde66e34e67824628bf3c0dc17, type: 3}
 --- !u!1 &783203938
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,7 +428,7 @@ MonoBehaviour:
     m_InternalValue: 0
   oScore:
     m_InternalValue: 0
-  _timeOutSoundFX: {fileID: 8300000, guid: aa6d311e28d8241729e7fa1cbe09213a, type: 3}
+  _timeOutSoundFX: {fileID: 8300000, guid: 523055ab0d80b49549eedd8d2056b27b, type: 3}
 --- !u!114 &1371501550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2045,8 +2046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767340102841952}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!114 &5932767338307253251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5892,8 +5892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767339619757224}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!114 &5932767338687094169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6931,8 +6930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767339581768623}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!1 &5932767338829143058
 GameObject:
   m_ObjectHideFlags: 0
@@ -18131,8 +18129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767338570879759}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!1 &5932767339914236290
 GameObject:
   m_ObjectHideFlags: 0
@@ -19400,8 +19397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767340044380491}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!114 &5932767340014110841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19643,8 +19639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767338413225534}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!114 &5932767340022543129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19929,8 +19924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767338485201105}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!1 &5932767340027258377
 GameObject:
   m_ObjectHideFlags: 0
@@ -20362,8 +20356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767339467572731}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!114 &5932767340060539243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22065,8 +22058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _placements: {fileID: 5932767339915901400}
-  _maximize: {fileID: 8300000, guid: 03c48e6e7cea947449ce9b5eaa40b49f, type: 3}
-  _minimize: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
+  _maximize: {fileID: 8300000, guid: e3796dd3e45fb46448d581024d16bf72, type: 3}
 --- !u!114 &5932767340151291073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23736,6 +23728,7 @@ GameObject:
   - component: {fileID: 8893339850014900916}
   - component: {fileID: 8893339850014900917}
   - component: {fileID: 8893339850014900924}
+  - component: {fileID: 8893339850014900925}
   m_Layer: 5
   m_Name: Reset Button
   m_TagString: ResetButton
@@ -23763,6 +23756,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8893339850014900925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339850014900919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8abce652ed049e799516e65a647f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressed: {fileID: 8300000, guid: 93d41b3992ec3402685daf78e8eef30f, type: 3}
 --- !u!114 &8893339850067450692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27473,6 +27479,7 @@ MonoBehaviour:
   _playAgainButton: {fileID: 8893339851254705756}
   _quitButton: {fileID: 8893339850204344551}
   _acceptButton: {fileID: 8893339851609687310}
+  roundOverSoundFX: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
 --- !u!114 &8893339851494355661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28093,7 +28100,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerText: {fileID: 8893339850882385827}
-  _turnSwitch: {fileID: 8300000, guid: 8e15113c1d73345999aa199be0326539, type: 3}
 --- !u!225 &8893339851804211969
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -28214,6 +28220,7 @@ MonoBehaviour:
   YourStatus: {fileID: 8893339851318617022}
   xScore: {fileID: 8893339850266033308}
   oScore: {fileID: 8893339850067450692}
+  _finishedGame: {fileID: 8300000, guid: 8e15113c1d73345999aa199be0326539, type: 3}
 --- !u!1 &8893339851834894324
 GameObject:
   m_ObjectHideFlags: 0
