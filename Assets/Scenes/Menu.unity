@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 1
+  m_ProtocolType: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
@@ -1300,7 +1300,6 @@ GameObject:
   - component: {fileID: 6230386771046473726}
   - component: {fileID: 6230386771046473727}
   - component: {fileID: 6230386771046473728}
-  - component: {fileID: 6230386771046473729}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -1355,26 +1354,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6230386771046473721}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d80269427974aafbe1090882588f0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f8f7d5ed986c49cf8763da9bad5fc8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hostMatch: {fileID: 6230386770631070307}
   joinMatch: {fileID: 6230386772254380677}
+  matchMakingMatch: {fileID: 6230386771537134718}
   hostScreen: {fileID: 7972404022727030258, guid: 0501078d82520430f937d3e8d1be37d8, type: 3}
   joinScreen: {fileID: 5351380002273477697, guid: c354ac970caf74161b3117dd2b42de4f, type: 3}
---- !u!114 &6230386771046473729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6230386771046473721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 130301b59c4464c9197cf97e60f5ec52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  matchMakingMatch: {fileID: 6230386771537134718}
   matchMakingScreen: {fileID: 8841224853220957276, guid: 5f49aa7fb3dec4fbd8acc6bfdb091d03, type: 3}
 --- !u!222 &6230386771313837057
 CanvasRenderer:
@@ -2079,7 +2066,6 @@ GameObject:
   - component: {fileID: 6230386772230102314}
   - component: {fileID: 6230386772230102312}
   - component: {fileID: 6230386772230102313}
-  - component: {fileID: 6230386772230102319}
   m_Layer: 5
   m_Name: Lobby UI
   m_TagString: Untagged
@@ -2087,18 +2073,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &6230386772230102319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6230386772230102315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51ff5eb95035f42128896acd63997829, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6230386772254380676
 MonoBehaviour:
   m_ObjectHideFlags: 0

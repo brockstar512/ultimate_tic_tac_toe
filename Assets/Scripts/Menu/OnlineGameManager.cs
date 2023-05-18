@@ -17,37 +17,39 @@ using UnityEngine.UI;
 using ParrelSync;
 #endif
 
-public class Matchmaking : MonoBehaviour
+public class OnlineGameManager : MonoBehaviour
 {
-    //[SerializeField] private GameObject _buttons;
-
+    [SerializeField] Button hostMatch;
+    [SerializeField] Button joinMatch;
+    [SerializeField] Button matchMakingMatch;
+    public Action<string> JoinDelegate;
+    private UnityTransport _transport;
+    private const int MaxPlayers = 2;
+    [SerializeField] HostUI hostScreen;
+    [SerializeField] JoinUI joinScreen;
+    [SerializeField] MatchMakingUI matchMakingScreen;
     private Lobby _connectedLobby;
     private QueryResponse _lobbies;
-    private UnityTransport _transport;
     private const string JoinCodeKey = "j";
     private string _playerId;
-    [SerializeField] Button matchMakingMatch;
-    [SerializeField] MatchMakingUI matchMakingScreen;
 
 
-    private void Awake() => _transport = FindObjectOfType<UnityTransport>();
-
-    private void Start()
+    private async void Awake()
     {
+        _transport = FindObjectOfType<UnityTransport>();
+        await Authenticate();
+
+
+
+        JoinDelegate += JoinGame;
+        hostMatch.onClick.AddListener(CreateGame);
+        joinMatch.onClick.AddListener(ShowJoin);
         matchMakingMatch.onClick.AddListener(ShowMatchmaking);
 
     }
 
-    public async void CreateOrJoinLobby()
-    {
-        await Authenticate();
 
-        _connectedLobby = await QuickJoinLobby() ?? await CreateLobby();
-
-        //if (_connectedLobby != null) _buttons.SetActive(false);
-    }
-
-    public async Task Authenticate()
+    private async Task Authenticate()
     {
         if (UnityServices.State == ServicesInitializationState.Initialized)
             return;
@@ -66,7 +68,7 @@ public class Matchmaking : MonoBehaviour
         _playerId = AuthenticationService.Instance.PlayerId;
     }
 
-
+    //--matchamking matches
     private async Task<Lobby> QuickJoinLobby()
     {
         try
@@ -130,7 +132,7 @@ public class Matchmaking : MonoBehaviour
         _transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
     }
 
-    private static IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
+    private IEnumerator HeartbeatLobbyCoroutine(string lobbyId, float waitTimeSeconds)
     {
         var delay = new WaitForSecondsRealtime(waitTimeSeconds);
         while (true)
@@ -138,6 +140,45 @@ public class Matchmaking : MonoBehaviour
             Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
             yield return delay;
         }
+    }
+
+    private async void CreateOrJoinLobby()
+    {
+        //await Authenticate();
+
+        _connectedLobby = await QuickJoinLobby() ?? await CreateLobby();
+
+        //if (_connectedLobby != null) _buttons.SetActive(false);
+    }
+
+
+    //--private matches
+    public async void CreateGame()
+    {
+        hostMatch.interactable = false;
+
+        Allocation a = await RelayService.Instance.CreateAllocationAsync(MaxPlayers);
+        string joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
+        HostMatch(joinCode);
+        _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
+
+        NetworkManager.Singleton.StartHost();
+    }
+
+    public async void JoinGame(string code)
+    {
+
+        JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(code);
+
+        _transport.SetClientRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData, a.HostConnectionData);
+
+        NetworkManager.Singleton.StartClient();
+    }
+
+    void ShowJoin()
+    {
+        Instantiate(joinScreen, this.transform.parent).Init(JoinDelegate);
+
     }
 
     void ShowMatchmaking()
@@ -148,9 +189,16 @@ public class Matchmaking : MonoBehaviour
 
     }
 
+    void HostMatch(string code)
+    {
+        Instantiate(hostScreen, this.transform.parent).Init(code);
+    }
+
     private void OnDestroy()
     {
         matchMakingMatch.onClick.RemoveAllListeners();
+        hostMatch.onClick.RemoveAllListeners();
+        JoinDelegate -= JoinGame;
 
         try
         {
@@ -167,4 +215,5 @@ public class Matchmaking : MonoBehaviour
             Debug.Log($"Error shutting down lobby: {e}");
         }
     }
+
 }
