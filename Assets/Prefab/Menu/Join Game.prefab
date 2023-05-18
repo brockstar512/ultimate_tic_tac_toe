@@ -463,6 +463,7 @@ GameObject:
   - component: {fileID: 4502713252635834315}
   - component: {fileID: 4502713252635834308}
   - component: {fileID: 4502713252635834309}
+  - component: {fileID: 4757192073493712320}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -573,6 +574,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4757192073493712320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4502713252635834311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8abce652ed049e799516e65a647f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressed: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!1 &4502713252750013991
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +681,7 @@ GameObject:
   - component: {fileID: 7961779297740202959}
   - component: {fileID: 7961779297740202958}
   - component: {fileID: 7961779297740202961}
+  - component: {fileID: 7049147352285242763}
   m_Layer: 5
   m_Name: Join Button
   m_TagString: Untagged
@@ -777,6 +792,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7049147352285242763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961779297740202963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8abce652ed049e799516e65a647f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressed: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!1 &7961779298166472968
 GameObject:
   m_ObjectHideFlags: 0

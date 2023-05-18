@@ -1035,7 +1035,7 @@ MonoBehaviour:
   icon: {fileID: 8360091055772608805}
   soundOn: {fileID: 21300000, guid: f7d62574e313a4eb9bd455923644b585, type: 3}
   soundOff: {fileID: 21300000, guid: cc1acaa29b2394c57bf7507fed41867d, type: 3}
-  _soundSample: {fileID: 0}
+  _soundSample: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!1 &8360091055772608803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,6 +1170,7 @@ GameObject:
   - component: {fileID: 8360091055912639102}
   - component: {fileID: 8360091055912639101}
   - component: {fileID: 8360091055912639100}
+  - component: {fileID: 8360091055912639103}
   m_Layer: 5
   m_Name: Play Button
   m_TagString: Untagged
@@ -1280,6 +1281,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8360091055912639098}
   m_CullTransparentMesh: 1
+--- !u!114 &8360091055912639103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8360091055912639098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8abce652ed049e799516e65a647f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressed: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!224 &8360091056038289304
 RectTransform:
   m_ObjectHideFlags: 0

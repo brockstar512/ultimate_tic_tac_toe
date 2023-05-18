@@ -27,7 +27,9 @@ public class GameManager : NetworkBehaviour
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
     public ulong[] clientList { get; private set; }
-    //[SerializeField] OnlinePlayer _playerPrefab;
+    [SerializeField] AudioClip _timeOutSoundFX;
+
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -234,6 +236,8 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     public void RoundOverTimeOutClientRpc(MarkType winner)
     {
+        SoundManager.Instance.PlaySound(_timeOutSoundFX);
+
         TimeManager.Instance.gameObject.SetActive(false);
         TimeOut?.Invoke(winner);
     }

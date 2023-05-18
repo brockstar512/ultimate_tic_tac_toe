@@ -11,6 +11,7 @@ public class MacroBoardManager : MonoBehaviour
     public Dictionary<int, MicroBoardManager> _boards { get; private set; }
     public static event Action<WinLineType, MarkType> winLine;
     private CanvasGroup cg;
+    [SerializeField] AudioClip _boardClaimedFx;
 
     private void Awake()
     {
@@ -50,6 +51,7 @@ public class MacroBoardManager : MonoBehaviour
 
     void MarkBoard(int row, int col, MarkType markType)
     {
+        SoundManager.Instance.PlaySound(_boardClaimedFx);
 
         Grid[row, col] = markType;
 

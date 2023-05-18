@@ -240,6 +240,7 @@ GameObject:
   - component: {fileID: 2679179094904818317}
   - component: {fileID: 2679179094904818316}
   - component: {fileID: 2679179094904818319}
+  - component: {fileID: 822963811906494463}
   m_Layer: 5
   m_Name: Copy Button
   m_TagString: Untagged
@@ -350,6 +351,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &822963811906494463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2679179094904818321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8abce652ed049e799516e65a647f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressed: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!1 &2679179095144072009
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,6 +605,7 @@ GameObject:
   - component: {fileID: 2679179095663637551}
   - component: {fileID: 2679179095663637550}
   - component: {fileID: 2679179095663637553}
+  - component: {fileID: 6694412432533585135}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -701,6 +716,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6694412432533585135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2679179095663637555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8abce652ed049e799516e65a647f25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pressed: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!1 &2679179095731107099
 GameObject:
   m_ObjectHideFlags: 0

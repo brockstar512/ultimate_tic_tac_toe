@@ -21,6 +21,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     public event Action<int, int, MarkType> markBoard;
     public event Action onCellSelected;
     private Image _mark;
+    [SerializeField] AudioClip _cellPressedFx;
 
 
     public void Init(byte index)
@@ -76,6 +77,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
     void MarkCell(int row, int col)
     {
+        SoundManager.Instance.PlaySound(_cellPressedFx);
 
         Grid[row, col] = GameManager.Instance.GetMarkType;
 

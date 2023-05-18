@@ -22,6 +22,7 @@ public class SoundControl : MonoBehaviour
         isMute = !isMute;
         icon.image.sprite = isMute ? soundOff : soundOn;
         float volumeLevel = isMute ? 0 : .75f;
+        Debug.Log($"Volume: {volumeLevel} and Mute:{isMute}");
         SoundManager.Instance.ChangeMatserVolume(volumeLevel);
         SoundManager.Instance.PlaySound(_soundSample);
     }
