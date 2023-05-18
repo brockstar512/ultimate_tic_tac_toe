@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,10 @@ public class MatchMakingUI : MonoBehaviour
 
     void Cancel()
     {
+        if (NetworkManager.Singleton.LocalClient == null)
+            return;
+
+        Destroy(NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<OnlinePlayer>().gameObject);
         Destroy(this.gameObject);
     }
 

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using DG.Tweening;
 
 public class HostUI : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class HostUI : MonoBehaviour
 
     private void Awake()
     {
-        _cancel.onClick.AddListener(() => Destroy(this.gameObject));
+        _cancel.onClick.AddListener(Cancel);
         _copy.onClick.AddListener(Copy);
 
     }
@@ -30,6 +29,14 @@ public class HostUI : MonoBehaviour
     {
         GUIUtility.systemCopyBuffer = _joinCodeText.text;
         copyPromptCG.DOFade(1, 0).OnComplete(() => { copyPromptCG.DOFade(1, 1).OnComplete(() => { copyPromptCG.DOFade(0, 2); }); });
+    }
+    void Cancel()
+    {
+        if (NetworkManager.Singleton.LocalClient == null)
+            return;
+
+        Destroy(NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<OnlinePlayer>().gameObject);
+        Destroy(this.gameObject);   
     }
 
     private void OnDestroy()

@@ -41,7 +41,11 @@ public class LoadingManager : MonoBehaviour
 
     public async void QuickLoad(MyScenes target)
     {
+        _progressBar.fillAmount = 0;
+        _progressBar.DOFillAmount(1, 1);
+        Debug.Log("Show Loading screen");
         await Enter();
+
         SceneManager.LoadScene(target.ToString());
         await Task.Delay(500);
         Exit();
@@ -49,7 +53,7 @@ public class LoadingManager : MonoBehaviour
 
     public async void LoadScene(MyScenes targetScene)
     {
-
+        _progressBar.fillAmount = 0;
 
         await Enter();
 
@@ -82,6 +86,7 @@ public class LoadingManager : MonoBehaviour
         CanvasGroup cg = _loaderCanvas.transform.GetComponent<CanvasGroup>();
         cg.blocksRaycasts = false;
         cg.DOFade(0, .15f).OnComplete(() => { _loaderCanvas.SetActive(false); });
+        _progressBar.fillAmount = 0;
 
     }
 
