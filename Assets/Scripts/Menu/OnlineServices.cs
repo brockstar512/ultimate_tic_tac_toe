@@ -175,6 +175,7 @@ public class OnlineServices : MonoBehaviour
 
     public async void JoinGame(string code)
     {
+        //maybe try catch here?
 
         JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(code);
 

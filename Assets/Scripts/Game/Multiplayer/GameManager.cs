@@ -142,9 +142,6 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
     {
-        if (InputsEnabled.Value == false)
-            return;
-
         int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
 
         if (BoardCells[cellDictIndex] != MarkType.None)
@@ -163,6 +160,7 @@ public class GameManager : NetworkBehaviour
             BoardCells[cellDictIndex] = GetMarkType;
             UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
+
             UpdateTurnServer();//this is board validation
             //i might need to change how the timer interacts with the utrn switching 
         }
