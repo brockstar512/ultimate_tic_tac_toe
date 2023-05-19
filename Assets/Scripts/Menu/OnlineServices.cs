@@ -17,7 +17,7 @@ using UnityEngine.UI;
 using ParrelSync;
 #endif
 
-public class OnlineGameManager : MonoBehaviour
+public class OnlineServices : MonoBehaviour
 {
     [SerializeField] Button hostMatch;
     [SerializeField] Button joinMatch;
@@ -34,7 +34,7 @@ public class OnlineGameManager : MonoBehaviour
     private string _playerId;
 
 
-    private async void Awake()
+    private async void Start()
     {
         _transport = FindObjectOfType<UnityTransport>();
         await Authenticate();
@@ -48,7 +48,7 @@ public class OnlineGameManager : MonoBehaviour
 
     }
 
-
+    //starts servivces and give anonomous id to player
     private async Task Authenticate()
     {
         if (UnityServices.State == ServicesInitializationState.Initialized)
@@ -69,6 +69,43 @@ public class OnlineGameManager : MonoBehaviour
     }
 
     //--matchamking matches
+
+    private async Task<Lobby> CreateLobby()
+    {
+        try
+        {
+            const int maxPlayers = 2;
+
+            // Create a relay allocation and generate a join code to share with the lobby
+
+            //allocation
+            var allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
+            //get join code
+            var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+            // Create a lobby, adding the relay join code to the lobby data
+            var options = new CreateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } }
+            };
+            var lobby = await Lobbies.Instance.CreateLobbyAsync("Useless Lobby Name", maxPlayers, options);
+
+            // Send a heartbeat every 15 seconds to keep the room alive
+            StartCoroutine(HeartbeatLobbyCoroutine(lobby.Id, 15));
+
+            // Set the game room to use the relay allocation
+            _transport.SetHostRelayData(allocation.RelayServer.IpV4, (ushort)allocation.RelayServer.Port, allocation.AllocationIdBytes, allocation.Key, allocation.ConnectionData);
+
+            // Start the room. I'm doing this immediately, but maybe you want to wait for the lobby to fill up
+            NetworkManager.Singleton.StartHost();
+            return lobby;
+        }
+        catch (Exception e)
+        {
+            Debug.LogFormat($"Failed creating a lobby: {e.Message}");
+            return null;
+        }
+    }
     private async Task<Lobby> QuickJoinLobby()
     {
         try
@@ -88,44 +125,12 @@ public class OnlineGameManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log($"No lobbies available via quick join");
+            Debug.Log($"No lobbies available via quick join: {e.Message}");
             return null;
         }
     }
 
-    private async Task<Lobby> CreateLobby()
-    {
-        try
-        {
-            const int maxPlayers = 2;
 
-            // Create a relay allocation and generate a join code to share with the lobby
-            var a = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
-            var joinCode = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
-
-            // Create a lobby, adding the relay join code to the lobby data
-            var options = new CreateLobbyOptions
-            {
-                Data = new Dictionary<string, DataObject> { { JoinCodeKey, new DataObject(DataObject.VisibilityOptions.Public, joinCode) } }
-            };
-            var lobby = await Lobbies.Instance.CreateLobbyAsync("Useless Lobby Name", maxPlayers, options);
-
-            // Send a heartbeat every 15 seconds to keep the room alive
-            StartCoroutine(HeartbeatLobbyCoroutine(lobby.Id, 15));
-
-            // Set the game room to use the relay allocation
-            _transport.SetHostRelayData(a.RelayServer.IpV4, (ushort)a.RelayServer.Port, a.AllocationIdBytes, a.Key, a.ConnectionData);
-
-            // Start the room. I'm doing this immediately, but maybe you want to wait for the lobby to fill up
-            NetworkManager.Singleton.StartHost();
-            return lobby;
-        }
-        catch (Exception e)
-        {
-            Debug.LogFormat("Failed creating a lobby");
-            return null;
-        }
-    }
 
     private void SetTransformAsClient(JoinAllocation a)
     {
@@ -175,6 +180,8 @@ public class OnlineGameManager : MonoBehaviour
         NetworkManager.Singleton.StartClient();
     }
 
+
+    //--UI
     void ShowJoin()
     {
         Instantiate(joinScreen, this.transform.parent).Init(JoinDelegate);
