@@ -36,6 +36,9 @@ public class OnlineServices : MonoBehaviour
 
     private async void Start()
     {
+        //NetworkManager.Singleton.Shutdown();
+
+        //---
         _transport = FindObjectOfType<UnityTransport>();
         await Authenticate();
 

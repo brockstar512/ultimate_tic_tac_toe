@@ -32,10 +32,7 @@ public class HostUI : MonoBehaviour
     }
     void Cancel()
     {
-        if (NetworkManager.Singleton.LocalClient == null)
-            return;
-
-        Destroy(NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<OnlinePlayer>().gameObject);
+        NetworkManager.Singleton.Shutdown();
         Destroy(this.gameObject);   
     }
 

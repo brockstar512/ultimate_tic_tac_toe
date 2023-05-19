@@ -17,10 +17,10 @@ public class MatchMakingUI : MonoBehaviour
 
     void Cancel()
     {
-        if (NetworkManager.Singleton.LocalClient == null)
-            return;
-
-        Destroy(NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<OnlinePlayer>().gameObject);
+        //if (NetworkManager.Singleton.LocalClient == null)
+        //    return;
+        NetworkManager.Singleton.Shutdown();
+        //Destroy(NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<OnlinePlayer>().gameObject);
         Destroy(this.gameObject);
     }
 
