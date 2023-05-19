@@ -190,6 +190,7 @@ public class GameManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc(byte PlayerMarkType)
     {
+        InputsEnabled.Value = false;
         //Debug.LogError("Time out");
         MarkType winner = (MarkType)PlayerMarkType == MarkType.X ? MarkType.O : MarkType.X;
         RoundOverStatusServerRpc(winner);
