@@ -8,15 +8,24 @@ using UnityEngine;
 public class OfflineTimeManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI timeTitle;
+    public static OfflineTimeManager Instance { get; private set; }
     public TextMeshProUGUI time;
     private float timeRemaining;
-    const float timeCountDown = 2;
+    const float timeCountDown = 5;
     public bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
     [SerializeField] AudioClip timerFailedSoundFX;
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
         timeRemaining = timeCountDown;
         timerIsRunning = false;
     }
@@ -56,7 +65,7 @@ public class OfflineTimeManager : MonoBehaviour
     {
         timerIsRunning = false;
     }
-    void StopTimer()
+    public void StopTimer()
     {
         timerIsRunning = false;
     }

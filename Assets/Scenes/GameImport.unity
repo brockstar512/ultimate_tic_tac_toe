@@ -26698,6 +26698,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8893339851275244666}
+  - component: {fileID: 8893339851275244668}
   m_Layer: 5
   m_Name: Timer UI
   m_TagString: Untagged
@@ -26705,6 +26706,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8893339851275244668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339851275244667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdcd70cd37d3c475eae037ee3041291b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeTitle: {fileID: 8893339850208381219}
+  time: {fileID: 8893339851905213317}
+  timerIsRunning: 0
+  timerFailedSoundFX: {fileID: 0}
 --- !u!224 &8893339851302676180
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27862,6 +27879,8 @@ GameObject:
   - component: {fileID: 8893339851804211960}
   - component: {fileID: 8893339851804211967}
   - component: {fileID: 8893339851804211965}
+  - component: {fileID: 8893339851804211968}
+  - component: {fileID: 8893339851804211969}
   m_Layer: 5
   m_Name: Turn Indicator (horizontal - what it wants to be. min - what its limited
     to)
@@ -27910,6 +27929,31 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &8893339851804211968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339851804211961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e366ec14e8a64faf85e40983d70eb82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerText: {fileID: 8893339850882385827}
+--- !u!225 &8893339851804211969
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339851804211961}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!222 &8893339851832793512
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -28303,13 +28347,14 @@ GameObject:
   m_Component:
   - component: {fileID: 8893339851922475600}
   - component: {fileID: 8893339851922475607}
+  - component: {fileID: 8893339851922475608}
   m_Layer: 5
   m_Name: Start Countdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!225 &8893339851922475607
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -28322,6 +28367,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8893339851922475608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893339851922475601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0025a7114013d47b487c307958aa028d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberText: {fileID: 8893339850703541450}
 --- !u!224 &8893339852065028360
 RectTransform:
   m_ObjectHideFlags: 0

@@ -48,8 +48,9 @@ public class OfflineInspectController : MonoBehaviour
 
     void Show()
     {
+        if (!OfflineGameManager.Instance.InputsEnabled)
+            return;
 
-        //Debug.Log("Show");
         this.transform.SetAsLastSibling();
         _button.onClick.RemoveAllListeners();
         _button.enabled = false;
@@ -62,7 +63,7 @@ public class OfflineInspectController : MonoBehaviour
 
     void Return()
     {
-        //Debug.Log("Return");
+
         _resetCanvasGroup.DOFade(0, speed);
         _resetButton.onClick.RemoveAllListeners();
         _button.enabled = true;

@@ -58,7 +58,7 @@ public class OfflineMicroBoardManager : MonoBehaviour
     void MarkCell(int row, int col)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
-        Grid[row, col] = MarkType.X;
+        Grid[row, col] = OfflineGameManager.Instance.GetCurrentType;
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);//this should be the 
@@ -88,8 +88,12 @@ public class OfflineMicroBoardManager : MonoBehaviour
             Debug.Log("you can keep going");//switch turns
             StopCoroutine(ResetView(.1f));
             StartCoroutine(ResetView(.1f));
+            //OfflineGameManager.Instance.UpdateTurn();
 
         }
+
+        OfflineTimeManager.Instance.StopTimer();
+        OfflineGameManager.Instance.UpdateTurn();
 
     }
 

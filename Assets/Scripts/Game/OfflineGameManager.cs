@@ -1,49 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using static Enums;
 
 public class OfflineGameManager : MonoBehaviour
 {
     public static OfflineGameManager Instance { get; private set; }
-    public MarkType MyType { get; set; }
-    public MarkType OpponentType { get; set; }
-    public Game ActiveGame { get; private set; }
+    public MarkType GetCurrentType { get { return players[CurrentPlayerIndex].MyType; } }
     public bool InputsEnabled { get; set; }
-    public string MyUsername { get; set; }
-    public string OpponentUsername { get; set; }
-    public bool IsMyTurn
-    {
-        get
-        {
-            if (ActiveGame == null)
-            {
-                return false;
-            }
-            if (ActiveGame.CurrentUser != MyUsername)
-            {
-                return false;
-            }
-            return true;
-        }
-    }
-    public Color GetColor
-    {
-        get
-        {
-            if (MyType == MarkType.X)
-            {
-                return new Color32(0,194,255,255);
-            }
-            else
-            {
-
-                return new Color32(0, 194, 255, 255); ;
-            }
-        }
-    }
+    public event Action<MarkType> TimeOut;
+    public Color GetColor { get { return players[CurrentPlayerIndex].GetMyColor; } }
+    int CurrentPlayerIndex;
+    int lastStarterIndex;
+    public List<OfflinePlayer> players;
 
 
     private void Awake()
@@ -56,84 +25,77 @@ public class OfflineGameManager : MonoBehaviour
         {
             Instance = this;
         }
-        MyType = MarkType.X;
+
+        players = new List<OfflinePlayer>();
+
+        RegisterGame();
     }
 
-    public void RegisterGame(Guid gameId, string xUser, string oUser)
+
+    public void RegisterGame()
     {
-        ActiveGame = new Game
-        {
-            Id = gameId,
-            XUser = xUser,
-            OUser = oUser,
-            StartTime = DateTime.Now,
-            CurrentUser = xUser,
-            LastStarter = xUser
-        };
+        InputsEnabled = false;
+        OfflinePlayer playerOne = new OfflinePlayer(0);
+        OfflinePlayer playerTwo = new OfflinePlayer(1);
+        players.Add(playerOne);
+        players.Add(playerTwo);
 
-        if (MyUsername == xUser)
-        {
-            MyType = MarkType.X;
-            OpponentUsername = oUser;
-            OpponentType = MarkType.O;
-        }
-        else
-        {
-            MyType = MarkType.O;
-            OpponentUsername = xUser;
-            OpponentType = MarkType.X;
 
-        }
-        InputsEnabled = true;
+        CurrentPlayerIndex = 0;
+        lastStarterIndex = CurrentPlayerIndex;
 
+
+
+        //Start countdown
+        //
+        OfflineCountDownHandler.Instance.StartCountDown();
     }
-
-    public class Game
+    public void StartGame()
     {
-        public Guid? Id { get; set; }
-        public string XUser { get; set; }
-        public string OUser { get; set; }
-        public string CurrentUser { get; set; }
-        public string LastStarter { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-
-        public void SwitchCurrentPlayer()
-        {
-            CurrentUser = GetOpponent(CurrentUser);
-        }
-
-        public void Reset()
-        {
-            //here
-            //CurrentUser = XUser;
-            CurrentUser = LastStarter == XUser ? OUser : XUser;
-            LastStarter = CurrentUser;
-        }
-
-        public MarkType GetPlayerType(string userID)
-        {
-            if (userID == XUser)
-            {
-                return MarkType.X;
-            }
-            else
-            {
-                return MarkType.O;
-            }
-        }
-
-        private string GetOpponent(string currentUser)
-        {
-            if (currentUser == XUser)
-            {
-                return OUser;
-            }
-            else
-            {
-                return XUser;
-            }
-        }
+            InputsEnabled = true;;
+            OfflineTurnIndicator.Instance.Show(true);
     }
+
+    public void UpdateTurn()
+    {
+        CurrentPlayerIndex = CurrentPlayerIndex == players.Count - 1 ? 0 : 1;
+        OfflineTurnIndicator.Instance.Show();
+    }
+
+    public void ResetPlayerOrder()
+    {
+        CurrentPlayerIndex = lastStarterIndex == 0 ? 1 : 0;
+        lastStarterIndex = CurrentPlayerIndex;
+    }
+
+
+    public class OfflinePlayer
+    {
+
+        public int Score;
+        public MarkType MyType;
+        public Color GetMyColor
+        {
+            get
+            {
+                if (MyType == MarkType.X)
+                {
+                    return new Color32(0, 194, 255, 255);
+                }
+                else
+                {
+                    return new Color32(141, 202, 0, 255);
+                }
+            }
+        }
+        public OfflinePlayer(int index)
+        {
+            Score = 0;
+            MyType = index == 0 ? MarkType.X : MarkType.O;
+
+        }
+
+    }
+
 
 }
