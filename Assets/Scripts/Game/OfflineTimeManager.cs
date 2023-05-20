@@ -5,7 +5,7 @@ using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+public class OfflineTimeManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI timeTitle;
     public TextMeshProUGUI time;

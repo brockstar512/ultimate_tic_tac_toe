@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
 using System;
-public class WinLineHandler : MonoBehaviour
+public class OfflineWinLineHandler : MonoBehaviour
 {
     Image line;
     [SerializeField] Transform LeftVerticalLine;
@@ -21,8 +21,8 @@ public class WinLineHandler : MonoBehaviour
 
     private void Awake()
     {
-        MacroBoardManager.winLine += ConfigLine;
-        RoundOverManager.reset += Reset;
+        OfflineMacroBoardManager.winLine += ConfigLine;
+        OfflineRoundOverManager.reset += Reset;
     }
 
     void ConfigLine(WinLineType WinLineType)
@@ -91,8 +91,8 @@ public class WinLineHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        MacroBoardManager.winLine -= ConfigLine;
-        RoundOverManager.reset -= Reset;
+        OfflineMacroBoardManager.winLine -= ConfigLine;
+        OfflineRoundOverManager.reset -= Reset;
         roundOver = null;
     }
 }

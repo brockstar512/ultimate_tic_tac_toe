@@ -5,9 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Enums;
 
-public class GameManager : MonoBehaviour
+public class OfflineGameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static OfflineGameManager Instance { get; private set; }
     public MarkType MyType { get; set; }
     public MarkType OpponentType { get; set; }
     public Game ActiveGame { get; private set; }

@@ -7,7 +7,7 @@ using System;
 using DG.Tweening;
 using System.Drawing;
 
-public class MicroBoardManager : MonoBehaviour
+public class OfflineMicroBoardManager : MonoBehaviour
 {
 
     public MarkType[,] Grid { get; private set; }
@@ -17,7 +17,7 @@ public class MicroBoardManager : MonoBehaviour
     private byte _col;
     private Transform _placements;
     CanvasGroup cg;
-    private Dictionary<int, Cell> _cells;
+    private Dictionary<int, OfflineCell> _cells;
     public event Action<int, int> markBoard;
     public event Action onCellSelected;
     private Image _mark;
@@ -36,17 +36,17 @@ public class MicroBoardManager : MonoBehaviour
         _row = (byte)(index / 3);
         _col = (byte)(index % 3);
         InitializeMicroBoard();
-        RoundOverManager.reset += Reset;
+        OfflineRoundOverManager.reset += Reset;
     }
 
     void InitializeMicroBoard()
     {
         this.gameObject.name = $"Board: [{_row},{_col}]";
-        _cells = new Dictionary<int, Cell>();
+        _cells = new Dictionary<int, OfflineCell>();
 
         for (int i = 0; i < _placements.childCount; i++)
         {
-            Cell cell = _placements.GetChild(i).GetComponent<Cell>();
+            OfflineCell cell = _placements.GetChild(i).GetComponent<OfflineCell>();
             cell.Init((byte)i);
             _cells.Add(i, cell);
             //cell.onCellSelected += ReadBoard;
@@ -77,7 +77,7 @@ public class MicroBoardManager : MonoBehaviour
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col);
             Vector3 size = new Vector3(.90f, .90f, .90f);
-            _mark.color = GameManager.Instance.GetColor;
+            _mark.color = OfflineGameManager.Instance.GetColor;
             _mark.enabled = true;
             _mark.transform.DOScale(size, .15f);
             //do whatever animations you need
@@ -120,7 +120,7 @@ public class MicroBoardManager : MonoBehaviour
     {
         markBoard = null;
         onCellSelected = null;
-        RoundOverManager.reset -= Reset;
+        OfflineRoundOverManager.reset -= Reset;
     }
 
 

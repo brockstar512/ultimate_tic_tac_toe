@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Enums;
 
-public class MacroBoardManager : MonoBehaviour
+public class OfflineMacroBoardManager : MonoBehaviour
 {
     //when a micro board is finished this should read the whole boards
 
     public MarkType[,] Grid { get; private set; }
     CanvasGroup cg;
-    private Dictionary<int, MicroBoardManager> _boards;
+    private Dictionary<int, OfflineMicroBoardManager> _boards;
     public static event Action<WinLineType> winLine;
 
     private void Awake()
@@ -18,18 +18,18 @@ public class MacroBoardManager : MonoBehaviour
         cg = GetComponent<CanvasGroup>();
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
         InitializeMacroBoard();
-        RoundOverManager.reset += Reset;
+        OfflineRoundOverManager.reset += Reset;
     }
 
     void InitializeMacroBoard()
     {
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
 
-        _boards = new Dictionary<int, MicroBoardManager>();
+        _boards = new Dictionary<int, OfflineMicroBoardManager>();
 
         for (int i = 0; i < this.transform.childCount; i++)
         {
-            MicroBoardManager board = this.transform.GetChild(i).GetComponent<MicroBoardManager>();
+            OfflineMicroBoardManager board = this.transform.GetChild(i).GetComponent<OfflineMicroBoardManager>();
             board.Init((byte)i);
             _boards.Add(i, board);
             board.markBoard += MarkBoard;
@@ -68,7 +68,7 @@ public class MacroBoardManager : MonoBehaviour
         {
             for (int row = 0; row < Grid.GetLength(1); row++)
             {
-                _boards = new Dictionary<int, MicroBoardManager>();
+                _boards = new Dictionary<int, OfflineMicroBoardManager>();
                 Grid[row, col] = MarkType.None;
             }
         }
@@ -79,6 +79,6 @@ public class MacroBoardManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        RoundOverManager.reset -= Reset;
+        OfflineRoundOverManager.reset -= Reset;
     }
 }

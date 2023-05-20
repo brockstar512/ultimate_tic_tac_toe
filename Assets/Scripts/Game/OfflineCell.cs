@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
 
-public class Cell : MonoBehaviour
+public class OfflineCell : MonoBehaviour
 {
     Image _mark;
     private Button _button;
@@ -27,14 +27,14 @@ public class Cell : MonoBehaviour
         _col = (byte)(index % 3);
         _button.onClick.AddListener(CellClicked);
         this.gameObject.name = $"Cell: [{_row},{_col}]";
-        RoundOverManager.reset += Reset;
+        OfflineRoundOverManager.reset += Reset;
 
 
     }
 
     private void CellClicked()
     {
-        _mark.color = GameManager.Instance.GetColor;
+        _mark.color = OfflineGameManager.Instance.GetColor;
         _button.interactable = false;
         _mark.enabled = true;
         Vector3 size = new Vector3(.90f, .90f, .90f);

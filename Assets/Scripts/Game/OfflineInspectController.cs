@@ -7,7 +7,7 @@ using static UnityEngine.UI.Image;
 using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(Button))]
-public class InspectController : MonoBehaviour
+public class OfflineInspectController : MonoBehaviour
 {
     Vector2 originMarkMax;
     Vector2 targetMarkMax;
@@ -83,10 +83,10 @@ public class InspectController : MonoBehaviour
         {
             switch (subscribe) {
                 case true:
-                    this.GetComponent<MicroBoardManager>().onCellSelected += Return;
+                    this.GetComponent<OfflineMicroBoardManager>().onCellSelected += Return;
                     break;
                 case false:
-                    this.GetComponent<MicroBoardManager>().onCellSelected -= Return;
+                    this.GetComponent<OfflineMicroBoardManager>().onCellSelected -= Return;
                     break;
             }
         }

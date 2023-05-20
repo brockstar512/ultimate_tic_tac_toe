@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using DG.Tweening;
-public class RoundOverManager : MonoBehaviour
+public class OfflineRoundOverManager : MonoBehaviour
 {
     [SerializeField] Button _playAgainButton;
     [SerializeField] Button _quitButton;
@@ -15,7 +15,7 @@ public class RoundOverManager : MonoBehaviour
     private void Awake()
     {
         cg = this.GetComponent<CanvasGroup>();
-        WinLineHandler.roundOver += Init;
+        OfflineWinLineHandler.roundOver += Init;
         _playAgainButton.onClick.AddListener(Reset);
     }
 
