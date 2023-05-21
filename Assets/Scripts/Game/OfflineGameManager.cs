@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using static Enums;
 
@@ -68,6 +69,22 @@ public class OfflineGameManager : MonoBehaviour
         lastStarterIndex = CurrentPlayerIndex;
     }
 
+    public void Timeout()
+    {
+        InputsEnabled = false;
+        MarkType winner = MarkType.None;
+        switch (GetCurrentType)
+        {
+            case MarkType.X:
+                winner = MarkType.O;
+                break;
+            case MarkType.O:
+                winner = MarkType.X;
+                break;
+        }
+
+        TimeOut?.Invoke(winner);
+    }
 
     public class OfflinePlayer
     {
@@ -88,6 +105,8 @@ public class OfflineGameManager : MonoBehaviour
                 }
             }
         }
+
+ 
         public OfflinePlayer(int index)
         {
             Score = 0;

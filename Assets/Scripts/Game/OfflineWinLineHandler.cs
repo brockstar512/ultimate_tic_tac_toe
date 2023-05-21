@@ -17,7 +17,7 @@ public class OfflineWinLineHandler : MonoBehaviour
     [SerializeField] Transform DiagonalLine;
     [SerializeField] Transform AntiDiagonalLine;
     const float _speed = 2f;
-    public static event Action roundOver;
+    public static event Action<MarkType> roundOver;
 
     private void Awake()
     {
@@ -79,7 +79,7 @@ public class OfflineWinLineHandler : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(.5f);
-        roundOver?.Invoke();
+        roundOver?.Invoke(OfflineGameManager.Instance.GetCurrentType);
 
     }
 

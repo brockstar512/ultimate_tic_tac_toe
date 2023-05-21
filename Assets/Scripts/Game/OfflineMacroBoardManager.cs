@@ -53,6 +53,7 @@ public class OfflineMacroBoardManager : MonoBehaviour
             //do whatever animations you need
             winLine?.Invoke(lineType);//this can be outisde to indicate draw or not
             cg.blocksRaycasts = false;
+            OfflineScoreKeeper.Instance.RoundOver(OfflineGameManager.Instance.GetCurrentType);
         }
         else
         {

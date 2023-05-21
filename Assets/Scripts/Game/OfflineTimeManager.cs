@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
+using static Enums;
 
 public class OfflineTimeManager : MonoBehaviour
 {
@@ -29,16 +30,7 @@ public class OfflineTimeManager : MonoBehaviour
         timeRemaining = timeCountDown;
         timerIsRunning = false;
     }
-    private void Start()
-    {
 
-    }
-
-    private void OnDestroy()
-    {
-
-
-    }
 
     public void StartTimer()
     {
@@ -72,7 +64,7 @@ public class OfflineTimeManager : MonoBehaviour
 
     void MarkCellTimeFail()
     {
-
+        OfflineGameManager.Instance.Timeout();
     }
 
     void DisplayTime(float timeToDisplay)
