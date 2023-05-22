@@ -29,9 +29,13 @@ public class OfflineGameManager : MonoBehaviour
 
         players = new List<OfflinePlayer>();
 
-        RegisterGame();
+        
     }
 
+    void Start()
+    {
+        RegisterGame();
+    }
 
     public void RegisterGame()
     {
