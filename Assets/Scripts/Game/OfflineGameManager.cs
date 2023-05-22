@@ -9,7 +9,7 @@ public class OfflineGameManager : MonoBehaviour
     public static OfflineGameManager Instance { get; private set; }
     public MarkType GetCurrentType { get { return players[CurrentPlayerIndex].MyType; } }
     public bool InputsEnabled { get; set; }
-    public event Action<MarkType> TimeOut;
+    public static event Action<MarkType> TimeOut;
     public Color GetColor { get { return players[CurrentPlayerIndex].GetMyColor; } }
     int CurrentPlayerIndex;
     int lastStarterIndex;

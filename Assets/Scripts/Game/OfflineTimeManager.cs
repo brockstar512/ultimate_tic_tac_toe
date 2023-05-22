@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
-using static Enums;
 
 public class OfflineTimeManager : MonoBehaviour
 {
@@ -34,6 +30,7 @@ public class OfflineTimeManager : MonoBehaviour
 
     public void StartTimer()
     {
+        Debug.Log("START TIMER");
         DisplayTime(timeCountDown);
 
         timeRemaining = timeCountDown;
@@ -43,6 +40,9 @@ public class OfflineTimeManager : MonoBehaviour
     }
     void Update()
     {
+        if (!OfflineGameManager.Instance.InputsEnabled)
+            return;
+
         if (timerIsRunning)
         {
             if (timeRemaining >= 0)
@@ -59,6 +59,8 @@ public class OfflineTimeManager : MonoBehaviour
     }
     public void StopTimer()
     {
+        Debug.Log("STOP TIMER");
+
         timerIsRunning = false;
     }
 

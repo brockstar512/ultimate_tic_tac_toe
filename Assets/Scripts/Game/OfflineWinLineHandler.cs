@@ -85,7 +85,8 @@ public class OfflineWinLineHandler : MonoBehaviour
 
     void Reset()
     {
-        Destroy(line.gameObject);
+        if (line != null)
+            Destroy(line.gameObject);
     }
 
 

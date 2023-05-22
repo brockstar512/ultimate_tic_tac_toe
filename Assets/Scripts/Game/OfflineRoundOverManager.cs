@@ -1,23 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using System;
 using DG.Tweening;
-using DG.Tweening.Core.Easing;
-using static Enums;
 using TMPro;
-using System.Text.RegularExpressions;
+using UnityEngine;
+using UnityEngine.UI;
+using static Enums;
 
 public class OfflineRoundOverManager : MonoBehaviour
 {
     [SerializeField] Image _banner;
     [SerializeField] TextMeshProUGUI _header;
     [SerializeField] OfflineWrapUpHandler _wrapUpHandler;
-    [SerializeField] TextMeshProUGUI _promptText;
     [SerializeField] Button _playAgainButton;
     [SerializeField] Button _quitButton;
-    [SerializeField] Button _acceptButton;
     CanvasGroup cg;
     const string TIE = "Round Tied!";
     const string OWin = "O Won!";
@@ -32,18 +26,20 @@ public class OfflineRoundOverManager : MonoBehaviour
     {
         cg = this.GetComponent<CanvasGroup>();
         OfflineWinLineHandler.roundOver += Init;
+        OfflineGameManager.TimeOut += Init;
         _playAgainButton.onClick.AddListener(ResetGame);
+        _quitButton.onClick.AddListener(Quit);
+
     }
 
     private void Init(MarkType markType)
     {
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         //SoundManager.Instance.PlaySound(roundOverSoundFX);
-
+        OfflineScoreKeeper.Instance.RoundOver(markType);
         //OfflineGameManager.Instance.myPlayer.ForceOff();
         _playAgainButton.gameObject.SetActive(true);
         _quitButton.gameObject.SetActive(true);
-        _acceptButton.gameObject.SetActive(false);
 
         SetUI(markType);
         cg.interactable = true;
@@ -80,7 +76,6 @@ public class OfflineRoundOverManager : MonoBehaviour
     private void Quit()
     {
         _quitButton.interactable = false;
-        Debug.Log("Network is dead");
         var (xVal, oVal) = OfflineScoreKeeper.Instance.Outcome();
          _wrapUpHandler.Init(xVal, oVal);
     }
@@ -101,7 +96,6 @@ public class OfflineRoundOverManager : MonoBehaviour
     public void OnDestroy()
     {
         _playAgainButton.onClick.RemoveAllListeners();
-        _acceptButton.onClick.RemoveAllListeners();
         _quitButton.onClick.RemoveAllListeners();
         reset = null;
 
