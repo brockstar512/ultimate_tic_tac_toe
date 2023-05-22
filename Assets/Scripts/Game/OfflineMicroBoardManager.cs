@@ -7,18 +7,18 @@ using System;
 using DG.Tweening;
 using System.Drawing;
 
-public class OfflineMicroBoardManager : MonoBehaviour
+public class OfflineMicroBoardManager : MonoBehaviour, IBoard
 {
 
     public MarkType[,] Grid { get; private set; }
-    private Button _button;
-    private byte _index;
-    private byte _row;
-    private byte _col;
+    public Button _button { get; private set; }
+    public byte _index { get; private set; }
+    public byte _row { get; private set; }
+    public byte _col { get; private set; }
     private Transform _placements;
     CanvasGroup cg;
     private Dictionary<int, OfflineCell> _cells;
-    public event Action<int, int> markBoard;
+    public event Action<int, int, MarkType> markBoard;
     public event Action onCellSelected;
     private Image _mark;
 
@@ -75,13 +75,23 @@ public class OfflineMicroBoardManager : MonoBehaviour
 
             cg.blocksRaycasts = false;
             Debug.Log("This board is done");
-            markBoard?.Invoke(_row, _col);
+            markBoard?.Invoke(_row, _col, OfflineGameManager.Instance.GetCurrentType);
             Vector3 size = new Vector3(.90f, .90f, .90f);
             _mark.color = OfflineGameManager.Instance.GetColor;
             _mark.enabled = true;
             _mark.transform.DOScale(size, .15f);
             //do whatever animations you need
             
+        }
+        else if (Utilities.IsDraw(_cells))
+        {
+            Debug.Log("This board is done with a draw");
+            _button.interactable = false;
+            markBoard?.Invoke(_row, _col, MarkType.None);
+
+            StopCoroutine(ResetView(.1f));
+            StartCoroutine(ResetView(.1f));
+
         }
         else
         {

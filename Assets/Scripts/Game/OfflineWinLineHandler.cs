@@ -1,10 +1,9 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
-using System;
+
 public class OfflineWinLineHandler : MonoBehaviour
 {
     Image line;
@@ -25,12 +24,23 @@ public class OfflineWinLineHandler : MonoBehaviour
         OfflineRoundOverManager.reset += Reset;
     }
 
-    void ConfigLine(WinLineType WinLineType)
+    void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
+        OfflineTurnIndicator.Instance.gameObject.SetActive(false);
+        OfflineTimeManager.Instance.gameObject.SetActive(false);
+        OfflineGameManager.Instance.RoundOver();
+
+        if (MarkType == MarkType.None)
+        {
+            Debug.Log("Is this ran twice?? ");
+            roundOver?.Invoke(MarkType);
+            return;
+        }
+
         Transform prefab = GetLine(WinLineType);
         line = Instantiate(prefab, this.transform).GetComponent<Image>();
-        StopCoroutine(AnimateLine());
-        StartCoroutine(AnimateLine());
+        StopCoroutine(AnimateLine(MarkType));
+        StartCoroutine(AnimateLine(MarkType));
     }
 
     private Transform GetLine(WinLineType WinLineType)
@@ -69,7 +79,7 @@ public class OfflineWinLineHandler : MonoBehaviour
         return line;
     }
 
-    IEnumerator AnimateLine()
+    IEnumerator AnimateLine(MarkType MarkType)
     {
         yield return new WaitForSeconds(0.5f);
 
@@ -79,7 +89,7 @@ public class OfflineWinLineHandler : MonoBehaviour
             yield return null;
         }
         yield return new WaitForSeconds(.5f);
-        roundOver?.Invoke(OfflineGameManager.Instance.GetCurrentType);
+        roundOver?.Invoke(MarkType);
 
     }
 

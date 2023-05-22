@@ -30,7 +30,7 @@ public class OfflineTimeManager : MonoBehaviour
 
     public void StartTimer()
     {
-        Debug.Log("START TIMER");
+        //Debug.Log("START TIMER");
         DisplayTime(timeCountDown);
 
         timeRemaining = timeCountDown;
@@ -59,7 +59,7 @@ public class OfflineTimeManager : MonoBehaviour
     }
     public void StopTimer()
     {
-        Debug.Log("STOP TIMER");
+        //Debug.Log("STOP TIMER");
 
         timerIsRunning = false;
     }

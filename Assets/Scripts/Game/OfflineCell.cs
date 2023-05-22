@@ -7,13 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Enums;
 
-public class OfflineCell : MonoBehaviour
+public class OfflineCell : MonoBehaviour, IBoard
 {
     Image _mark;
-    private Button _button;
-    private byte _index;
-    private byte _row;
-    private byte _col;
+    public Button _button { get; private set; }
+    public byte _index { get; private set; }
+    public byte _row { get; private set; }
+    public byte _col { get; private set; }
     //public event Action onCellSelected;
     public event Action<int,int> markCell;
 

@@ -46,13 +46,14 @@ public class OfflineGameManager : MonoBehaviour
         lastStarterIndex = CurrentPlayerIndex;
 
 
-
+        OfflineRoundOverManager.reset += ResetPlayerOrder;
         //Start countdown
         //
         OfflineCountDownHandler.Instance.StartCountDown();
     }
     public void StartGame()
     {
+
             InputsEnabled = true;;
             OfflineTurnIndicator.Instance.Show(true);
     }
@@ -84,6 +85,10 @@ public class OfflineGameManager : MonoBehaviour
         }
 
         TimeOut?.Invoke(winner);
+    }
+    public void RoundOver()
+    {
+        InputsEnabled = false;
     }
 
     public class OfflinePlayer

@@ -11,7 +11,7 @@ public class OfflineMacroBoardManager : MonoBehaviour
     public MarkType[,] Grid { get; private set; }
     CanvasGroup cg;
     private Dictionary<int, OfflineMicroBoardManager> _boards;
-    public static event Action<WinLineType> winLine;
+    public static event Action<WinLineType, MarkType> winLine;
 
     private void Awake()
     {
@@ -36,10 +36,10 @@ public class OfflineMacroBoardManager : MonoBehaviour
         }
     }
 
-    void MarkBoard(int row, int col)
+    void MarkBoard(int row, int col, MarkType markType)
     {
         //Debug.Log($"Marking cell for grid {gameObject.name}");
-        Grid[row, col] = OfflineGameManager.Instance.GetCurrentType;
+        Grid[row, col] = markType;
         //GameManager.Instance.ActiveGame.GetPlayerType(actor);
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
@@ -51,9 +51,16 @@ public class OfflineMacroBoardManager : MonoBehaviour
             //_boards.interactable = false;
             Debug.Log($"Game is over");
             //do whatever animations you need
-            winLine?.Invoke(lineType);//this can be outisde to indicate draw or not
+            winLine?.Invoke(lineType, OfflineGameManager.Instance.GetCurrentType);
             cg.blocksRaycasts = false;
-            
+
+        }
+        else if (Utilities.IsDraw(_boards))
+        {
+            Debug.Log("Is Draw!");
+
+            winLine?.Invoke(WinLineType.None, MarkType.None);
+            cg.blocksRaycasts = false;
         }
         else
         {
