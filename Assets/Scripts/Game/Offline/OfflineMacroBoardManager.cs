@@ -54,6 +54,8 @@ public class OfflineMacroBoardManager : MonoBehaviour
             //do whatever animations you need
             winLine?.Invoke(lineType, OfflineGameManager.Instance.GetCurrentType);
             cg.blocksRaycasts = false;
+            Debug.Log("CG CHANGE");
+
 
         }
         else if (Utilities.IsDraw(_boards))
@@ -62,6 +64,8 @@ public class OfflineMacroBoardManager : MonoBehaviour
 
             winLine?.Invoke(WinLineType.None, MarkType.None);
             cg.blocksRaycasts = false;
+            Debug.Log("CG CHANGE");
+
         }
         else
         {
@@ -81,6 +85,8 @@ public class OfflineMacroBoardManager : MonoBehaviour
             }
         }
         cg.blocksRaycasts = true;
+        Debug.Log("CG CHANGE");
+
     }
 
 
