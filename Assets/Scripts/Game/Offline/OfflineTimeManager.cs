@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OfflineTimeManager : MonoBehaviour
@@ -11,7 +12,7 @@ public class OfflineTimeManager : MonoBehaviour
     const float timeCountDown = 5;
     public bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
-    [SerializeField] AudioClip timerFailedSoundFX;
+    [SerializeField] AudioClip _timeOutSoundFX;
 
     private void Awake()
     {
@@ -60,13 +61,15 @@ public class OfflineTimeManager : MonoBehaviour
     public void StopTimer()
     {
         //Debug.Log("STOP TIMER");
-
+        
         timerIsRunning = false;
     }
 
     void MarkCellTimeFail()
     {
         OfflineGameManager.Instance.Timeout();
+        SoundManager.Instance.PlaySound(_timeOutSoundFX);
+
     }
 
     void DisplayTime(float timeToDisplay)

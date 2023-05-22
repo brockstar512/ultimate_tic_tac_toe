@@ -20,6 +20,7 @@ public class OfflineInspectController : MonoBehaviour
     Button _resetButton;
     CanvasGroup _resetCanvasGroup;
     [SerializeField]CanvasGroup _placements;
+    [SerializeField] AudioClip _maximize;
 
 
     private void Awake()
@@ -59,6 +60,8 @@ public class OfflineInspectController : MonoBehaviour
         HandleMarks(true);
         _resetButton.onClick.AddListener(Return);
         _resetCanvasGroup.DOFade(1, speed);
+        SoundManager.Instance.PlaySound(_maximize);
+
     }
 
     void Return()

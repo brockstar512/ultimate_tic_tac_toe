@@ -47,7 +47,6 @@ public class LoadingManager : MonoBehaviour
         await Enter();
 
         SceneManager.LoadScene(target.ToString());
-        await Task.Delay(500);
         Exit();
     }
 

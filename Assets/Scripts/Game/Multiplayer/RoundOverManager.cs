@@ -20,6 +20,7 @@ public class RoundOverManager : NetworkBehaviour
     const string WIN = "Round Won!";
     public Color tie_Color;
 
+    [SerializeField] GameObject _popUpScreen;
     [SerializeField] Image _banner;
     [SerializeField] TextMeshProUGUI _header;
     [SerializeField] WrapUpHandler _wrapUpHandler;
@@ -46,6 +47,7 @@ public class RoundOverManager : NetworkBehaviour
     void Init(MarkType MarkType)
     {
         SoundManager.Instance.PlaySound(roundOverSoundFX);
+        _popUpScreen.SetActive(true);
 
         GameManager.Instance.myPlayer.ForceOff();
         _playAgainButton.gameObject.SetActive(true);
@@ -102,6 +104,8 @@ public class RoundOverManager : NetworkBehaviour
             {
                 didWin = false;
             }
+            _popUpScreen.SetActive(false);
+
             _wrapUpHandler.Init(xVal, oVal, didWin);
         }
     }

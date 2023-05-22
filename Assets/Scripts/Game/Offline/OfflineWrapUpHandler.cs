@@ -11,8 +11,8 @@ public class OfflineWrapUpHandler : MonoBehaviour
     [SerializeField] TextMeshProUGUI xScore;
     [SerializeField] TextMeshProUGUI oScore;
     const string TIE = "Draw!";
-    const string OWIN = "O Won!";
-    const string XWON = "X Won!";
+    const string OWIN = "Green Won!";
+    const string XWON = "Blue Won!";
     [SerializeField] AudioClip _finishedGame;
 
     private void Awake()
@@ -22,6 +22,8 @@ public class OfflineWrapUpHandler : MonoBehaviour
     }
     public void Init(int xScore, int oScore)
     {
+        SoundManager.Instance.PlaySound(_finishedGame);
+
         Debug.Log($"initialize wrap up {xScore} and {oScore}");
         //SoundManager.Instance.PlaySound(_finishedGame);
         this.transform.localScale = new Vector3(1, 1, 1);
@@ -53,7 +55,7 @@ public class OfflineWrapUpHandler : MonoBehaviour
         //yield return new WaitForSeconds(3f);
 
         yield return new WaitForSeconds(2f);
-        //LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
+        LoadingManager.Instance.QuickLoad(Enums.MyScenes.Menu);
         yield return null;
     }
 }

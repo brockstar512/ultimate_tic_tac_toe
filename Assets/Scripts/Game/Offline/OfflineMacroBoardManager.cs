@@ -12,6 +12,7 @@ public class OfflineMacroBoardManager : MonoBehaviour
     CanvasGroup cg;
     private Dictionary<int, OfflineMicroBoardManager> _boards;
     public static event Action<WinLineType, MarkType> winLine;
+    [SerializeField] AudioClip _boardClaimedFx;
 
     private void Awake()
     {

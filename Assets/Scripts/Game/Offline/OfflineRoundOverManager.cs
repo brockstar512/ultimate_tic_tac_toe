@@ -7,6 +7,7 @@ using static Enums;
 
 public class OfflineRoundOverManager : MonoBehaviour
 {
+    [SerializeField] GameObject _popUpScreen;
     [SerializeField] Image _banner;
     [SerializeField] TextMeshProUGUI _header;
     [SerializeField] OfflineWrapUpHandler _wrapUpHandler;
@@ -14,12 +15,12 @@ public class OfflineRoundOverManager : MonoBehaviour
     [SerializeField] Button _quitButton;
     CanvasGroup cg;
     const string TIE = "Round Tied!";
-    const string OWin = "O Won!";
-    const string XWin = "X Won!";
+    const string OWin = "Green Won!";
+    const string XWin = "Blue Won!";
     public Color tie_Color;
     private Color32 x_Color = new Color32(0, 194, 255, 255);
     private Color32 o_Color = new Color32(141, 202, 0, 255);
-
+    [SerializeField] AudioClip roundOverSoundFX;
     public static event Action reset;
 
     private void Awake()
@@ -34,6 +35,8 @@ public class OfflineRoundOverManager : MonoBehaviour
 
     private void Init(MarkType markType)
     {
+        SoundManager.Instance.PlaySound(roundOverSoundFX);
+        _popUpScreen.SetActive(true);
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         //SoundManager.Instance.PlaySound(roundOverSoundFX);
         OfflineScoreKeeper.Instance.RoundOver(markType);
@@ -77,7 +80,8 @@ public class OfflineRoundOverManager : MonoBehaviour
     {
         _quitButton.interactable = false;
         var (xVal, oVal) = OfflineScoreKeeper.Instance.Outcome();
-         _wrapUpHandler.Init(xVal, oVal);
+        _popUpScreen.SetActive(false);
+        _wrapUpHandler.Init(xVal, oVal);
     }
 
   

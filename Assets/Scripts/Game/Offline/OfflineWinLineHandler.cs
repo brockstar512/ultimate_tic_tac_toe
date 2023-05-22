@@ -17,6 +17,8 @@ public class OfflineWinLineHandler : MonoBehaviour
     [SerializeField] Transform AntiDiagonalLine;
     const float _speed = 2f;
     public static event Action<MarkType> roundOver;
+    [SerializeField] AudioClip winLineSound;
+
 
     private void Awake()
     {
@@ -26,6 +28,8 @@ public class OfflineWinLineHandler : MonoBehaviour
 
     void ConfigLine(WinLineType WinLineType, MarkType MarkType)
     {
+        SoundManager.Instance.PlaySound(winLineSound);
+
         OfflineTurnIndicator.Instance.gameObject.SetActive(false);
         OfflineTimeManager.Instance.gameObject.SetActive(false);
         OfflineGameManager.Instance.RoundOver();

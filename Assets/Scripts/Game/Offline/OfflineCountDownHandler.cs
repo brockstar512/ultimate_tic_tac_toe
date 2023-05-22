@@ -8,8 +8,8 @@ public class OfflineCountDownHandler : MonoBehaviour
 {
     public static OfflineCountDownHandler Instance { get; private set; }
     [SerializeField] TextMeshProUGUI numberText;
-    //[SerializeField] AudioClip _numberCount;
-    //[SerializeField] AudioClip _start;
+    [SerializeField] AudioClip _numberCount;
+    [SerializeField] AudioClip _start;
 
 
     private void Awake()
@@ -48,12 +48,12 @@ public class OfflineCountDownHandler : MonoBehaviour
         numberText.gameObject.SetActive(true);
         for (int i = 3; i > 0; i--)
         {
-            //SoundManager.Instance.PlaySound(_numberCount);
+            SoundManager.Instance.PlaySound(_numberCount);
 
             numberText.text = i.ToString();
             yield return new WaitForSeconds(1);
         }
-        //SoundManager.Instance.PlaySound(_start);
+        SoundManager.Instance.PlaySound(_start);
         numberText.text = "START!";
         yield return new WaitForSeconds(1);
         numberText.gameObject.SetActive(false);

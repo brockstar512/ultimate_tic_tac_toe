@@ -21,6 +21,7 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
     public event Action<int, int, MarkType> markBoard;
     public event Action onCellSelected;
     private Image _mark;
+    [SerializeField] AudioClip _cellPressedFx;
 
 
     //when a cell is selected this read its own board to see if the user won this micro board
