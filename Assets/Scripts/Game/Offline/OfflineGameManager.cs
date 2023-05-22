@@ -95,7 +95,10 @@ public class OfflineGameManager : MonoBehaviour
     {
         InputsEnabled = false;
     }
-
+    private void OnDestroy()
+    {
+        TimeOut = null;
+    }
     public class OfflinePlayer
     {
 

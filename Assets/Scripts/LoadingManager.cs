@@ -36,14 +36,14 @@ public class LoadingManager : MonoBehaviour
     {
         NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
         _progressBar.DOFillAmount(1,1);
-        Debug.Log("Show Loading screen");
+        //Debug.Log("Show Loading screen");
     }
 
     public async void QuickLoad(MyScenes target)
     {
         _progressBar.fillAmount = 0;
         _progressBar.DOFillAmount(1, 1);
-        Debug.Log("Show Loading screen");
+        //Debug.Log("Show Loading screen");
         await Enter();
 
         SceneManager.LoadScene(target.ToString());
@@ -65,7 +65,7 @@ public class LoadingManager : MonoBehaviour
     [ContextMenu("Enter")]
     async Task Enter()
     {
-        Debug.Log("LOAD PAGE");
+        //Debug.Log("LOAD PAGE");
         _loaderCanvas.gameObject.SetActive(true);
         //_loaderCanvas.transform.GetComponent<RectTransform>().DOAnchorPos(Vector2.zero, 1.5f).SetEase(enterEase);
         CanvasGroup cg = _loaderCanvas.transform.GetComponent<CanvasGroup>();

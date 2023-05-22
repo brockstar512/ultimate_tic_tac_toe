@@ -36,7 +36,7 @@ public class OfflineRoundOverManager : MonoBehaviour
     private void Init(MarkType markType)
     {
         SoundManager.Instance.PlaySound(roundOverSoundFX);
-        _popUpScreen.SetActive(true);
+        
         cg.DOFade(1,.5f).SetEase(Ease.OutSine);
         //SoundManager.Instance.PlaySound(roundOverSoundFX);
         OfflineScoreKeeper.Instance.RoundOver(markType);
@@ -50,9 +50,6 @@ public class OfflineRoundOverManager : MonoBehaviour
         _playAgainButton.interactable = true;
         _quitButton.interactable = true;
     }
-
-
-
 
 
     void SetUI(MarkType markType)
@@ -95,7 +92,10 @@ public class OfflineRoundOverManager : MonoBehaviour
         reset?.Invoke();
     }
 
-
+    private void OnDisable()
+    {
+        _popUpScreen.SetActive(true);
+    }
 
     public void OnDestroy()
     {
