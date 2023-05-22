@@ -76,12 +76,10 @@ public class OfflineMacroBoardManager : MonoBehaviour
         {
             for (int row = 0; row < Grid.GetLength(1); row++)
             {
-                _boards = new Dictionary<int, OfflineMicroBoardManager>();
                 Grid[row, col] = MarkType.None;
             }
         }
         cg.blocksRaycasts = true;
-
     }
 
 

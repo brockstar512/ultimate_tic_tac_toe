@@ -73,6 +73,7 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
                 _cells[i].Reset();
             }
 
+            _button.interactable = false;
             cg.blocksRaycasts = false;
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col, OfflineGameManager.Instance.GetCurrentType);
@@ -82,6 +83,8 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
             _mark.transform.DOScale(size, .15f);
             //do whatever animations you need
             
+
+
         }
         else if (Utilities.IsDraw(_cells))
         {
@@ -116,8 +119,10 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
 
     private void Reset()
     {
-        //_button.interactable = true;
+        _button.interactable = true;
         cg.blocksRaycasts = true;
+
+
         for (int col = 0; col < Grid.GetLength(0); col++)
         {
             for (int row = 0; row < Grid.GetLength(1); row++)
