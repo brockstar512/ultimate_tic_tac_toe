@@ -37,7 +37,6 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
         _col = (byte)(index % 3);
         InitializeMicroBoard();
         OfflineRoundOverManager.reset += Reset;
-
     }
 
     void InitializeMicroBoard()
@@ -54,9 +53,6 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
             cell.markCell += MarkCell;
 
         }
-        Debug.Log("micro Board manager");
-        cg.interactable = true;
-        cg.blocksRaycasts = true;
     }
 
     void MarkCell(int row, int col)
@@ -78,7 +74,6 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
             }
 
             _button.interactable = false;
-            Debug.Log("CG CHANGE");
             cg.blocksRaycasts = false;
             Debug.Log("This board is done");
             markBoard?.Invoke(_row, _col, OfflineGameManager.Instance.GetCurrentType);
@@ -126,7 +121,6 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
     {
         _button.interactable = true;
         cg.blocksRaycasts = true;
-        Debug.Log("CG CHANGE");
 
 
         for (int col = 0; col < Grid.GetLength(0); col++)

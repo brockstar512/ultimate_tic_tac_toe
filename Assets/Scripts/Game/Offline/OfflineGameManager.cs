@@ -32,11 +32,10 @@ public class OfflineGameManager : MonoBehaviour
         
     }
 
-    private void Start()
+    void Start()
     {
         RegisterGame();
     }
-
 
     public void RegisterGame()
     {

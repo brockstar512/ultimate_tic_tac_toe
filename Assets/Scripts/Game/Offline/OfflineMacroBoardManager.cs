@@ -20,7 +20,6 @@ public class OfflineMacroBoardManager : MonoBehaviour
         InitializeMacroBoard();
         OfflineRoundOverManager.reset += Reset;
     }
-    
 
     void InitializeMacroBoard()
     {
@@ -35,11 +34,7 @@ public class OfflineMacroBoardManager : MonoBehaviour
             _boards.Add(i, board);
             board.markBoard += MarkBoard;
         }
-        Debug.Log("micro Board manager");
-        cg.interactable = true;
-        cg.blocksRaycasts = true;
     }
-
 
     void MarkBoard(int row, int col, MarkType markType)
     {
@@ -58,8 +53,6 @@ public class OfflineMacroBoardManager : MonoBehaviour
             //do whatever animations you need
             winLine?.Invoke(lineType, OfflineGameManager.Instance.GetCurrentType);
             cg.blocksRaycasts = false;
-            Debug.Log("CG CHANGE");
-
 
         }
         else if (Utilities.IsDraw(_boards))
@@ -68,8 +61,6 @@ public class OfflineMacroBoardManager : MonoBehaviour
 
             winLine?.Invoke(WinLineType.None, MarkType.None);
             cg.blocksRaycasts = false;
-            Debug.Log("CG CHANGE");
-
         }
         else
         {
@@ -89,8 +80,6 @@ public class OfflineMacroBoardManager : MonoBehaviour
             }
         }
         cg.blocksRaycasts = true;
-        Debug.Log("CG CHANGE");
-
     }
 
 
