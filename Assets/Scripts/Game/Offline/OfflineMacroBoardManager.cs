@@ -17,13 +17,10 @@ public class OfflineMacroBoardManager : MonoBehaviour
     {
         cg = GetComponent<CanvasGroup>();
         Grid = new MarkType[Utilities.GRID_SIZE, Utilities.GRID_SIZE];
-        
+        InitializeMacroBoard();
         OfflineRoundOverManager.reset += Reset;
     }
-    private void Start()
-    {
-        InitializeMacroBoard();
-    }
+    
 
     void InitializeMacroBoard()
     {
