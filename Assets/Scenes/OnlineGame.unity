@@ -24856,6 +24856,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xScore: {fileID: 8893339850577617274}
   yScore: {fileID: 8893339850976400544}
+  blueName: {fileID: 8893339851390580756}
+  greenName: {fileID: 8893339851238861631}
 --- !u!114 &8893339850361303231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26708,7 +26710,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &8893339851238861630
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -27509,7 +27511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &8893339851390580763
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -104,8 +104,8 @@ public class RoundOverManager : NetworkBehaviour
             {
                 didWin = false;
             }
-            _popUpScreen.SetActive(false);
 
+            _popUpScreen.SetActive(false);
             _wrapUpHandler.Init(xVal, oVal, didWin);
         }
     }
@@ -172,6 +172,8 @@ public class RoundOverManager : NetworkBehaviour
         {
             didWin = false;
         }
+
+        _popUpScreen.SetActive(false);
         _wrapUpHandler.Init(xScore, oScore, didWin);
         NetworkManager.Singleton.Shutdown();
     }

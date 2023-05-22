@@ -78,6 +78,7 @@ public class OnlinePlayer : NetworkBehaviour
         }
         //namer = MyUsername;
         Debug.Log((MarkType)MyType.Value);
+        ScoreUIHandler.Instance.ShowPlayersNames((MarkType)MyType.Value);
     }
 
     public void UpdateTurn()

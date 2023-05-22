@@ -85,10 +85,12 @@ public class LoadingManager : MonoBehaviour
         CanvasGroup cg = _loaderCanvas.transform.GetComponent<CanvasGroup>();
         cg.blocksRaycasts = false;
         cg.DOFade(0, .15f).OnComplete(() => { _loaderCanvas.SetActive(false); });
-        _progressBar.fillAmount = 0;
 
     }
 
-
+    private void OnEnable()
+    {
+        _progressBar.fillAmount = 0;
+    }
 
 }
