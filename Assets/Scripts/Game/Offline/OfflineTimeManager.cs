@@ -66,6 +66,7 @@ public class OfflineTimeManager : MonoBehaviour
 
     void MarkCellTimeFail()
     {
+        return;
         OfflineGameManager.Instance.Timeout();
     }
 

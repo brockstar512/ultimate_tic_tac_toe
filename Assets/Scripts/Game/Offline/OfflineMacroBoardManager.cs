@@ -35,7 +35,11 @@ public class OfflineMacroBoardManager : MonoBehaviour
             _boards.Add(i, board);
             board.markBoard += MarkBoard;
         }
+        Debug.Log("micro Board manager");
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
     }
+
 
     void MarkBoard(int row, int col, MarkType markType)
     {

@@ -37,6 +37,7 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
         _col = (byte)(index % 3);
         InitializeMicroBoard();
         OfflineRoundOverManager.reset += Reset;
+
     }
 
     void InitializeMicroBoard()
@@ -53,6 +54,9 @@ public class OfflineMicroBoardManager : MonoBehaviour, IBoard
             cell.markCell += MarkCell;
 
         }
+        Debug.Log("micro Board manager");
+        cg.interactable = true;
+        cg.blocksRaycasts = true;
     }
 
     void MarkCell(int row, int col)

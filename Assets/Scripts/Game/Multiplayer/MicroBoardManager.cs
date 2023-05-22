@@ -95,6 +95,8 @@ public class MicroBoardManager : MonoBehaviour, IBoard
 
             _button.interactable = false;
             cg.blocksRaycasts = false;
+            Debug.Log("CG CHANGE");
+
             _mark.color = GameManager.Instance.GetColor;
             markBoard?.Invoke(_row, _col, GameManager.Instance.GetMarkType);
             Vector3 size = new Vector3(.90f, .90f, .90f);
@@ -130,6 +132,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     {
         _button.interactable = true;
         cg.blocksRaycasts = true;
+        Debug.Log("CG CHANGE");
 
         for (int col = 0; col < Grid.GetLength(0); col++)
         {

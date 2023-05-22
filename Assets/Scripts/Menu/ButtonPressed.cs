@@ -17,6 +17,7 @@ public class ButtonPressed : MonoBehaviour
     }
     void Pressed()
     {
+        return;
         Debug.Log(gameObject.name);
         SoundManager.Instance.PlaySound(_pressed);
     }
