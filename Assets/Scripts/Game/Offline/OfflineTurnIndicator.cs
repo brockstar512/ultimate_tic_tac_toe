@@ -31,11 +31,11 @@ public class OfflineTurnIndicator : MonoBehaviour
         Color _color = OfflineGameManager.Instance.GetColor;
         if (OfflineGameManager.Instance.GetCurrentType == Enums.MarkType.X)
         {
-            playerText.text = "Blue";
+            playerText.text = "Blue's";
         }
         else
         {
-            playerText.text = "Green";
+            playerText.text = "Green's";
         }
         playerText.color = _color;
         cg.alpha = isOn ? 1 : 0;
