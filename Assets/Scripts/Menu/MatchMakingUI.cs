@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 public class MatchMakingUI : MonoBehaviour
 {
@@ -14,6 +12,11 @@ public class MatchMakingUI : MonoBehaviour
         _cancel.onClick.AddListener(Cancel);
     }
 
+    public void Init(Action ResetButtonsDelegate)
+    {
+        _cancel.onClick.AddListener(() => ResetButtonsDelegate?.Invoke()); ;
+
+    }
 
     void Cancel()
     {

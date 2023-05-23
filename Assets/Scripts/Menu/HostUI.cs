@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class HostUI : MonoBehaviour
 {
@@ -20,9 +21,11 @@ public class HostUI : MonoBehaviour
 
     }
 
-    public void Init(string hostCode)
+    public void Init(string hostCode, Action ResetButtonsDelegate)
     {
         _joinCodeText.text = hostCode;
+        _cancel.onClick.AddListener(() => ResetButtonsDelegate?.Invoke()); ;
+
     }
 
     void Copy()

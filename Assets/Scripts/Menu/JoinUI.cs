@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,9 +11,10 @@ public class JoinUI : MonoBehaviour
     [SerializeField] private TMP_InputField _joinInput;
 
 
-    public void Init(Action<string> JoinDelegate)
+    public void Init(Action<string> JoinDelegate, Action ResetButtonsDelegate)
     {
         _cancel.onClick.AddListener(Cancel);
+        _cancel.onClick.AddListener(() => ResetButtonsDelegate?.Invoke()); ;
         _join.onClick.AddListener(delegate { JoinDelegate?.Invoke(_joinInput.text); });
 
     }

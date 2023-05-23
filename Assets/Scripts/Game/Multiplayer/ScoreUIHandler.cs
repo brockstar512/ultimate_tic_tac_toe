@@ -39,16 +39,18 @@ public class ScoreUIHandler : NetworkBehaviour
 
     public void ShowPlayersNames(MarkType markType)
     {
+        Debug.Log($"My type: {markType}");
         if (markType == MarkType.X)
         {
-            blueName.text = "Enemy";
-            greenName.text = "You";
+
+            greenName.text = "Enemy";
+            blueName.text = "You";
 
         }
         else
         {
-            blueName.text = "You";
-            greenName.text = "Enemy";
+            greenName.text = "You";
+            blueName.text = "Enemy";
         }
 
         blueName.gameObject.SetActive(true);

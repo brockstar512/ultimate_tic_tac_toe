@@ -23,6 +23,8 @@ public class OnlineServices : MonoBehaviour
     [SerializeField] Button joinMatch;
     [SerializeField] Button matchMakingMatch;
     public Action<string> JoinDelegate;
+    public Action ResetButtonsDelegate;
+
     private UnityTransport _transport;
     private const int MaxPlayers = 2;
     [SerializeField] HostUI hostScreen;
@@ -43,7 +45,7 @@ public class OnlineServices : MonoBehaviour
         await Authenticate();
 
 
-
+        ResetButtonsDelegate += ResetButtons;
         JoinDelegate += JoinGame;
         hostMatch.onClick.AddListener(CreateGame);
         joinMatch.onClick.AddListener(ShowJoin);
@@ -159,6 +161,13 @@ public class OnlineServices : MonoBehaviour
         //if (_connectedLobby != null) _buttons.SetActive(false);
     }
 
+    void ResetButtons()
+    {
+        //Action<string> JoinDelegate
+        hostMatch.interactable = true;
+        joinMatch.interactable = true;
+        matchMakingMatch.interactable = true;
+    }
 
     //--private matches
     public async void CreateGame()
@@ -188,13 +197,14 @@ public class OnlineServices : MonoBehaviour
     //--UI
     void ShowJoin()
     {
-        Instantiate(joinScreen, this.transform.parent).Init(JoinDelegate);
+        Instantiate(joinScreen, this.transform.parent).Init(JoinDelegate, ResetButtonsDelegate);
 
     }
 
     void ShowMatchmaking()
     {
-        Instantiate(matchMakingScreen, this.transform.parent);
+        matchMakingMatch.interactable = false;
+        Instantiate(matchMakingScreen, this.transform.parent).Init(ResetButtonsDelegate);
         CreateOrJoinLobby();
         //Init();
 
@@ -202,7 +212,7 @@ public class OnlineServices : MonoBehaviour
 
     void HostMatch(string code)
     {
-        Instantiate(hostScreen, this.transform.parent).Init(code);
+        Instantiate(hostScreen, this.transform.parent).Init(code, ResetButtonsDelegate);
     }
 
     private void OnDestroy()
@@ -210,6 +220,8 @@ public class OnlineServices : MonoBehaviour
         matchMakingMatch.onClick.RemoveAllListeners();
         hostMatch.onClick.RemoveAllListeners();
         JoinDelegate -= JoinGame;
+        ResetButtonsDelegate -= ResetButtons;
+
 
         try
         {
