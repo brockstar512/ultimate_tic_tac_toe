@@ -8,7 +8,7 @@ public class TimeManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timeTitle;
     public TextMeshProUGUI time;
     private float timeRemaining;
-    const float timeCountDown = 3;
+    const float timeCountDown = 5;
     [SerializeField] bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
 
