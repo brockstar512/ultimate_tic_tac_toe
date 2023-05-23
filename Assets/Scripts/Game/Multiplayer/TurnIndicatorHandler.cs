@@ -24,7 +24,7 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     public void Show(bool isOn)
     {
-
+        Debug.Log("Show");
         Color _color = GameManager.Instance.GetColor;
         if (GameManager.Instance.myPlayer.IsMyTurn.Value)
         {
@@ -54,8 +54,8 @@ public class TurnIndicatorHandler : MonoBehaviour
         }
 
         playerText.color = _color;
-        playerText.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => playerText.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
-
+        //playerText.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => playerText.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
+        Pulse();
     }
 
     public void Pulse()

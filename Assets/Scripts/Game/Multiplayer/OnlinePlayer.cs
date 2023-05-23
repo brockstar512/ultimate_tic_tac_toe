@@ -63,7 +63,7 @@ public class OnlinePlayer : NetworkBehaviour
             return;
         }
 
-        TurnIndicatorHandler.Instance.ShowTurn();
+        //TurnIndicatorHandler.Instance.ShowTurn();
 
         if (1 == (int)xUser)
         {

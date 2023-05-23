@@ -41,7 +41,7 @@ public class CountDownHandler : NetworkBehaviour
 
     private IEnumerator CountDown()
     {
-        TurnIndicatorHandler.Instance.Show(false);
+        //TurnIndicatorHandler.Instance.Show(false);
 
         numberText.text = 3.ToString();
 
