@@ -43,6 +43,7 @@ public class OfflineMacroBoardManager : MonoBehaviour
         //Debug.Log($"Marking cell for grid {gameObject.name}");
         Grid[row, col] = markType;
         //GameManager.Instance.ActiveGame.GetPlayerType(actor);
+        SoundManager.Instance.PlaySound(_boardClaimedFx);
 
         //Debug.Log($"Here is the board we are reading {this.gameObject.name}");
         var (isOver, lineType) = Utilities.CheckWin((byte)row, (byte)col, Grid);
