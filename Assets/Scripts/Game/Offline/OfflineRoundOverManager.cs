@@ -27,7 +27,6 @@ public class OfflineRoundOverManager : MonoBehaviour
     {
         cg = this.GetComponent<CanvasGroup>();
         OfflineWinLineHandler.roundOver += Init;
-        OfflineGameManager.TimeOut += Init;
         _playAgainButton.onClick.AddListener(ResetGame);
         _quitButton.onClick.AddListener(Quit);
 

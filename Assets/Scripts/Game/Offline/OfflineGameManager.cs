@@ -8,7 +8,7 @@ public class OfflineGameManager : MonoBehaviour
     public static OfflineGameManager Instance { get; private set; }
     public MarkType GetCurrentType { get { return players[CurrentPlayerIndex].MyType; } }
     public bool InputsEnabled { get; set; }
-    public static event Action<MarkType> TimeOut;
+    public static event Action TimeOut;
     public Color GetColor { get { return players[CurrentPlayerIndex].GetMyColor; } }
     int CurrentPlayerIndex;
     int lastStarterIndex;
@@ -34,6 +34,7 @@ public class OfflineGameManager : MonoBehaviour
     private void Start()
     {
         RegisterGame();
+        TimeOut += UpdateTurn;
     }
 
 
@@ -76,19 +77,9 @@ public class OfflineGameManager : MonoBehaviour
 
     public void Timeout()
     {
-        InputsEnabled = false;
-        MarkType winner = MarkType.None;
-        switch (GetCurrentType)
-        {
-            case MarkType.X:
-                winner = MarkType.O;
-                break;
-            case MarkType.O:
-                winner = MarkType.X;
-                break;
-        }
-
-        TimeOut?.Invoke(winner);
+        
+        TimeOut?.Invoke();
+        
     }
     public void RoundOver()
     {

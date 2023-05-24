@@ -48,7 +48,7 @@ public class TurnIndicatorHandler : MonoBehaviour
             cg.alpha = 1;
         }
 
-        Debug.Log("Show turn");
+        //Debug.Log("Show turn");
         //Debug.Log("Showing header turn");
         Color _color = GameManager.Instance.GetColor;
 

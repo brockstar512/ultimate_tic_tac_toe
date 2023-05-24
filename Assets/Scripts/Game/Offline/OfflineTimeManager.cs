@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -30,9 +31,8 @@ public class OfflineTimeManager : MonoBehaviour
 
     public void StartTimer()
     {
-        //Debug.Log("START TIMER");
         DisplayTime(timeCountDown);
-
+        Pulse();
         timeRemaining = timeCountDown;
 
         // Starts the timer automatically   
@@ -43,24 +43,27 @@ public class OfflineTimeManager : MonoBehaviour
         if (!OfflineGameManager.Instance.InputsEnabled)
             return;
 
+        //Debug.Log($"TIMER RUNNING STATUS {timeRemaining} and {timerIsRunning}");
+
         if (timerIsRunning)
         {
+            //Debug.Log("running");
+            //Debug.Log($"TIMER running{timeRemaining}");
+
             if (timeRemaining >= 0)
             {
+
                 timeRemaining -= Time.deltaTime;
                 DisplayTime(timeRemaining);
             }
         }
     }
 
-    void MarkCellTimeSuccess()
-    {
-        timerIsRunning = false;
-    }
+
     public void StopTimer()
     {
         //Debug.Log("STOP TIMER");
-        
+
         timerIsRunning = false;
     }
 
@@ -77,11 +80,16 @@ public class OfflineTimeManager : MonoBehaviour
         time.text = string.Format("{0:00}:{1:00}", timeLeft.Seconds, timeLeft.Milliseconds);
         if (timeToDisplay < 0)
         {
-            MarkCellTimeFail();
             time.text = string.Format("{0:00}:{1:00}", 00, 00);
             time.text = "00:00";
             timerIsRunning = false;
             timeRemaining = timeCountDown;
+            MarkCellTimeFail();
         }
+    }
+
+    public void Pulse()
+    {
+        time.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => time.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
     }
 }

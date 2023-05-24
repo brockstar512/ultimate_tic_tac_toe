@@ -40,6 +40,7 @@ public class OfflineTurnIndicator : MonoBehaviour
         playerText.color = _color;
         cg.alpha = isOn ? 1 : 0;
         Pulse();
+
         if (isOn)
         {
             OfflineTimeManager.Instance.StartTimer();

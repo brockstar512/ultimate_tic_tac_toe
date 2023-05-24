@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Threading;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using static Enums;
@@ -83,6 +84,7 @@ public class TimeManager : MonoBehaviour
             return;
         //maybe have a delay? so consider making this a voroutine
         DisplayTime(timeCountDown);
+        Pulse();
 
         timeRemaining = timeCountDown;
 
@@ -106,5 +108,9 @@ public class TimeManager : MonoBehaviour
     {
         TimeOut = null;
 
+    }
+    public void Pulse()
+    {
+        time.transform.DOScale(new Vector3(1.15f, 1.15f, 1.15f), .15f).SetEase(Ease.InSine).OnComplete(() => time.transform.DOScale(new Vector3(1, 1, 1), .15f).SetEase(Ease.InSine));
     }
 }
