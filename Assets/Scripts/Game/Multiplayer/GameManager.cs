@@ -68,8 +68,22 @@ public class GameManager : NetworkBehaviour
         {
             ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
             rpcParams.Send.TargetClientIds = singleTarget;
+
+            //this is to fix the UI issue where it would flicker between players for the first turn on waiting opponent
+            ClientRpcParams awaitingRpcParams = default;
+            byte otherIndex = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
+            ulong[] otherTarget = new ulong[] { clientList[otherIndex] };
+            awaitingRpcParams.Send.TargetClientIds = otherTarget;
+            NotifyWaitingPlayerGameStartedClientRpc(awaitingRpcParams);
         }
         UpdateTurnClientRpc(rpcParams);
+    }
+
+    [ClientRpc]
+    private void NotifyWaitingPlayerGameStartedClientRpc(ClientRpcParams rpcParams = default)
+    {
+        Debug.Log("Opponent is first in this game show that");
+        TurnIndicatorHandler.Instance.ShowTurn();
     }
 
     bool ValidateTurn(byte playerRequesting)

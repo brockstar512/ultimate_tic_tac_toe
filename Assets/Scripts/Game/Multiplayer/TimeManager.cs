@@ -93,7 +93,6 @@ public class TimeManager : MonoBehaviour
     //when i press the cell
     public void StopTimer()
     {
-        Debug.Log("Stop timer");
         timerIsRunning = false;
     }
 

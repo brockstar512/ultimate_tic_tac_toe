@@ -61,7 +61,7 @@ public class CountDownHandler : NetworkBehaviour
         cg.blocksRaycasts = false;
         cg.interactable = false;
         GameManager.Instance.StartGameServerRpc(GameManager.Instance.myPlayer.MyType.Value);
-        TurnIndicatorHandler.Instance.Show(true);
+        //TurnIndicatorHandler.Instance.Show(true);
 
     }
 

@@ -24,7 +24,9 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     public void Show(bool isOn)
     {
-        //Debug.Log("Show");
+        cg.alpha = 0;
+        return;
+        Debug.Log("Show ");
         Color _color = GameManager.Instance.GetColor;
         if (GameManager.Instance.myPlayer.IsMyTurn.Value)
         {
@@ -41,6 +43,12 @@ public class TurnIndicatorHandler : MonoBehaviour
 
     public void ShowTurn()
     {
+        if(cg.alpha == 0)
+        {
+            cg.alpha = 1;
+        }
+
+        Debug.Log("Show turn");
         //Debug.Log("Showing header turn");
         Color _color = GameManager.Instance.GetColor;
 
