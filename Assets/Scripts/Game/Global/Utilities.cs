@@ -24,9 +24,11 @@ public static class Utilities
             if (Grid[row, i] != type) break;
             if (i == GRID_SIZE - 1) return (true, ResolveLineTypeRow(row));
         }
-        //check row
+        //check col
         for (int i = 0; i < GRID_SIZE; i++)
         {
+            //Debug.Log($"this col {i},{col} is type {type}");
+
             if (Grid[i, col] != type) break;
             if (i == GRID_SIZE - 1) return (true, ResolveLineTypeCol(col));
         }

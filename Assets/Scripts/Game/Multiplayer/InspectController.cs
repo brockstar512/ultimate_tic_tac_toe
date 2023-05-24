@@ -35,12 +35,13 @@ public class InspectController : MonoBehaviour
         targetMarkMin = target.anchorMin;
         _button.onClick.AddListener(Show);
         HandleMarks(false);
-        GameManager.Instance.TimeOut += TimeOutMinimize;
     }
 
     void Start()
     {
         HandleSubscription(true);
+        TimeManager.Instance.TimeOut += TimeOutMinimize;
+
     }
 
     void OnDestroy()
@@ -48,7 +49,7 @@ public class InspectController : MonoBehaviour
         HandleSubscription(false);
     }
 
-    void TimeOutMinimize(MarkType markType)
+    void TimeOutMinimize()
     {
         if (!_button.enabled)
         {

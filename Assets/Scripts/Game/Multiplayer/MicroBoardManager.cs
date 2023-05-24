@@ -79,7 +79,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
     {
         SoundManager.Instance.PlaySound(_cellPressedFx);
 
-        Grid[row, col] = GameManager.Instance.GetMarkType;
+        Grid[row, col] = GameManager.Instance.GetMarkType;//this is not switching
 
         var (isDone, lineType) = Utilities.CheckWin((byte)row,(byte)col, Grid);
 
@@ -107,6 +107,7 @@ public class MicroBoardManager : MonoBehaviour, IBoard
         }
         else if (Utilities.IsDraw(_cells))
         {
+
             Debug.Log("This board is done with a draw");
             _button.interactable = false;
             markBoard?.Invoke(_row, _col, MarkType.None);

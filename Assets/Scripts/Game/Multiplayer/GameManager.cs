@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Enums;
 
@@ -22,7 +23,6 @@ public class GameManager : NetworkBehaviour
     public OnlinePlayer myPlayer;
     public NetworkVariable<byte> xScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<byte> oScore = new NetworkVariable<byte>((byte)0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public event Action<MarkType> TimeOut;
     public Dictionary<int, MarkType> BoardCells { get; private set; }
     private int lastStarterIndex;
     public ulong[] clientList { get; private set; }
@@ -54,7 +54,7 @@ public class GameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        Debug.Log("network spawn");
+        //Debug.Log("network spawn");
         base.OnNetworkSpawn();
     }
 
@@ -140,29 +140,37 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex)
+    public void UpdateBoardServerRpc(byte boardIndex, byte cellIndex, bool hasTimedOut = false)
     {
-        int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
-
-        if (BoardCells[cellDictIndex] != MarkType.None)
+        if (!hasTimedOut)
         {
-            Debug.Log("Failed Validation reset");
+            int cellDictIndex = (Utilities.GRID_SIZE * Utilities.GRID_SIZE) * (int)boardIndex + (int)cellIndex;
 
-            ClientRpcParams rpcParams = default;
-            ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
-            rpcParams.Send.TargetClientIds = singleTarget;
-            UserFailedBoardValidationClientRpc(boardIndex,cellIndex, (byte)BoardCells[cellDictIndex], rpcParams);
 
+            if (BoardCells[cellDictIndex] != MarkType.None)
+            {
+                Debug.Log("Failed Validation reset");
+
+                ClientRpcParams rpcParams = default;
+                ulong[] singleTarget = new ulong[] { clientList[CurrentPlayerIndex.Value] };
+                rpcParams.Send.TargetClientIds = singleTarget;
+                UserFailedBoardValidationClientRpc(boardIndex, cellIndex, (byte)BoardCells[cellDictIndex], rpcParams);
+
+            }
+            else
+            {
+                //Debug.Log("Updating board and turn");
+                BoardCells[cellDictIndex] = GetMarkType;
+                UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
+                CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
+                UpdateTurnServer();
+                //i might need to change how the timer interacts with the utrn switching 
+            }
         }
         else
         {
-            //Debug.Log("Updating board and turn");
-            BoardCells[cellDictIndex] = GetMarkType;
-            UpdateAwaitingPlayersBoardClientRpc(boardIndex, cellIndex);
             CurrentPlayerIndex.Value = CurrentPlayerIndex.Value == (byte)0 ? (byte)1 : (byte)0;
-
-            UpdateTurnServer();//this is board validation
-            //i might need to change how the timer interacts with the utrn switching 
+            UpdateTurnServer();
         }
 
 
@@ -188,8 +196,16 @@ public class GameManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
+    public void PlayerTimedOutServerRpc()
+    {
+        NotifyTimeOutClientRpc();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
     public void PlayerTimedOutServerRpc(byte PlayerMarkType)
     {
+
+        return;
         InputsEnabled.Value = false;
         //Debug.LogError("Time out");
         MarkType winner = (MarkType)PlayerMarkType == MarkType.X ? MarkType.O : MarkType.X;
@@ -239,7 +255,6 @@ public class GameManager : NetworkBehaviour
         SoundManager.Instance.PlaySound(_timeOutSoundFX);
 
         TimeManager.Instance.gameObject.SetActive(false);
-        TimeOut?.Invoke(winner);
     }
 
     [ClientRpc]
@@ -250,6 +265,12 @@ public class GameManager : NetworkBehaviour
             return;
         
         MacroBoardManager.Instance._boards[boardIndex]._cells[cellIndex].CellClicked();//this is going to run it again for the same player
+    }
+
+    [ClientRpc]
+    void NotifyTimeOutClientRpc()
+    {
+        SoundManager.Instance.PlaySound(_timeOutSoundFX);
     }
 
     [ClientRpc]
@@ -267,7 +288,6 @@ public class GameManager : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        TimeOut = null;
         BoardCells = null;
     }
 

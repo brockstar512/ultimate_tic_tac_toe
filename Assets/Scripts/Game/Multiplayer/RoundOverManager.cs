@@ -36,7 +36,6 @@ public class RoundOverManager : NetworkBehaviour
     {
         cg = this.GetComponent<CanvasGroup>();
         WinLineHandler.roundOver += Init;
-        GameManager.Instance.TimeOut += Init;
 
         _playAgainButton.onClick.AddListener(PlayAgainRequest);
         _acceptButton.onClick.AddListener(HandlePlayAgainAcceptServerRpc);

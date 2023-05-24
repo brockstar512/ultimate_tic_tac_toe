@@ -1,6 +1,9 @@
 using System;
+using System.Reflection;
+using System.Threading;
 using TMPro;
 using UnityEngine;
+using static Enums;
 
 public class TimeManager : MonoBehaviour
 {
@@ -11,6 +14,7 @@ public class TimeManager : MonoBehaviour
     const float timeCountDown = 5;
     [SerializeField] bool timerIsRunning = false;
     Color32 normalColor = new Color32(101, 138, 167, 255);
+    public event Action TimeOut;
 
 
     void Awake()
@@ -50,7 +54,12 @@ public class TimeManager : MonoBehaviour
 
     void MarkCellTimeFail()
     {
-        GameManager.Instance.PlayerTimedOutServerRpc(GameManager.Instance.myPlayer.MyType.Value);
+        TimeOut?.Invoke();
+        StopTimer();
+        GameManager.Instance.UpdateBoardServerRpc(0, 0,true);
+        GameManager.Instance.PlayerTimedOutServerRpc();
+        //GameManager.Instance.PlayerTimedOutServerRpc(GameManager.Instance.myPlayer.MyType.Value);
+
     }
 
     void DisplayTime(float timeToDisplay)
@@ -84,6 +93,7 @@ public class TimeManager : MonoBehaviour
     //when i press the cell
     public void StopTimer()
     {
+        Debug.Log("Stop timer");
         timerIsRunning = false;
     }
 
@@ -93,5 +103,9 @@ public class TimeManager : MonoBehaviour
         timerIsRunning = true;
     }
 
-    
+    private void OnDestroy()
+    {
+        TimeOut = null;
+
+    }
 }
