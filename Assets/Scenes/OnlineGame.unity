@@ -27783,6 +27783,8 @@ MonoBehaviour:
   _quitButton: {fileID: 8893339850204344551}
   _acceptButton: {fileID: 8893339851609687310}
   roundOverSoundFX: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
+  IsOver:
+    m_InternalValue: 0
 --- !u!114 &8893339851494355661
 MonoBehaviour:
   m_ObjectHideFlags: 0

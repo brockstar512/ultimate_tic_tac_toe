@@ -31,6 +31,7 @@ public class RoundOverManager : NetworkBehaviour
     CanvasGroup cg;
     public static event Action reset;
     [SerializeField] AudioClip roundOverSoundFX;
+    public NetworkVariable<bool> IsOver = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     void Awake()
     {
@@ -40,7 +41,9 @@ public class RoundOverManager : NetworkBehaviour
         _playAgainButton.onClick.AddListener(PlayAgainRequest);
         _acceptButton.onClick.AddListener(HandlePlayAgainAcceptServerRpc);
         _quitButton.onClick.AddListener(Quit);
+        IsOver.Value = false;
 
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientQuitMidGame;
     }
 
     void Init(MarkType MarkType)
@@ -60,6 +63,7 @@ public class RoundOverManager : NetworkBehaviour
         cg.blocksRaycasts = true;
         _playAgainButton.interactable = true;
         _quitButton.interactable = true;
+        IsOver.Value = true;
     }
 
     void SetUI(MarkType markType)
@@ -80,6 +84,15 @@ public class RoundOverManager : NetworkBehaviour
         _playAgainButton.gameObject.SetActive(false);
         _promptText.text = WAITING;
         HandlePlayAgainRequestServerRpc(new ServerRpcParams());
+    }
+
+    void ClientQuitMidGame(ulong clientId = 0)
+    {
+        if (IsOver.Value)
+            return;
+        _popUpScreen.SetActive(false);
+        cg.DOFade(1, .1f).SetEase(Ease.OutSine);
+        _wrapUpHandler.OpponentLeft();
     }
 
     private void Quit()
@@ -207,13 +220,19 @@ public class RoundOverManager : NetworkBehaviour
         cg.DOFade(0, .15f).SetEase(Ease.OutSine);
         TimeManager.Instance.gameObject.SetActive(true);
         reset?.Invoke();
+        IsOver.Value = false;
     }
 
+    
 
+    //will work when server leaves. not when client leaves
     public override void OnNetworkDespawn()
     {
-        base.OnNetworkDespawn();
+        base.OnNetworkDespawn();        
         reset = null;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= ClientQuitMidGame;
+
+
     }
     public override void OnDestroy()
     {

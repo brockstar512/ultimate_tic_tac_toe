@@ -82,7 +82,6 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     private void NotifyWaitingPlayerGameStartedClientRpc(ClientRpcParams rpcParams = default)
     {
-        Debug.Log("Opponent is first in this game show that");
         TurnIndicatorHandler.Instance.ShowTurn();
     }
 
